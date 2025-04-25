@@ -1,0 +1,35 @@
+meta {
+  name: Refresh
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{URL}}/api/token/refresh
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "refresh_token": "{{refresh_token}}"
+  }
+}
+
+body:multipart-form {
+  file: @file(/Users/mageas/Downloads/1.png)
+}
+
+script:post-response {
+  const token = res.body.token;
+  const refreshToken = res.body.refresh_token;
+  
+  if (token) {
+    bru.setEnvVar("token", token);
+  }
+  
+  if (refreshToken) {
+    bru.setEnvVar("refresh_token", refreshToken);
+  }
+  
+}
