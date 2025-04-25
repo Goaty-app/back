@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -15,9 +18,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['herd'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['herd'])]
     private ?string $email = null;
 
     /**
@@ -31,6 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Herd>
+     */
+    #[ORM\OneToMany(targetEntity: Herd::class, mappedBy: 'owner')]
+    private Collection $herds;
+
+    public function __construct()
+    {
+        $this->herds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,5 +121,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Herd>
+     */
+    public function getHerds(): Collection
+    {
+        return $this->herds;
+    }
+
+    public function addHerd(Herd $herd): static
+    {
+        if (!$this->herds->contains($herd)) {
+            $this->herds->add($herd);
+            $herd->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHerd(Herd $herd): static
+    {
+        if ($this->herds->removeElement($herd)) {
+            // set the owning side to null (unless already changed)
+            if ($herd->getOwner() === $this) {
+                $herd->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 }

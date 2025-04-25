@@ -1,0 +1,17 @@
+meta {
+  name: Update Herd
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{URL}}/{{API}}/herd/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "NightCity"
+  }
+}
