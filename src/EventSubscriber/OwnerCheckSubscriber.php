@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Herd;
 use App\Entity\Interface\HasOwner;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,17 +14,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
-    private const ENTITY_NAMESPACE = 'App\\Entity\\';
-    private const SKIP_PREFIX = '_';
-
-    // // Other Solution, much simpler
-    // private const ALLOWED_PARAMS = [
-    //     'herd',
-    // ];
+    private const ENTITY_PARAM_MAP = [
+        'herd' => Herd::class,
+    ];
 
     public function __construct(
         private readonly Security $security,
-        private readonly EntityManagerInterface $em,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -36,40 +33,32 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
 
     public function onController(ControllerEvent $event): void
     {
-        $routeParams = $event->getRequest()->attributes->all();
+        $request = $event->getRequest();
+        $attributes = $request->attributes;
 
-        foreach ($routeParams as $paramName => $paramValue) {
-            if ($this->shouldSkipParam($paramName, $paramValue)) {
+        foreach (self::ENTITY_PARAM_MAP as $paramName => $entityClass) {
+            if (!$attributes->has($paramName)) {
                 continue;
             }
 
-            $entity = $this->tryGetEntity($paramName, $paramValue);
+            $paramValue = $attributes->get($paramName);
+
+            if (!is_numeric($paramValue)) {
+                continue;
+            }
+
+            $entity = $this->entityManager->getRepository($entityClass)->find($paramValue);
+
+            if (!$entity) {
+                continue;
+            }
 
             if ($entity instanceof HasOwner) {
                 $this->checkOwnership($entity);
             }
+
+            break;
         }
-    }
-
-    private function shouldSkipParam(string $paramName, $paramValue): bool
-    {
-        return str_starts_with($paramName, self::SKIP_PREFIX) || !is_numeric($paramValue);
-    }
-
-    private function tryGetEntity(string $paramName, $paramValue)
-    {
-        $entityClass = $this->getEntityClass($paramName);
-
-        if (!class_exists($entityClass)) {
-            return null;
-        }
-
-        return $this->em->getRepository($entityClass)->find($paramValue);
-    }
-
-    private function getEntityClass(string $paramName): string
-    {
-        return self::ENTITY_NAMESPACE.ucfirst($paramName);
     }
 
     private function checkOwnership(HasOwner $entity): void
