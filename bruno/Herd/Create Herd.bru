@@ -1,0 +1,18 @@
+meta {
+  name: Create Herd
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{URL}}/{{API}}/herd
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "GoatCity",
+    "location": "Alpes"
+  }
+}
