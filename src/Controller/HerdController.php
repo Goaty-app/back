@@ -18,10 +18,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
-#[Route('api/v1/herd', name: 'api_herd_')]
+#[Route('api', name: 'api_herd_')]
 final class HerdController extends AbstractController
 {
-    #[Route('', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/herd', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HerdRepository $herdRepository,
         SerializerInterface $serializer,
@@ -38,7 +38,7 @@ final class HerdController extends AbstractController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/{herd}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/herd/{herd}', name: 'get', methods: ['GET'])]
     public function get(
         Herd $herd,
         SerializerInterface $serializer,
@@ -48,7 +48,7 @@ final class HerdController extends AbstractController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herd', name: 'create', methods: ['POST'])]
     public function create(
         Request $request,
         UrlGeneratorInterface $urlGenerator,
@@ -80,7 +80,7 @@ final class HerdController extends AbstractController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/{herd}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/herd/{herd}', name: 'update', methods: ['PATCH'])]
     public function update(
         Herd $herd,
         Request $request,
@@ -99,7 +99,7 @@ final class HerdController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/{herd}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/herd/{herd}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Herd $herd,
         EntityManagerInterface $entityManager,
