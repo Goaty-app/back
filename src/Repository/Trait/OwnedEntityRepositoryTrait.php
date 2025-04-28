@@ -16,6 +16,18 @@ trait OwnedEntityRepositoryTrait
         ;
     }
 
+    public function findByOwnerFlex(string $column, int $value, User $user): array
+    {
+        return $this->createQueryBuilder('e')
+            ->where("e.{$column} = :value")
+            ->andWhere('e.owner = :owner')
+            ->setParameter('value', $value)
+            ->setParameter('owner', $user)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findOneByIdAndOwner(int $id, User $user): ?object
     {
         return $this->createQueryBuilder('e')
