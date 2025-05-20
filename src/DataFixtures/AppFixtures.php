@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Herd;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -12,23 +14,40 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
     private Generator $faker;
-    private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
-    {
-        $this->userPasswordHasher = $userPasswordHasher;
+    public function __construct(
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+    ) {
         $this->faker = Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setEmail('test@test.fr')
-            ->setPassword($this->userPasswordHasher->hashPassword($user, 'password'))
+        $admin = new User();
+        $admin->setEmail('test@test.fr')
+            ->setPassword($this->userPasswordHasher->hashPassword($admin, 'password'))
             ->setRoles(['ROLE_ADMIN'])
         ;
 
+        $manager->persist($admin);
+
+        $user = new User();
+        $password = $this->faker->password(3, 6);
+        $user->setEmail($this->faker->name().$password)
+            ->setPassword($this->userPasswordHasher->hashPassword($user, $password))
+            ->setRoles(['ROLE_USER'])
+        ;
+
         $manager->persist($user);
+
+        $herd = new Herd();
+        $herd->setOwner($admin);
+        $herd->setName('Goat')
+            ->setLocation('Alpes')
+            ->setCreatedAt(new DateTimeImmutable())
+        ;
+
+        $manager->persist($herd);
 
         $manager->flush();
     }
