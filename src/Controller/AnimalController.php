@@ -32,6 +32,7 @@ final class AnimalController extends AbstractController
         $jsonData = $cache->get($cacheKey, function (ItemInterface $item) use ($animalRepository, $herd, $serializer) {
             $item->tag('animalsCache');
             $animals = $animalRepository->findBy(['herd' => $herd]);
+
             return $serializer->serialize($animals, 'json', ['groups' => ['animal']]);
         });
 
@@ -77,6 +78,7 @@ final class AnimalController extends AbstractController
         $jsonData = $cache->get('allAnimals', function (ItemInterface $item) use ($animalRepository, $serializer) {
             $item->tag('animalsCache');
             $animals = $animalRepository->findAll();
+
             return $serializer->serialize($animals, 'json', ['groups' => ['animal']]);
         });
 
@@ -89,7 +91,7 @@ final class AnimalController extends AbstractController
         SerializerInterface $serializer,
     ): JsonResponse {
         $jsonData = $serializer->serialize($animal, 'json', ['groups' => ['animal']]);
-        
+
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
@@ -106,7 +108,7 @@ final class AnimalController extends AbstractController
             $request->getContent(),
             Animal::class,
             'json',
-            [AbstractNormalizer::OBJECT_TO_POPULATE => $animal]
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $animal],
         );
 
         $errors = $validator->validate($animal);

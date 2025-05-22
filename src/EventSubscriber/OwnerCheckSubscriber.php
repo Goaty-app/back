@@ -16,8 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
-        'herd' => Herd::class,
-        'animal' => Animal::class
+        'herd'   => Herd::class,
+        'animal' => Animal::class,
     ];
 
     public function __construct(

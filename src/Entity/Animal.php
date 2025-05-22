@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Enum\Gender;
-use App\Enum\Country;
 use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
+use App\Enum\Country;
+use App\Enum\Gender;
 use App\Repository\AnimalRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
@@ -24,7 +24,7 @@ class Animal implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal','herd'])]
+    #[Groups(['animal', 'herd'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]
@@ -112,6 +112,7 @@ class Animal implements HasOwner
     public function setGender(?Gender $gender): static
     {
         $this->gender = $gender;
+
         return $this;
     }
 
@@ -123,6 +124,7 @@ class Animal implements HasOwner
     public function setOriginCountry(?Country $originCountry): static
     {
         $this->originCountry = $originCountry;
+
         return $this;
     }
 
