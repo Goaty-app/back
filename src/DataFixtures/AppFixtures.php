@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
             ->setQuantityUnit('Kilos')
             ->setNotes('Je suis une petite note')
             ->setCreatedAt(new DateTimeImmutable())
-            ->addProductionType($productionType)
+            ->setProductionType($productionType)
         ;
 
         $manager->persist($production);

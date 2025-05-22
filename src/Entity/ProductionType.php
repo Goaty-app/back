@@ -35,7 +35,7 @@ class ProductionType implements HasOwner
     /**
      * @var Collection<int, Production>
      */
-    #[ORM\ManyToMany(targetEntity: Production::class, inversedBy: 'productionTypes')]
+    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'productionType', orphanRemoval: true)]
     private Collection $production;
 
     public function __construct()

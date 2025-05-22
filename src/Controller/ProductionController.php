@@ -71,6 +71,7 @@ final class ProductionController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         TagAwareCacheInterface $cache,
+        ProductionService $productionService,
     ): JsonResponse {
         /** @var Production */
         $production = $serializer->deserialize($request->getContent(), Production::class, 'json');
@@ -80,6 +81,8 @@ final class ProductionController extends AbstractController
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
+
+        $productionService->updateProductionType($production, $request, $this->getUser());
 
         $production->setOwner($this->getUser())
             ->setHerd($herd)
@@ -110,6 +113,7 @@ final class ProductionController extends AbstractController
         $production = $serializer->deserialize($request->getContent(), Production::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $production]);
 
         $productionService->updateHerd($production, $request, $this->getUser());
+        $productionService->updateProductionType($production, $request, $this->getUser());
 
         $entityManager->persist($production);
         $entityManager->flush();
