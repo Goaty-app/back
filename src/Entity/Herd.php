@@ -57,7 +57,12 @@ class Herd implements HasOwner
     {
         $this->productions = new ArrayCollection();
         $this->foodStocks = new ArrayCollection();
+        $this->animals = new ArrayCollection();
     }
+
+    #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
+    #[Groups(['herd'])]
+    private Collection $animals;
 
     public function getId(): ?int
     {
@@ -154,6 +159,32 @@ class Herd implements HasOwner
             // set the owning side to null (unless already changed)
             if ($foodStock->getHerd() === $this) {
                 $foodStock->setHerd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): static
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals[] = $animal;
+            $animal->setHerd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): static
+    {
+        if ($this->animals->removeElement($animal)) {
+            if ($animal->getHerd() === $this) {
+                $animal->setHerd(null);
             }
         }
 

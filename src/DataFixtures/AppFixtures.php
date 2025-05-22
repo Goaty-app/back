@@ -2,12 +2,15 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Animal;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Entity\ProductionType;
 use App\Entity\User;
+use App\Enum\Country;
+use App\Enum\Gender;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -53,7 +56,16 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($herd);
+        $goat = new Animal();
+        $goat->setHerd($herd)
+            ->setName('Pepe')
+            ->setIdNumber('GOAT-001')
+            ->setGender(Gender::FEMALE)
+            ->setOriginCountry(Country::FRANCE)
+            ->setStatus('Baby')
+        ;
 
+        $manager->persist($goat);
         $productionType = new ProductionType();
         $productionType->setOwner($admin)
             ->setName('Ma petite production')

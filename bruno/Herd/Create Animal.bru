@@ -1,0 +1,23 @@
+meta {
+  name: Create Animal
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{URL}}/{{API}}/herd/1/animals
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jess",
+    "idNumber": "GOAT-002",
+    "gender": "female",
+    "originCountry": "FR",
+    "behaviorNotes": "Chilled",
+    "status": "Adult"
+  }
+  
+}
