@@ -52,7 +52,7 @@ final class AnimalController extends AbstractController
         $animal = $serializer->deserialize($request->getContent(), Animal::class, 'json');
 
         $animal->setHerd($herd);
-
+        $animal->setOwner($this->getUser());
         $errors = $validator->validate($animal);
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
