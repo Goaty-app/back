@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
 use App\Repository\ProductionRepository;
 use DateTimeImmutable;
@@ -19,7 +20,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'productions'),
 ])]
-class Production
+class Production implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;

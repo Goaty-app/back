@@ -2,14 +2,14 @@
 
 namespace App\Service;
 
-use App\Entity\Herd;
-use App\Entity\Production;
+use App\Entity\FoodStock;
+use App\Entity\FoodStockType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ProductionService
+class FoodStockService
 {
     private EntityManagerInterface $entityManager;
 
@@ -18,26 +18,26 @@ class ProductionService
         $this->entityManager = $entityManager;
     }
 
-    public function updateHerd(Production $production, Request $request, UserInterface $currentUser): void
+    public function updateFoodStockType(FoodStock $foodStock, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $herdId = $requestData['herd_id'];
+        $foodStockTypeId = $requestData['food_stock_type_id'];
 
-        if (!$herdId) {
+        if (!$foodStockTypeId) {
             return;
         }
 
-        /** @var Herd */
-        $herd = $this->entityManager->getRepository(Herd::class)->findOneByIdAndOwner($herdId, $currentUser);
+        /** @var FoodStockType */
+        $foodStockType = $this->entityManager->getRepository(FoodStockType::class)->findOneByIdAndOwner($foodStockTypeId, $currentUser);
 
-        if (!$herd) {
+        if (!$foodStockType) {
             throw new NotFoundHttpException();
         }
 
-        if ($herd->getOwner() !== $currentUser) {
+        if ($foodStockType->getOwner() !== $currentUser) {
             throw new NotFoundHttpException();
         }
 
-        $production->setHerd($herd);
+        $foodStock->setFoodStockType($foodStockType);
     }
 }
