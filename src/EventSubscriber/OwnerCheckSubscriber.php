@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\Herd;
 use App\Entity\Interface\HasOwner;
+use App\Entity\Production;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -15,7 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
-        'herd' => Herd::class,
+        'herd'       => Herd::class,
+        'production' => Production::class,
     ];
 
     public function __construct(

@@ -3,7 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Herd;
+use App\Entity\Production;
 use App\Entity\User;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -41,13 +43,26 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
         $herd = new Herd();
-        $herd->setOwner($admin);
-        $herd->setName('Goat')
+        $herd->setOwner($admin)
+            ->setName('Goat')
             ->setLocation('Alpes')
             ->setCreatedAt(new DateTimeImmutable())
         ;
 
         $manager->persist($herd);
+
+        $production = new Production();
+        $production->setOwner($admin)
+            ->setHerd($herd)
+            ->setProductionDate(new DateTime())
+            ->setExpirationDate(new DateTime())
+            ->setQuantity(20.3)
+            ->setQuantityUnit('Kilos')
+            ->setNotes('Je suis une petite note')
+            ->setCreatedAt(new DateTimeImmutable())
+        ;
+
+        $manager->persist($production);
 
         $manager->flush();
     }
