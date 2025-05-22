@@ -2,9 +2,9 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Animal;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
-use App\Entity\Animal;
 use App\Entity\Herd;
 use App\Entity\Interface\HasOwner;
 use App\Entity\Production;
@@ -20,12 +20,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
-        'herd' => Herd::class,
-        'production' => Production::class,
+        'herd'           => Herd::class,
+        'production'     => Production::class,
         'productionType' => ProductionType::class,
-        'foodStock' => FoodStock::class,
-        'foodStockType' => FoodStockType::class,
-        'animal' => Animal::class,
+        'foodStock'      => FoodStock::class,
+        'foodStockType'  => FoodStockType::class,
+        'animal'         => Animal::class,
     ];
 
     public function __construct(
