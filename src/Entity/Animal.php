@@ -8,6 +8,7 @@ use App\Enum\Country;
 use App\Enum\Gender;
 use App\Repository\AnimalRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
