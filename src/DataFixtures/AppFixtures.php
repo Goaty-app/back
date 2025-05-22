@@ -52,6 +52,13 @@ class AppFixtures extends Fixture
 
         $manager->persist($herd);
 
+        $productionType = new ProductionType();
+        $productionType->setOwner($admin)
+            ->setName('Ma petite production')
+        ;
+
+        $manager->persist($productionType);
+
         $production = new Production();
         $production->setOwner($admin)
             ->setHerd($herd)
@@ -61,16 +68,10 @@ class AppFixtures extends Fixture
             ->setQuantityUnit('Kilos')
             ->setNotes('Je suis une petite note')
             ->setCreatedAt(new DateTimeImmutable())
+            ->addProductionType($productionType)
         ;
 
         $manager->persist($production);
-
-        $productionType = new ProductionType();
-        $productionType->setOwner($admin)
-            ->setName('Ma petite production')
-        ;
-
-        $manager->persist($productionType);
 
         $manager->flush();
     }
