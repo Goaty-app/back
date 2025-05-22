@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\FoodStock;
 use App\Entity\Herd;
 use App\Entity\Interface\HasOwner;
 use App\Entity\Production;
@@ -20,6 +21,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         'herd'           => Herd::class,
         'production'     => Production::class,
         'productionType' => ProductionType::class,
+        'foodStock'      => FoodStock::class,
     ];
 
     public function __construct(

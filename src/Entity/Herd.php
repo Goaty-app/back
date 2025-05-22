@@ -26,19 +26,19 @@ class Herd implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['herd', 'production'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['herd', 'production'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['herd', 'production'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?string $location = null;
 
     #[ORM\Column]
-    #[Groups(['herd', 'production'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?DateTimeImmutable $createdAt = null;
 
     /**
@@ -47,9 +47,16 @@ class Herd implements HasOwner
     #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'herd')]
     private Collection $productions;
 
+    /**
+     * @var Collection<int, FoodStock>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'herd')]
+    private Collection $foodStocks;
+
     public function __construct()
     {
         $this->productions = new ArrayCollection();
+        $this->foodStocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +124,36 @@ class Herd implements HasOwner
             // set the owning side to null (unless already changed)
             if ($production->getHerd() === $this) {
                 $production->setHerd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodStock>
+     */
+    public function getFoodStocks(): Collection
+    {
+        return $this->foodStocks;
+    }
+
+    public function addFoodStock(FoodStock $foodStock): static
+    {
+        if (!$this->foodStocks->contains($foodStock)) {
+            $this->foodStocks->add($foodStock);
+            $foodStock->setHerd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStock(FoodStock $foodStock): static
+    {
+        if ($this->foodStocks->removeElement($foodStock)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStock->getHerd() === $this) {
+                $foodStock->setHerd(null);
             }
         }
 

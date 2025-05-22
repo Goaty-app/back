@@ -1,0 +1,18 @@
+meta {
+  name: Create Food Stocks
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{URL}}/{{API}}/herd/1/food-stock
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "My little stock",
+    "quantityUnit": "Kilos"
+  }
+}
