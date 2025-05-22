@@ -6,6 +6,7 @@ use App\Enum\Gender;
 use App\Enum\Country;
 use App\Repository\AnimalRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
@@ -13,28 +14,36 @@ class Animal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['animal','herd'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['animal'])]
     private ?Herd $herd = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['animal'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal'])]
     private ?string $idNumber = null;
 
     #[ORM\Column(enumType: Gender::class, nullable: true)]
+    #[Groups(['animal'])]
     private ?Gender $gender = null;
 
     #[ORM\Column(enumType: Country::class, nullable: true)]
+    #[Groups(['animal'])]
     private ?Country $originCountry = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['animal'])]
     private ?string $behaviorNotes = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal'])]
     private ?string $status = null;
 
     public function getId(): ?int
