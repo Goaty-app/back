@@ -20,11 +20,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
-        'herd'             => Herd::class,
-        'production'     => Production::class,
+        'herd' => Herd::class,
+        'production' => Production::class,
         'productionType' => ProductionType::class,
-        'foodStock'      => FoodStock::class,
-        'foodStockType'  => FoodStockType::class,
+        'foodStock' => FoodStock::class,
+        'foodStockType' => FoodStockType::class,
         'animal' => Animal::class,
     ];
 

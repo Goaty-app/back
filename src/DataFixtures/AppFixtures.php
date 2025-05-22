@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
 
         $user = new User();
         $password = $this->faker->password(3, 6);
-        $user->setEmail($this->faker->name().$password)
+        $user->setEmail($this->faker->name() . $password)
             ->setPassword($this->userPasswordHasher->hashPassword($user, $password))
             ->setRoles(['ROLE_USER'])
         ;

@@ -42,13 +42,6 @@ class Herd implements HasOwner
     private ?DateTimeImmutable $createdAt = null;
 
     /**
-     * @var Collection<int, Animal>
-     */
-    #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
-    #[Groups(['herd'])]
-    private Collection $animals;
-
-    /**
      * @var Collection<int, Production>
      */
     #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'herd', orphanRemoval: true)]
@@ -66,6 +59,10 @@ class Herd implements HasOwner
         $this->foodStocks = new ArrayCollection();
         $this->animals = new ArrayCollection();
     }
+
+    #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
+    #[Groups(['herd'])]
+    private Collection $animals;
 
     public function getId(): ?int
     {
@@ -104,32 +101,6 @@ class Herd implements HasOwner
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getAnimals(): Collection
-    {
-        return $this->animals;
-    }
-
-    public function addAnimal(Animal $animal): static
-    {
-        if (!$this->animals->contains($animal)) {
-            $this->animals[] = $animal;
-            $animal->setHerd($this);
-        }
-        
-        return $this;
-    }
-
-    public function removeAnimal(Animal $animal): static
-    {
-        if ($this->animals->removeElement($animal)) {
-            if ($animal->getHerd() === $this) {
-                $animal->setHerd(null);
-                }
-        }
 
         return $this;
     }
@@ -188,6 +159,32 @@ class Herd implements HasOwner
             // set the owning side to null (unless already changed)
             if ($foodStock->getHerd() === $this) {
                 $foodStock->setHerd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): static
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals[] = $animal;
+            $animal->setHerd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): static
+    {
+        if ($this->animals->removeElement($animal)) {
+            if ($animal->getHerd() === $this) {
+                $animal->setHerd(null);
             }
         }
 
