@@ -4,6 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Herd;
 use App\Entity\User;
+use App\Entity\Animal;
+use App\Enum\Gender;
+use App\Enum\Country;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -48,7 +51,15 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($herd);
+        $goat = new Animal();
+        $goat->setHerd($herd)  
+            ->setName('Pepe')
+            ->setIdNumber('GOAT-001')
+            ->setGender(Gender::FEMALE)
+            ->setOriginCountry(Country::FRANCE)
+            ->setStatus('Baby');
 
+        $manager->persist($goat);
         $manager->flush();
     }
 }
