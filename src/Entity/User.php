@@ -40,8 +40,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Herd>
      */
-    #[ORM\OneToMany(targetEntity: Herd::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Herd::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $herds;
+
+    /**
+     * @var Collection<int, Production>
+     */
+    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $productions;
+
+    /**
+     * @var Collection<int, ProductionType>
+     */
+    #[ORM\OneToMany(targetEntity: ProductionType::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $productionTypes;
+
+    /**
+     * @var Collection<int, FoodStock>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $foodStocks;
+
+    /**
+     * @var Collection<int, FoodStockType>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStockType::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $foodStockTypes;
 
     /**
      * @var Collection<int, Animal>
@@ -52,6 +76,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->herds = new ArrayCollection();
+        $this->productions = new ArrayCollection();
+        $this->productionTypes = new ArrayCollection();
+        $this->foodStocks = new ArrayCollection();
+        $this->foodStockTypes = new ArrayCollection();
         $this->animals = new ArrayCollection();
     }
 
@@ -183,6 +211,126 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->animals->removeElement($animal)) {
             if ($animal->getOwner() === $this) {
                 $animal->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Production>
+     */
+    public function getProductions(): Collection
+    {
+        return $this->productions;
+    }
+
+    public function addProduction(Production $production): static
+    {
+        if (!$this->productions->contains($production)) {
+            $this->productions->add($production);
+            $production->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduction(Production $production): static
+    {
+        if ($this->productions->removeElement($production)) {
+            // set the owning side to null (unless already changed)
+            if ($production->getOwner() === $this) {
+                $production->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductionType>
+     */
+    public function getProductionTypes(): Collection
+    {
+        return $this->productionTypes;
+    }
+
+    public function addProductionType(ProductionType $productionType): static
+    {
+        if (!$this->productionTypes->contains($productionType)) {
+            $this->productionTypes->add($productionType);
+            $productionType->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductionType(ProductionType $productionType): static
+    {
+        if ($this->productionTypes->removeElement($productionType)) {
+            // set the owning side to null (unless already changed)
+            if ($productionType->getOwner() === $this) {
+                $productionType->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodStock>
+     */
+    public function getFoodStocks(): Collection
+    {
+        return $this->foodStocks;
+    }
+
+    public function addFoodStock(FoodStock $foodStock): static
+    {
+        if (!$this->foodStocks->contains($foodStock)) {
+            $this->foodStocks->add($foodStock);
+            $foodStock->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStock(FoodStock $foodStock): static
+    {
+        if ($this->foodStocks->removeElement($foodStock)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStock->getOwner() === $this) {
+                $foodStock->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodStockType>
+     */
+    public function getFoodStockTypes(): Collection
+    {
+        return $this->foodStockTypes;
+    }
+
+    public function addFoodStockType(FoodStockType $foodStockType): static
+    {
+        if (!$this->foodStockTypes->contains($foodStockType)) {
+            $this->foodStockTypes->add($foodStockType);
+            $foodStockType->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStockType(FoodStockType $foodStockType): static
+    {
+        if ($this->foodStockTypes->removeElement($foodStockType)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStockType->getOwner() === $this) {
+                $foodStockType->setOwner(null);
             }
         }
 

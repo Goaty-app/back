@@ -1,0 +1,17 @@
+meta {
+  name: Create Food Stock Types
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{URL}}/{{API}}/food-stock-type
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Type de stock"
+  }
+}

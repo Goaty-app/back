@@ -1,0 +1,22 @@
+meta {
+  name: Update Production
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{URL}}/{{API}}/production/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "herd_id": 1,
+    "production_date": "2025-01-01",
+    "expiration_date": "2025-01-01",
+    "quantity": 30.1,
+    "quantityUnit": "Kilos",
+    "notes": "Petite note"
+  }
+}

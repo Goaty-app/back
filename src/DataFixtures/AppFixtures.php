@@ -2,11 +2,16 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\FoodStock;
+use App\Entity\FoodStockType;
 use App\Entity\Animal;
 use App\Entity\Herd;
+use App\Entity\Production;
+use App\Entity\ProductionType;
 use App\Entity\User;
 use App\Enum\Country;
 use App\Enum\Gender;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -44,8 +49,8 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
         $herd = new Herd();
-        $herd->setOwner($admin);
-        $herd->setName('Goat')
+        $herd->setOwner($admin)
+            ->setName('Goat')
             ->setLocation('Alpes')
             ->setCreatedAt(new DateTimeImmutable())
         ;
@@ -61,6 +66,46 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($goat);
+        $productionType = new ProductionType();
+        $productionType->setOwner($admin)
+            ->setName('Ma petite production')
+        ;
+
+        $manager->persist($productionType);
+
+        $production = new Production();
+        $production->setOwner($admin)
+            ->setHerd($herd)
+            ->setProductionDate(new DateTime())
+            ->setExpirationDate(new DateTime())
+            ->setQuantity(20.3)
+            ->setQuantityUnit('Kilos')
+            ->setNotes('Je suis une petite note')
+            ->setCreatedAt(new DateTimeImmutable())
+            ->setProductionType($productionType)
+        ;
+
+        $manager->persist($production);
+
+        $foodStockType = new FoodStockType();
+        $foodStockType->setOwner($admin)
+            ->setName('Mon stock')
+        ;
+
+        $manager->persist($foodStockType);
+
+        $foodStock = new FoodStock();
+        $foodStock->setOwner($admin)
+            ->setHerd($herd)
+            ->setQuantity(0)
+            ->setQuantityUnit('Kilos')
+            ->setName('Mon petit stock')
+            ->setCreatedAt(new DateTimeImmutable())
+            ->setFoodStockType($foodStockType)
+        ;
+
+        $manager->persist($foodStock);
+
         $manager->flush();
     }
 }

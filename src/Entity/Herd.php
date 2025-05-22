@@ -26,24 +26,46 @@ class Herd implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['herd'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['herd'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['herd'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?string $location = null;
 
     #[ORM\Column]
-    #[Groups(['herd'])]
+    #[Groups(['herd', 'production', 'foodStock'])]
     private ?DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Collection<int, Animal>
+     */
     #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
     #[Groups(['herd'])]
     private Collection $animals;
+
+    /**
+     * @var Collection<int, Production>
+     */
+    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'herd', orphanRemoval: true)]
+    private Collection $productions;
+
+    /**
+     * @var Collection<int, FoodStock>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'herd', orphanRemoval: true)]
+    private Collection $foodStocks;
+
+    public function __construct()
+    {
+        $this->productions = new ArrayCollection();
+        $this->foodStocks = new ArrayCollection();
+        $this->animals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,11 +108,6 @@ class Herd implements HasOwner
         return $this;
     }
 
-    public function __construct()
-    {
-        $this->animals = new ArrayCollection();
-    }
-
     public function getAnimals(): Collection
     {
         return $this->animals;
@@ -102,7 +119,7 @@ class Herd implements HasOwner
             $this->animals[] = $animal;
             $animal->setHerd($this);
         }
-
+        
         return $this;
     }
 
@@ -111,6 +128,66 @@ class Herd implements HasOwner
         if ($this->animals->removeElement($animal)) {
             if ($animal->getHerd() === $this) {
                 $animal->setHerd(null);
+                }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Production>
+     */
+    public function getProductions(): Collection
+    {
+        return $this->productions;
+    }
+
+    public function addProduction(Production $production): static
+    {
+        if (!$this->productions->contains($production)) {
+            $this->productions->add($production);
+            $production->setHerd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduction(Production $production): static
+    {
+        if ($this->productions->removeElement($production)) {
+            // set the owning side to null (unless already changed)
+            if ($production->getHerd() === $this) {
+                $production->setHerd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodStock>
+     */
+    public function getFoodStocks(): Collection
+    {
+        return $this->foodStocks;
+    }
+
+    public function addFoodStock(FoodStock $foodStock): static
+    {
+        if (!$this->foodStocks->contains($foodStock)) {
+            $this->foodStocks->add($foodStock);
+            $foodStock->setHerd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStock(FoodStock $foodStock): static
+    {
+        if ($this->foodStocks->removeElement($foodStock)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStock->getHerd() === $this) {
+                $foodStock->setHerd(null);
             }
         }
 
