@@ -1,0 +1,16 @@
+meta {
+  name: Dissociate Production
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{URL}}/{{API}}/production/1/production-type/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+  }
+}

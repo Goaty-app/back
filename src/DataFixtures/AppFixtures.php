@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Herd;
 use App\Entity\Production;
+use App\Entity\ProductionType;
 use App\Entity\User;
 use DateTime;
 use DateTimeImmutable;
@@ -63,6 +64,13 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($production);
+
+        $productionType = new ProductionType();
+        $productionType->setOwner($admin)
+            ->setName('Ma petite production')
+        ;
+
+        $manager->persist($productionType);
 
         $manager->flush();
     }
