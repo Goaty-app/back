@@ -55,11 +55,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: ProductionType::class, mappedBy: 'owner')]
     private Collection $productionTypes;
 
+    /**
+     * @var Collection<int, FoodStock>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'owner')]
+    private Collection $foodStocks;
+
     public function __construct()
     {
         $this->herds = new ArrayCollection();
         $this->productions = new ArrayCollection();
         $this->productionTypes = new ArrayCollection();
+        $this->foodStocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,7 +205,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Production>
+     * @return Collection<int, ProductionType>
      */
     public function getProductionTypes(): Collection
     {
@@ -221,6 +228,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($productionType->getOwner() === $this) {
                 $productionType->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodStock>
+     */
+    public function getFoodStocks(): Collection
+    {
+        return $this->foodStocks;
+    }
+
+    public function addFoodStock(FoodStock $foodStock): static
+    {
+        if (!$this->foodStocks->contains($foodStock)) {
+            $this->foodStocks->add($foodStock);
+            $foodStock->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStock(FoodStock $foodStock): static
+    {
+        if ($this->foodStocks->removeElement($foodStock)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStock->getOwner() === $this) {
+                $foodStock->setOwner(null);
             }
         }
 

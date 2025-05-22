@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\FoodStock;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Entity\ProductionType;
@@ -72,6 +73,17 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($production);
+
+        $foodStock = new FoodStock();
+        $foodStock->setOwner($admin)
+            ->setHerd($herd)
+            ->setQuantity(0)
+            ->setQuantityUnit('Kilos')
+            ->setName('Mon petit stock')
+            ->setCreatedAt(new DateTimeImmutable())
+        ;
+
+        $manager->persist($foodStock);
 
         $manager->flush();
     }
