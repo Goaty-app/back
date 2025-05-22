@@ -4,13 +4,23 @@ namespace App\Entity;
 
 use App\Enum\Gender;
 use App\Enum\Country;
+use App\Entity\Interface\HasOwner;
+use App\Entity\Trait\HasOwnerTrait;
 use App\Repository\AnimalRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
-class Animal
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
+#[ORM\AssociationOverrides([
+    new ORM\AssociationOverride(name: 'owner', inversedBy: 'animals'),
+])]
+class Animal implements HasOwner
 {
+    use HasOwnerTrait;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

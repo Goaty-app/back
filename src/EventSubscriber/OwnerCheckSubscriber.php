@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Animal;
 use App\Entity\Herd;
 use App\Entity\Interface\HasOwner;
 use App\Entity\User;
@@ -16,6 +17,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
         'herd' => Herd::class,
+        'animal' => Animal::class
     ];
 
     public function __construct(
