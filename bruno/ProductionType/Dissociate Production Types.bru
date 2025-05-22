@@ -1,10 +1,10 @@
 meta {
-  name: Associate Production
+  name: Dissociate Production Types
   type: http
-  seq: 6
+  seq: 7
 }
 
-post {
+delete {
   url: {{URL}}/{{API}}/production/1/production-type/1
   body: json
   auth: inherit
