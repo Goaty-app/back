@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Production;
 use App\Entity\ProductionType;
 use App\Repository\ProductionTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -108,40 +107,6 @@ final class ProductionTypeController extends AbstractController
         $entityManager->flush();
 
         $cache->invalidateTags(['productionTypesCache']);
-
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-    }
-
-    #[Route('/v1/production/{production}/production-type/{productionType}', name: 'associate', methods: ['POST'])]
-    public function associate(
-        Production $production,
-        ProductionType $productionType,
-        EntityManagerInterface $entityManager,
-        TagAwareCacheInterface $cache,
-    ): JsonResponse {
-        $production->addProductionType($productionType);
-
-        $entityManager->persist($production);
-        $entityManager->flush();
-
-        $cache->invalidateTags(['productionsCache']);
-
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-    }
-
-    #[Route('/v1/production/{production}/production-type/{productionType}', name: 'dissociate', methods: ['DELETE'])]
-    public function dissociate(
-        Production $production,
-        ProductionType $productionType,
-        EntityManagerInterface $entityManager,
-        TagAwareCacheInterface $cache,
-    ): JsonResponse {
-        $production->removeProductionType($productionType);
-
-        $entityManager->persist($production);
-        $entityManager->flush();
-
-        $cache->invalidateTags(['productionsCache']);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

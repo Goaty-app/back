@@ -7,8 +7,6 @@ use App\Entity\Trait\HasOwnerTrait;
 use App\Repository\ProductionRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -60,17 +58,10 @@ class Production implements HasOwner
     #[Groups(['production'])]
     private ?Herd $herd = null;
 
-    /**
-     * @var Collection<int, ProductionType>
-     */
-    #[ORM\ManyToMany(targetEntity: ProductionType::class, mappedBy: 'production')]
+    #[ORM\ManyToOne(inversedBy: 'production')]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['production'])]
-    private Collection $productionTypes;
-
-    public function __construct()
-    {
-        $this->productionTypes = new ArrayCollection();
-    }
+    private ?ProductionType $productionType = null;
 
     public function getId(): ?int
     {
@@ -161,29 +152,14 @@ class Production implements HasOwner
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProductionType>
-     */
-    public function getProductionTypes(): Collection
+    public function getProductionType(): ?ProductionType
     {
-        return $this->productionTypes;
+        return $this->productionType;
     }
 
-    public function addProductionType(ProductionType $productionType): static
+    public function setProductionType(?ProductionType $productionType): static
     {
-        if (!$this->productionTypes->contains($productionType)) {
-            $this->productionTypes->add($productionType);
-            $productionType->addProduction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductionType(ProductionType $productionType): static
-    {
-        if ($this->productionTypes->removeElement($productionType)) {
-            $productionType->removeProduction($this);
-        }
+        $this->productionType = $productionType;
 
         return $this;
     }
