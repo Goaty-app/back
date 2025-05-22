@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
 use App\Repository\ProductionTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'productionTypes'),
 ])]
-class ProductionType
+class ProductionType implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;

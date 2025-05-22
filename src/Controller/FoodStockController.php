@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\FoodStock;
 use App\Entity\Herd;
 use App\Repository\FoodStockRepository;
+use App\Service\FoodStockService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,6 +71,7 @@ final class FoodStockController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         TagAwareCacheInterface $cache,
+        FoodStockService $foodStockService,
     ): JsonResponse {
         /** @var FoodStock */
         $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json');
@@ -79,6 +81,8 @@ final class FoodStockController extends AbstractController
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
+
+        $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());
 
         $foodStock->setOwner($this->getUser())
             ->setHerd($herd)
@@ -104,9 +108,12 @@ final class FoodStockController extends AbstractController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         TagAwareCacheInterface $cache,
+        FoodStockService $foodStockService,
     ): JsonResponse {
         /** @var FoodStock */
         $production = $serializer->deserialize($request->getContent(), FoodStock::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStock, AbstractNormalizer::IGNORED_ATTRIBUTES => ['quantity']]);
+
+        $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());
 
         $entityManager->persist($production);
         $entityManager->flush();

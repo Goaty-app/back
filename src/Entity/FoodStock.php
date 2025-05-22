@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
 use App\Repository\FoodStockRepository;
 use DateTimeImmutable;
@@ -15,7 +16,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'foodStocks'),
 ])]
-class FoodStock
+class FoodStock implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
@@ -46,6 +47,11 @@ class FoodStock
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
     private ?string $name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'foodStocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['foodStock'])]
+    private ?FoodStockType $foodStockType = null;
 
     public function getId(): ?int
     {
@@ -108,6 +114,18 @@ class FoodStock
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getFoodStockType(): ?FoodStockType
+    {
+        return $this->foodStockType;
+    }
+
+    public function setFoodStockType(?FoodStockType $foodStockType): static
+    {
+        $this->foodStockType = $foodStockType;
 
         return $this;
     }
