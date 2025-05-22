@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Animal;
+use App\Entity\AnimalType;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
 use App\Entity\Herd;
@@ -56,6 +57,13 @@ class AppFixtures extends Fixture
             ->setCreatedAt(new DateTimeImmutable())
         ;
 
+        $animalType = new AnimalType();
+        $animalType->setOwner($admin)
+            ->setName('Goat')
+        ;
+
+        $manager->persist($animalType);
+
         $manager->persist($herd);
         $goat = new Animal();
         $goat->setOwner($admin)
@@ -65,6 +73,7 @@ class AppFixtures extends Fixture
             ->setGender(Gender::FEMALE)
             ->setOriginCountry(Country::FRANCE)
             ->setStatus('Baby')
+            ->addType($animalType)
         ;
 
         $manager->persist($goat);

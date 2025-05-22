@@ -73,6 +73,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'owner')]
     private Collection $animals;
 
+    /**
+     * @var Collection<int, AnimalType>
+     */
+    #[ORM\OneToMany(targetEntity: AnimalType::class, mappedBy: 'owner')]
+    private Collection $animaltype;
+
     public function __construct()
     {
         $this->herds = new ArrayCollection();
@@ -81,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->foodStocks = new ArrayCollection();
         $this->foodStockTypes = new ArrayCollection();
         $this->animals = new ArrayCollection();
+        $this->animaltype = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,6 +338,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($foodStockType->getOwner() === $this) {
                 $foodStockType->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AnimalType>
+     */
+    public function getAnimaltypes(): Collection
+    {
+        return $this->animaltype;
+    }
+
+    public function addAnimaltype(AnimalType $animaltype): static
+    {
+        if (!$this->animaltype->contains($animaltype)) {
+            $this->animaltype->add($animaltype);
+            $animaltype->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimaltype(AnimalType $animaltype): static
+    {
+        if ($this->animaltype->removeElement(element: $animaltype)) {
+            // set the owning side to null (unless already changed)
+            if ($animaltype->getOwner() === $this) {
+                $animaltype->setOwner(null);
             }
         }
 

@@ -7,6 +7,8 @@ use App\Entity\Trait\HasOwnerTrait;
 use App\Enum\Country;
 use App\Enum\Gender;
 use App\Repository\AnimalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -56,6 +58,16 @@ class Animal implements HasOwner
     #[ORM\Column(length: 255)]
     #[Groups(['animal'])]
     private ?string $status = null;
+
+    #[ORM\ManyToMany(targetEntity: AnimalType::class, inversedBy: 'animals')]
+    #[ORM\JoinTable(name: 'animal_type_link')]
+    #[Groups(['animal'])]
+    private Collection $types;
+
+    public function __construct()
+    {
+        $this->types = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +161,30 @@ class Animal implements HasOwner
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTypes(): Collection
+    {
+        return $this->types;
+    }
+
+    public function addType(AnimalType $type): static
+    {
+        if (!$this->types->contains($type)) {
+            $this->types[] = $type;
+            $type->addAnimal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeType(AnimalType $type): static
+    {
+        if ($this->types->removeElement($type)) {
+            $type->removeAnimal($this);
+        }
 
         return $this;
     }
