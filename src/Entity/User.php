@@ -49,10 +49,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'owner')]
     private Collection $productions;
 
+    /**
+     * @var Collection<int, ProductionType>
+     */
+    #[ORM\OneToMany(targetEntity: ProductionType::class, mappedBy: 'owner')]
+    private Collection $productionTypes;
+
     public function __construct()
     {
         $this->herds = new ArrayCollection();
         $this->productions = new ArrayCollection();
+        $this->productionTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -184,6 +191,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($production->getOwner() === $this) {
                 $production->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Production>
+     */
+    public function getProductionTypes(): Collection
+    {
+        return $this->productionTypes;
+    }
+
+    public function addProductionType(ProductionType $productionType): static
+    {
+        if (!$this->productionTypes->contains($productionType)) {
+            $this->productionTypes->add($productionType);
+            $productionType->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductionType(ProductionType $productionType): static
+    {
+        if ($this->productionTypes->removeElement($productionType)) {
+            // set the owning side to null (unless already changed)
+            if ($productionType->getOwner() === $this) {
+                $productionType->setOwner(null);
             }
         }
 
