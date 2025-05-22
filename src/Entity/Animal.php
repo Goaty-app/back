@@ -25,7 +25,7 @@ class Animal implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal', 'herd'])]
+    #[Groups(['animal'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]

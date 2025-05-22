@@ -58,7 +58,8 @@ class AppFixtures extends Fixture
 
         $manager->persist($herd);
         $goat = new Animal();
-        $goat->setHerd($herd)
+        $goat->setOwner($admin)
+            ->setHerd($herd)
             ->setName('Pepe')
             ->setIdNumber('GOAT-001')
             ->setGender(Gender::FEMALE)

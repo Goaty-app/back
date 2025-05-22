@@ -26,19 +26,19 @@ class Herd implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['herd', 'production', 'foodStock'])]
+    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['herd', 'production', 'foodStock'])]
+    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['herd', 'production', 'foodStock'])]
+    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
     private ?string $location = null;
 
     #[ORM\Column]
-    #[Groups(['herd', 'production', 'foodStock'])]
+    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
     private ?DateTimeImmutable $createdAt = null;
 
     /**
@@ -61,7 +61,6 @@ class Herd implements HasOwner
     }
 
     #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
-    #[Groups(['herd'])]
     private Collection $animals;
 
     public function getId(): ?int
