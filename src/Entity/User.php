@@ -40,25 +40,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Herd>
      */
-    #[ORM\OneToMany(targetEntity: Herd::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Herd::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $herds;
 
     /**
      * @var Collection<int, Production>
      */
-    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $productions;
 
     /**
      * @var Collection<int, ProductionType>
      */
-    #[ORM\OneToMany(targetEntity: ProductionType::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: ProductionType::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $productionTypes;
 
     /**
      * @var Collection<int, FoodStock>
      */
-    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $foodStocks;
 
     public function __construct()

@@ -35,7 +35,7 @@ class FoodStockType implements HasOwner
     /**
      * @var Collection<int, FoodStock>
      */
-    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'foodStockType')]
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'foodStockType', orphanRemoval: true)]
     private Collection $foodStocks;
 
     public function __construct()

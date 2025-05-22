@@ -44,13 +44,13 @@ class Herd implements HasOwner
     /**
      * @var Collection<int, Production>
      */
-    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'herd')]
+    #[ORM\OneToMany(targetEntity: Production::class, mappedBy: 'herd', orphanRemoval: true)]
     private Collection $productions;
 
     /**
      * @var Collection<int, FoodStock>
      */
-    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'herd')]
+    #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'herd', orphanRemoval: true)]
     private Collection $foodStocks;
 
     public function __construct()
