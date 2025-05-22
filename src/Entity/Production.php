@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
+use App\Enum\QuantityUnit;
 use App\Repository\ProductionRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -41,9 +42,9 @@ class Production implements HasOwner
     #[Groups(['production'])]
     private ?float $quantity = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['production'])]
-    private ?string $quantityUnit = null;
+    private ?QuantityUnit $quantityUnit = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['production'])]
@@ -104,12 +105,12 @@ class Production implements HasOwner
         return $this;
     }
 
-    public function getQuantityUnit(): ?string
+    public function getQuantityUnit(): ?QuantityUnit
     {
         return $this->quantityUnit;
     }
 
-    public function setQuantityUnit(string $quantityUnit): static
+    public function setQuantityUnit(QuantityUnit $quantityUnit): static
     {
         $this->quantityUnit = $quantityUnit;
 

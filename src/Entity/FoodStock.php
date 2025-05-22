@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Interface\HasOwner;
 use App\Entity\Trait\HasOwnerTrait;
+use App\Enum\QuantityUnit;
 use App\Repository\FoodStockRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -36,9 +37,9 @@ class FoodStock implements HasOwner
     #[Groups(['foodStock'])]
     private ?float $quantity = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['foodStock'])]
-    private ?string $quantityUnit = null;
+    private ?QuantityUnit $quantityUnit = null;
 
     #[ORM\Column]
     #[Groups(['foodStock'])]
@@ -82,12 +83,12 @@ class FoodStock implements HasOwner
         return $this;
     }
 
-    public function getQuantityUnit(): ?string
+    public function getQuantityUnit(): ?QuantityUnit
     {
         return $this->quantityUnit;
     }
 
-    public function setQuantityUnit(string $quantityUnit): static
+    public function setQuantityUnit(QuantityUnit $quantityUnit): static
     {
         $this->quantityUnit = $quantityUnit;
 

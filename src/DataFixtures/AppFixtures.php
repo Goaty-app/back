@@ -11,6 +11,7 @@ use App\Entity\ProductionType;
 use App\Entity\User;
 use App\Enum\Country;
 use App\Enum\Gender;
+use App\Enum\QuantityUnit;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -79,7 +80,7 @@ class AppFixtures extends Fixture
             ->setProductionDate(new DateTime())
             ->setExpirationDate(new DateTime())
             ->setQuantity(20.3)
-            ->setQuantityUnit('Kilos')
+            ->setQuantityUnit(QuantityUnit::POUND)
             ->setNotes('Je suis une petite note')
             ->setCreatedAt(new DateTimeImmutable())
             ->setProductionType($productionType)
@@ -98,7 +99,7 @@ class AppFixtures extends Fixture
         $foodStock->setOwner($admin)
             ->setHerd($herd)
             ->setQuantity(0)
-            ->setQuantityUnit('Kilos')
+            ->setQuantityUnit(QuantityUnit::KILOGRAM)
             ->setName('Mon petit stock')
             ->setCreatedAt(new DateTimeImmutable())
             ->setFoodStockType($foodStockType)
