@@ -3,14 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\Herd;
-use App\Repository\Trait\OwnedEntityRepositoryTrait;
+use App\Entity\Interface\OwnedEntityRepository;
+use App\Trait\OwnedEntityRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Herd>
  */
-class HerdRepository extends ServiceEntityRepository
+class HerdRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
     use OwnedEntityRepositoryTrait;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Trait;
+namespace App\Trait;
 
 use App\Entity\User;
 

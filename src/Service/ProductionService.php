@@ -22,7 +22,7 @@ class ProductionService
     public function updateProductionType(Production $production, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $herdId = $requestData['production_type_id'];
+        $herdId = $requestData['production_type_id'] ?? null;
 
         if (!$herdId) {
             return;

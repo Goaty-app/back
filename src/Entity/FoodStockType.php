@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Interface\HasOwner;
-use App\Entity\Trait\HasOwnerTrait;
+use App\Interface\HasOwner;
 use App\Repository\FoodStockTypeRepository;
+use App\Trait\HasOwnerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

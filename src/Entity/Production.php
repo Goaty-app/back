@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\Interface\HasOwner;
-use App\Entity\Trait\HasOwnerTrait;
 use App\Enum\QuantityUnit;
+use App\Interface\HasOwner;
 use App\Repository\ProductionRepository;
+use App\Trait\HasOwnerTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;

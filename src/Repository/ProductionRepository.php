@@ -2,15 +2,16 @@
 
 namespace App\Repository;
 
+use App\Entity\Interface\OwnedEntityRepository;
 use App\Entity\Production;
-use App\Repository\Trait\OwnedEntityRepositoryTrait;
+use App\Trait\OwnedEntityRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Production>
  */
-class ProductionRepository extends ServiceEntityRepository
+class ProductionRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
     use OwnedEntityRepositoryTrait;
 
