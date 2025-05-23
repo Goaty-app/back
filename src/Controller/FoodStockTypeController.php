@@ -92,8 +92,6 @@ final class FoodStockTypeController extends AbstractCachedController
         $entityManager->flush();
 
         $this->cache->invalidateTags([
-            // $this->getTag(static::getCacheKey()),
-            // $this->getTag(FoodStockController::getCacheKey()),
             $this->getTag(static::getGroupCacheKey()),
         ]);
 
@@ -109,9 +107,6 @@ final class FoodStockTypeController extends AbstractCachedController
         $entityManager->flush();
 
         $this->cache->invalidateTags([
-            // $this->getTag(static::getCacheKey()),
-            // $this->getTag(FoodStockController::getCacheKey()),
-            // $this->getTag(FoodStockHistoryController::getCacheKey()),
             $this->getTag(static::getGroupCacheKey()),
         ]);
 
