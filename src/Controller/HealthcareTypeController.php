@@ -22,10 +22,10 @@ final class HealthcareTypeController extends AbstractCachedController
         return 'HealthcareTypes';
     }
 
-    // public static function getGroupCacheKey(): string
-    // {
-    //     return HealthcareController::getGroupCacheKey();
-    // }
+    public static function getGroupCacheKey(): string
+    {
+        return HealthcareController::getGroupCacheKey();
+    }
 
     #[Route('/v1/healthcare-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
