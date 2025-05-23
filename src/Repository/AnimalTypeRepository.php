@@ -3,14 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\AnimalType;
-use App\Repository\Trait\OwnedEntityRepositoryTrait;
+use App\Entity\Interface\OwnedEntityRepository;
+use App\Trait\OwnedEntityRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<AnimalType>
  */
-class AnimalTypeRepository extends ServiceEntityRepository
+class AnimalTypeRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
     use OwnedEntityRepositoryTrait;
 
