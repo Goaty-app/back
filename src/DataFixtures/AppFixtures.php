@@ -65,6 +65,8 @@ class AppFixtures extends Fixture
             ->setCreatedAt(new DateTimeImmutable())
         ;
 
+        $manager->persist($herd);
+
         $animalType = new AnimalType();
         $animalType->setOwner($admin)
             ->setName('Goat')
@@ -81,10 +83,12 @@ class AppFixtures extends Fixture
             ->setGender(Gender::FEMALE)
             ->setOriginCountry(Country::FRANCE)
             ->setStatus('Baby')
-            ->addType($animalType)
+            ->setAnimalType($animalType)
+            ->setCreatedAt(new DateTimeImmutable())
         ;
 
         $manager->persist($goat);
+
         $productionType = new ProductionType();
         $productionType->setOwner($admin)
             ->setName('Ma petite production')

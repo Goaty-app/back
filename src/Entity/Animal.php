@@ -7,8 +7,7 @@ use App\Enum\Gender;
 use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
 use App\Trait\HasOwnerTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -59,15 +58,14 @@ class Animal implements HasOwner
     #[Groups(['animal'])]
     private ?string $status = null;
 
-    #[ORM\ManyToMany(targetEntity: AnimalType::class, inversedBy: 'animals')]
-    #[ORM\JoinTable(name: 'animal_type_link')]
+    #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['animal'])]
-    private Collection $types;
+    private ?AnimalType $animalType = null;
 
-    public function __construct()
-    {
-        $this->types = new ArrayCollection();
-    }
+    #[ORM\Column]
+    #[Groups(['animal'])]
+    private ?DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
     {
@@ -165,26 +163,26 @@ class Animal implements HasOwner
         return $this;
     }
 
-    public function getTypes(): Collection
+    public function getAnimalType(): ?AnimalType
     {
-        return $this->types;
+        return $this->animalType;
     }
 
-    public function addType(AnimalType $type): static
+    public function setAnimalType(?AnimalType $animalType): static
     {
-        if (!$this->types->contains($type)) {
-            $this->types[] = $type;
-            $type->addAnimal($this);
-        }
+        $this->animalType = $animalType;
 
         return $this;
     }
 
-    public function removeType(AnimalType $type): static
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        if ($this->types->removeElement($type)) {
-            $type->removeAnimal($this);
-        }
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

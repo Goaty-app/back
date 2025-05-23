@@ -1,24 +1,21 @@
 meta {
   name: Update Animal
   type: http
-  seq: 3
+  seq: 5
 }
 
 patch {
-  url: {{URL}}/{{API}}/animals/1
+  url: {{URL}}/{{API}}/animal/1
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "id": 1,
-    "name": "Jess",
-    "idNumber": "GOAT-001",
-    "gender": "female",
-    "originCountry": "FR",
-    "behaviorNotes": "Chilled",
-    "status": "Adult"
+    "herd_id": 2,
+    "name": "Seguin",
+    "idNumber": "GOAT-069",
+    "gender": "male"
   }
   
 }
