@@ -6,6 +6,7 @@ use App\Entity\FoodStock;
 use App\Entity\Herd;
 use App\Repository\FoodStockRepository;
 use App\Service\FoodStockService;
+use App\Service\HerdService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -101,13 +102,15 @@ final class FoodStockController extends AbstractCachedController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         FoodStockService $foodStockService,
+        HerdService $herdService,
     ): JsonResponse {
         /** @var FoodStock */
-        $production = $serializer->deserialize($request->getContent(), FoodStock::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStock, AbstractNormalizer::IGNORED_ATTRIBUTES => ['quantity']]);
+        $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStock, AbstractNormalizer::IGNORED_ATTRIBUTES => ['quantity']]);
 
+        $herdService->updateHerd($foodStock, $request, $this->getUser());
         $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());
 
-        $entityManager->persist($production);
+        $entityManager->persist($foodStock);
         $entityManager->flush();
 
         $this->cache->invalidateTags([
