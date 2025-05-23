@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\QuantityUnit;
+use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\FoodStockRepository;
 use App\Trait\HasOwnerTrait;
@@ -19,7 +20,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'foodStocks'),
 ])]
-class FoodStock implements HasOwner
+class FoodStock implements HasOwner, HasHerd
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;

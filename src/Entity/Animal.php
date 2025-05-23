@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\Country;
 use App\Enum\Gender;
+use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
 use App\Trait\HasOwnerTrait;
@@ -18,7 +19,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'animals'),
 ])]
-class Animal implements HasOwner
+class Animal implements HasOwner, HasHerd
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
