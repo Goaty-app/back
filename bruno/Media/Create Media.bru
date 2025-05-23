@@ -1,0 +1,40 @@
+meta {
+  name: Create Media
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{URL}}/{{API}}/healthcare/1/media
+  body: multipartForm
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "test@test.fr",
+    "password": "password"
+  }
+}
+
+body:multipart-form {
+  file: @file(/home/mageas/Downloads/woman-city.png)
+}
+
+body:file {
+  file: @file()
+}
+
+script:post-response {
+  const token = res.body.token;
+  const refreshToken = res.body.refresh_token;
+  
+  if (token) {
+    bru.setEnvVar("token", token);
+  }
+  
+  if (refreshToken) {
+    bru.setEnvVar("refresh_token", refreshToken);
+  }
+  
+}

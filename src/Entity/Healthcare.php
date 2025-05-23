@@ -6,6 +6,7 @@ use App\Interface\HasOwner;
 use App\Repository\HealthcareRepository;
 use App\Trait\HasOwnerTrait;
 use DateTimeInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -45,6 +46,14 @@ class Healthcare implements HasOwner
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['healthcare'])]
     private ?HealthcareType $healthcareType = null;
+
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(mappedBy: 'healthcare', targetEntity: Media::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['uploadedAt' => 'DESC'])]
+    #[Groups(['healthcare'])]
+    private Collection $documents;
 
     public function getId(): ?int
     {
@@ -95,6 +104,35 @@ class Healthcare implements HasOwner
     public function setHealthcareType(?HealthcareType $healthcareType): static
     {
         $this->healthcareType = $healthcareType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Media $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setHealthcare($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Media $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            if ($document->getHealthcare() === $this) {
+                $document->setHealthcare(null);
+            }
+        }
 
         return $this;
     }
