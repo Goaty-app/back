@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: AnimalTypeRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
-    new ORM\AssociationOverride(name: 'owner', inversedBy: 'animalType'),
+    new ORM\AssociationOverride(name: 'owner', inversedBy: 'animalTypes'),
 ])]
 class AnimalType implements HasOwner
 {
@@ -25,14 +25,17 @@ class AnimalType implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal', 'type'])]
+    #[Groups(['animalType', 'animal'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['animal', 'type'])]
+    #[ORM\Column(length: 50)]
+    #[Groups(['animalType', 'animal'])]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Animal::class, mappedBy: 'types')]
+    /**
+     * @var Collection<int, Animal>
+     */
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'animalType', orphanRemoval: true)]
     private Collection $animals;
 
     public function __construct()
@@ -43,13 +46,6 @@ class AnimalType implements HasOwner
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -75,8 +71,8 @@ class AnimalType implements HasOwner
     public function addAnimal(Animal $animal): static
     {
         if (!$this->animals->contains($animal)) {
-            $this->animals[] = $animal;
-            $animal->addType($this);
+            $this->animals->add($animal);
+            $animal->setAnimalType($this);
         }
 
         return $this;
@@ -85,7 +81,10 @@ class AnimalType implements HasOwner
     public function removeAnimal(Animal $animal): static
     {
         if ($this->animals->removeElement($animal)) {
-            $animal->removeType($this);
+            // set the owning side to null (unless already changed)
+            if ($animal->getAnimalType() === $this) {
+                $animal->setAnimalType(null);
+            }
         }
 
         return $this;

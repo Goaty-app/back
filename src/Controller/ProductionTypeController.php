@@ -19,7 +19,7 @@ final class ProductionTypeController extends AbstractCachedController
 {
     public static function getCacheKey(): string
     {
-        return 'production_types';
+        return 'productionTypes';
     }
 
     public static function getGroupCacheKey(): string
