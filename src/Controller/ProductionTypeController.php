@@ -22,6 +22,11 @@ final class ProductionTypeController extends AbstractCachedController
         return 'production_types';
     }
 
+    public static function getGroupCacheKey(): string
+    {
+        return ProductionController::getGroupCacheKey();
+    }
+
     #[Route('/v1/production-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         ProductionTypeRepository $productionTypeRepository,
@@ -87,8 +92,7 @@ final class ProductionTypeController extends AbstractCachedController
         $entityManager->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getCacheKey()),
-            $this->getTag(ProductionController::getCacheKey()),
+            $this->getTag(static::getGroupCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -103,8 +107,7 @@ final class ProductionTypeController extends AbstractCachedController
         $entityManager->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getCacheKey()),
-            $this->getTag(ProductionController::getCacheKey()),
+            $this->getTag(static::getGroupCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
