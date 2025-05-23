@@ -79,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: AnimalType::class, mappedBy: 'owner')]
     private Collection $animalTypes;
 
+    /**
+     * @var Collection<int, HealthcareType>
+     */
+    #[ORM\OneToMany(targetEntity: HealthcareType::class, mappedBy: 'owner')]
+    private Collection $healthcareTypes;
+
     public function __construct()
     {
         $this->herds = new ArrayCollection();
@@ -88,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->foodStockTypes = new ArrayCollection();
         $this->animals = new ArrayCollection();
         $this->animalTypes = new ArrayCollection();
+        $this->healthcareTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -367,6 +374,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($foodStockType->getOwner() === $this) {
                 $foodStockType->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HealthcareType>
+     */
+    public function getHealthcareTypes(): Collection
+    {
+        return $this->healthcareTypes;
+    }
+
+    public function addHealthcareType(HealthcareType $healthcareType): static
+    {
+        if (!$this->healthcareTypes->contains($healthcareType)) {
+            $this->healthcareTypes->add($healthcareType);
+            $healthcareType->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHealthcareType(HealthcareType $healthcareType): static
+    {
+        if ($this->healthcareTypes->removeElement($healthcareType)) {
+            // set the owning side to null (unless already changed)
+            if ($healthcareType->getOwner() === $this) {
+                $healthcareType->setOwner(null);
             }
         }
 

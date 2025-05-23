@@ -1,0 +1,17 @@
+meta {
+  name: Update Healthcare Type
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{URL}}/{{API}}/healthcare-type/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Gros soins"
+  }
+}

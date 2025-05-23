@@ -1,0 +1,17 @@
+meta {
+  name: Create Healthcare Type
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{URL}}/{{API}}/healthcare-type
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Petits soins"
+  }
+}

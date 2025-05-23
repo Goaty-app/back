@@ -7,6 +7,7 @@ use App\Entity\AnimalType;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Entity\FoodStockType;
+use App\Entity\HealthcareType;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Entity\ProductionType;
@@ -30,6 +31,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         'foodStockHistory' => FoodStockHistory::class,
         'animal'           => Animal::class,
         'animalType'       => AnimalType::class,
+        'healthcareType'   => HealthcareType::class,
     ];
 
     public function __construct(
