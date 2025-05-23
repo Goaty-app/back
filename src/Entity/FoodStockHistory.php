@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\Interface\HasOwner;
-use App\Entity\Trait\HasOwnerTrait;
 use App\Enum\Operation;
+use App\Interface\HasOwner;
 use App\Repository\FoodStockHistoryRepository;
+use App\Trait\HasOwnerTrait;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

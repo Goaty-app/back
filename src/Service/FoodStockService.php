@@ -21,7 +21,7 @@ class FoodStockService
     public function updateFoodStockType(FoodStock $foodStock, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $foodStockTypeId = $requestData['food_stock_type_id'];
+        $foodStockTypeId = $requestData['food_stock_type_id'] ?? null;
 
         if (!$foodStockTypeId) {
             return;

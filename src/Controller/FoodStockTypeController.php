@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\FoodStockType;
 use App\Repository\FoodStockTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,25 +13,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_food_stock_type_')]
-final class FoodStockTypeController extends AbstractController
+final class FoodStockTypeController extends AbstractCachedController
 {
+    public static function getCacheKey(): string
+    {
+        return 'foodStockTypes';
+    }
+
+    public static function getGroupCacheKey(): string
+    {
+        return FoodStockController::getGroupCacheKey();
+    }
+
     #[Route('/v1/food-stock-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         FoodStockTypeRepository $foodStockTypeRepository,
-        SerializerInterface $serializer,
-        TagAwareCacheInterface $cache,
     ): JsonResponse {
-        $cacheReturn = $cache->get('getAllFoodStockTypes', function (ItemInterface $item) use ($foodStockTypeRepository, $serializer) {
-            $item->tag('foodStockTypesCache');
-            $data = $foodStockTypeRepository->findByOwner($this->getUser());
-            $jsonData = $serializer->serialize($data, 'json', ['groups' => ['foodStockType']]);
-
-            return $jsonData;
-        });
+        $cacheReturn = $this->getAllCachedItems($foodStockTypeRepository, ['groups' => ['foodStockType']]);
 
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
@@ -54,7 +53,6 @@ final class FoodStockTypeController extends AbstractController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
-        TagAwareCacheInterface $cache,
     ): JsonResponse {
         /** @var FoodStockType */
         $foodStockType = $serializer->deserialize($request->getContent(), FoodStockType::class, 'json');
@@ -70,7 +68,9 @@ final class FoodStockTypeController extends AbstractController
         $entityManager->persist($foodStockType);
         $entityManager->flush();
 
-        $cache->invalidateTags(['foodStockTypesCache']);
+        $this->cache->invalidateTags([
+            $this->getTag(static::getCacheKey()),
+        ]);
 
         $jsonData = $serializer->serialize($foodStockType, 'json', ['groups' => ['foodStock']]);
         $location = $urlGenerator->generate('api_food_stock_type_get', ['foodStockType' => $foodStockType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -84,7 +84,6 @@ final class FoodStockTypeController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
-        TagAwareCacheInterface $cache,
     ): JsonResponse {
         /** @var FoodStockType */
         $foodStockType = $serializer->deserialize($request->getContent(), FoodStockType::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStockType]);
@@ -92,7 +91,11 @@ final class FoodStockTypeController extends AbstractController
         $entityManager->persist($foodStockType);
         $entityManager->flush();
 
-        $cache->invalidateTags(['foodStockTypesCache']);
+        $this->cache->invalidateTags([
+            // $this->getTag(static::getCacheKey()),
+            // $this->getTag(FoodStockController::getCacheKey()),
+            $this->getTag(static::getGroupCacheKey()),
+        ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
@@ -101,12 +104,16 @@ final class FoodStockTypeController extends AbstractController
     public function delete(
         FoodStockType $foodStockType,
         EntityManagerInterface $entityManager,
-        TagAwareCacheInterface $cache,
     ): JsonResponse {
         $entityManager->remove($foodStockType);
         $entityManager->flush();
 
-        $cache->invalidateTags(['foodStockTypesCache']);
+        $this->cache->invalidateTags([
+            // $this->getTag(static::getCacheKey()),
+            // $this->getTag(FoodStockController::getCacheKey()),
+            // $this->getTag(FoodStockHistoryController::getCacheKey()),
+            $this->getTag(static::getGroupCacheKey()),
+        ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

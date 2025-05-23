@@ -3,14 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\FoodStockHistory;
-use App\Repository\Trait\OwnedEntityRepositoryTrait;
+use App\Entity\Interface\OwnedEntityRepository;
+use App\Trait\OwnedEntityRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<FoodStockHistory>
  */
-class FoodStockHistoryRepository extends ServiceEntityRepository
+class FoodStockHistoryRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
     use OwnedEntityRepositoryTrait;
 
