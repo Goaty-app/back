@@ -6,6 +6,7 @@ use App\Entity\Animal;
 use App\Entity\AnimalType;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
+use App\Entity\HealthcareType;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Entity\ProductionType;
@@ -128,6 +129,13 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($foodStock);
+
+        $healthcareType = new HealthcareType();
+        $healthcareType->setOwner($admin)
+            ->setName('Soins')
+        ;
+
+        $manager->persist($healthcareType);
 
         $manager->flush();
     }
