@@ -29,7 +29,7 @@ final class FoodStockHistoryController extends AbstractCachedController
         return FoodStockController::getGroupCacheKey();
     }
 
-    #[Route('/v1/food-stock/{foodStock}/food-stock-history', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/food-stock/{foodStock}/food-stock-history', name: 'get_all_in', methods: ['GET'])]
     public function getAll(
         FoodStock $foodStock,
         FoodStockHistoryRepository $foodStockHistory,
