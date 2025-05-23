@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Repository\ProductionRepository;
+use App\Service\HerdService;
 use App\Service\ProductionService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -100,11 +101,12 @@ final class ProductionController extends AbstractCachedController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         ProductionService $productionService,
+        HerdService $herdService,
     ): JsonResponse {
         /** @var Production */
         $production = $serializer->deserialize($request->getContent(), Production::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $production]);
 
-        $productionService->updateHerd($production, $request, $this->getUser());
+        $herdService->updateHerd($production, $request, $this->getUser());
         $productionService->updateProductionType($production, $request, $this->getUser());
 
         $entityManager->persist($production);

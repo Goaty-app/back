@@ -6,6 +6,7 @@ use App\Entity\Animal;
 use App\Entity\Herd;
 use App\Repository\AnimalRepository;
 use App\Service\AnimalService;
+use App\Service\HerdService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -100,10 +101,12 @@ final class AnimalController extends AbstractCachedController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         AnimalService $animalService,
+        HerdService $herdService,
     ): JsonResponse {
         /** @var Animal */
         $animal = $serializer->deserialize($request->getContent(), Animal::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $animal]);
 
+        $herdService->updateHerd($animal, $request, $this->getUser());
         $animalService->updateAnimalType($animal, $request, $this->getUser());
 
         $entityManager->persist($animal);
