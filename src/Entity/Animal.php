@@ -9,6 +9,8 @@ use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
 use App\Trait\HasOwnerTrait;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -27,7 +29,7 @@ class Animal implements HasOwner, HasHerd
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal'])]
+    #[Groups(['animal', 'healthcare'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]
@@ -67,6 +69,17 @@ class Animal implements HasOwner, HasHerd
     #[ORM\Column]
     #[Groups(['animal'])]
     private ?DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, Healthcare>
+     */
+    #[ORM\OneToMany(targetEntity: Healthcare::class, mappedBy: 'animal', orphanRemoval: true)]
+    private Collection $healthcares;
+
+    public function __construct()
+    {
+        $this->healthcares = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -184,6 +197,36 @@ class Animal implements HasOwner, HasHerd
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Healthcare>
+     */
+    public function getHealthcares(): Collection
+    {
+        return $this->healthcares;
+    }
+
+    public function addHealthcare(Healthcare $healthcare): static
+    {
+        if (!$this->healthcares->contains($healthcare)) {
+            $this->healthcares->add($healthcare);
+            $healthcare->setAnimal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHealthcare(Healthcare $healthcare): static
+    {
+        if ($this->healthcares->removeElement($healthcare)) {
+            // set the owning side to null (unless already changed)
+            if ($healthcare->getAnimal() === $this) {
+                $healthcare->setAnimal(null);
+            }
+        }
 
         return $this;
     }
