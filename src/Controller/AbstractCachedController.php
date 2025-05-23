@@ -16,19 +16,17 @@ abstract class AbstractCachedController extends AbstractController
     protected TagAwareCacheInterface $cache;
     protected SerializerInterface $serializer;
 
+    /**
+     * Get the cache key from the Controller.
+     */
     abstract public static function getCacheKey(): string;
 
+    /**
+     * Generate a cache group key, the user can override this function.
+     */
     public static function getGroupCacheKey(): string
     {
         return static::getCacheKey().'Group';
-    }
-
-    private static function filterCacheTags(): array
-    {
-        return array_unique([
-            static::getCacheKey(),
-            static::getGroupCacheKey(),
-        ]);
     }
 
     public function __construct(TagAwareCacheInterface $cache, SerializerInterface $serializer)
@@ -44,7 +42,10 @@ abstract class AbstractCachedController extends AbstractController
         return $this->cache->get(
             $this->buildAllCacheKey(static::getCacheKey()),
             function (ItemInterface $item) use ($repository, $serializer, $groups) {
-                $item->tag($this->buildTags(static::filterCacheTags()));
+                $item->tag($this->buildTags([
+                    static::getCacheKey(),
+                    static::getGroupCacheKey(),
+                ]));
                 $data = $repository->findByOwner($this->getUser());
                 $jsonData = $serializer->serialize($data, 'json', $groups);
 
@@ -60,7 +61,10 @@ abstract class AbstractCachedController extends AbstractController
         return $this->cache->get(
             $this->buildInCacheKey(static::getCacheKey()),
             function (ItemInterface $item) use ($repository, $serializer, $groups, $column, $value) {
-                $item->tag($this->buildTags(static::filterCacheTags()));
+                $item->tag($this->buildTags([
+                    static::getCacheKey(),
+                    static::getGroupCacheKey(),
+                ]));
                 $data = $repository->findByOwnerFlex($column, $value, $this->getUser());
                 $jsonData = $serializer->serialize($data, 'json', $groups);
 
