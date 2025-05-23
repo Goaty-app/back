@@ -6,6 +6,7 @@ use App\Entity\Animal;
 use App\Entity\AnimalType;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
+use App\Entity\Healthcare;
 use App\Entity\HealthcareType;
 use App\Entity\Herd;
 use App\Entity\Production;
@@ -76,8 +77,9 @@ class AppFixtures extends Fixture
         $manager->persist($animalType);
 
         $manager->persist($herd);
-        $goat = new Animal();
-        $goat->setOwner($admin)
+
+        $animal = new Animal();
+        $animal->setOwner($admin)
             ->setHerd($herd)
             ->setName('Pepe')
             ->setIdNumber('GOAT-001')
@@ -88,7 +90,7 @@ class AppFixtures extends Fixture
             ->setCreatedAt(new DateTimeImmutable())
         ;
 
-        $manager->persist($goat);
+        $manager->persist($animal);
 
         $productionType = new ProductionType();
         $productionType->setOwner($admin)
@@ -136,6 +138,15 @@ class AppFixtures extends Fixture
         ;
 
         $manager->persist($healthcareType);
+
+        $healthcare = new Healthcare();
+        $healthcare->setOwner($admin)
+            ->setCareDate(new DateTime())
+            ->setAnimal($animal)
+            ->setHealthcareType($healthcareType)
+        ;
+
+        $manager->persist($healthcare);
 
         $manager->flush();
     }
