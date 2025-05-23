@@ -35,8 +35,8 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herd/{herd}/food-stock', name: 'get_all_herd', methods: ['GET'])]
-    public function getAllInHerd(
+    #[Route('/v1/herd/{herd}/food-stock', name: 'get_all_in', methods: ['GET'])]
+    public function getAllIn(
         Herd $herd,
         FoodStockRepository $foodStockRepository,
     ): JsonResponse {

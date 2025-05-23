@@ -34,8 +34,8 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal/{animal}/healthcare', name: 'get_all_herd', methods: ['GET'])]
-    public function getAllInAnimal(
+    #[Route('/v1/animal/{animal}/healthcare', name: 'get_all_in', methods: ['GET'])]
+    public function getAllIn(
         Animal $animal,
         HealthcareRepository $healthcareRepository,
     ): JsonResponse {
