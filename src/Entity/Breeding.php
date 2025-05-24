@@ -52,7 +52,7 @@ class Breeding implements HasOwner
 
     #[ORM\Column(enumType: BreedingStatus::class, nullable: true)]
     #[Groups(['breeding'])]
-    private ?string $status = null;
+    private ?BreedingStatus $status = null;
 
     #[ORM\Column]
     #[Groups(['animal'])]
@@ -123,12 +123,12 @@ class Breeding implements HasOwner
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?BreedingStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(BreedingStatus $status): static
     {
         $this->status = $status;
 
