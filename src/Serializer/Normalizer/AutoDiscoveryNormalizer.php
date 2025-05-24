@@ -4,6 +4,7 @@ namespace App\Serializer\Normalizer;
 
 use App\Entity\Animal;
 use App\Entity\AnimalType;
+use App\Entity\Birth;
 use App\Entity\Breeding;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
@@ -159,6 +160,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
             || $data instanceof FoodStockHistory
             || $data instanceof Healthcare
             || $data instanceof HealthcareType
+            || $data instanceof Birth
             || $data instanceof Breeding;
     }
 
@@ -175,6 +177,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
             FoodStockHistory::class => true,
             Healthcare::class       => true,
             HealthcareType::class   => true,
+            Birth::class            => true,
             Breeding::class         => true,
         ];
     }

@@ -1,0 +1,18 @@
+meta {
+  name: Create Birth
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{URL}}/{{API}}/birth
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "childId": 1
+  }
+  
+}
