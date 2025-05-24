@@ -70,6 +70,7 @@ final class BirthController extends AbstractCachedController
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
+            $this->getTag(AnimalController::getCacheKey()),
         ]);
 
         $jsonData = $serializer->serialize($birth, 'json', ['groups' => ['birth']]);

@@ -114,6 +114,9 @@ final class AnimalController extends AbstractCachedController
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
+            $this->getTag(HealthcareController::getCacheKey()),
+            $this->getTag(BreedingController::getCacheKey()),
+            $this->getTag(BirthController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -129,6 +132,9 @@ final class AnimalController extends AbstractCachedController
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
+            $this->getTag(HealthcareController::getCacheKey()),
+            $this->getTag(BreedingController::getCacheKey()),
+            $this->getTag(BirthController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
