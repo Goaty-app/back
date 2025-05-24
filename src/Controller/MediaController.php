@@ -61,6 +61,7 @@ final class MediaController extends AbstractCachedController
         $media = new Media();
         $file = $request->files->get('file');
         $media->setFile($file)
+            ->setOwner($this->getUser())
             ->setRealName($file->getClientOriginalName())
             ->setPublicPath('uploads/media')
             ->setUploadedAt(new DateTime())

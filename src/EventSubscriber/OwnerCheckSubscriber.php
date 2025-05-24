@@ -12,6 +12,7 @@ use App\Entity\FoodStockType;
 use App\Entity\Healthcare;
 use App\Entity\HealthcareType;
 use App\Entity\Herd;
+use App\Entity\Media;
 use App\Entity\Production;
 use App\Entity\ProductionType;
 use App\Entity\User;
@@ -29,6 +30,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         'herd'             => Herd::class,
         'birth'            => Birth::class,
         'breeding'         => Breeding::class,
+        'media'            => Media::class,
         'production'       => Production::class,
         'productionType'   => ProductionType::class,
         'foodStock'        => FoodStock::class,
