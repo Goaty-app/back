@@ -7,7 +7,6 @@ use App\Entity\Herd;
 use App\Repository\AnimalRepository;
 use App\Service\AnimalService;
 use App\Service\HerdService;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +76,6 @@ final class AnimalController extends AbstractCachedController
 
         $animal->setOwner($this->getUser())
             ->setHerd($herd)
-            ->setCreatedAt(new DateTimeImmutable())
         ;
 
         $entityManager->persist($animal);

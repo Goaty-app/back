@@ -6,7 +6,6 @@ use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Enum\Operation;
 use App\Repository\FoodStockHistoryRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +73,6 @@ final class FoodStockHistoryController extends AbstractCachedController
         $entityManager->persist($foodStock);
 
         $foodStockHistory->setOwner($this->getUser())
-            ->setCreatedAt(new DateTimeImmutable())
             ->setFoodStock($foodStock)
         ;
 

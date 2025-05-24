@@ -89,7 +89,6 @@ class BreedingFixtures extends Fixture implements DependentFixtureInterface
 
                 $breeding->setExpectedChildCount($this->faker->optional(0.8, 0)->numberBetween(1, 3));
                 $breeding->setStatus($this->faker->randomElement(BreedingStatus::cases()));
-                $breeding->setCreatedAt(DateTimeImmutable::createFromMutable($matingDateStart));
 
                 $manager->persist($breeding);
 

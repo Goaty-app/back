@@ -7,7 +7,7 @@ use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\FoodStockRepository;
 use App\Trait\HasOwnerTrait;
-use DateTimeImmutable;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: FoodStockRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -24,6 +25,7 @@ class FoodStock implements HasOwner, HasHerd
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,10 +45,6 @@ class FoodStock implements HasOwner, HasHerd
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['foodStock'])]
     private ?QuantityUnit $quantityUnit = null;
-
-    #[ORM\Column]
-    #[Groups(['foodStock'])]
-    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
@@ -105,18 +103,6 @@ class FoodStock implements HasOwner, HasHerd
     public function setQuantityUnit(QuantityUnit $quantityUnit): static
     {
         $this->quantityUnit = $quantityUnit;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

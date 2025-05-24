@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Interface\HasOwner;
 use App\Repository\FoodStockTypeRepository;
 use App\Trait\HasOwnerTrait;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: FoodStockTypeRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -21,6 +23,7 @@ class FoodStockType implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

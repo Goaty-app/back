@@ -7,7 +7,6 @@ use App\Entity\Production;
 use App\Entity\ProductionType;
 use App\Entity\User;
 use App\Enum\QuantityUnit;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -59,7 +58,6 @@ class ProductionFixtures extends Fixture implements DependentFixtureInterface
                     $production->setQuantity($this->faker->randomFloat(2, 1, 100));
                     $production->setQuantityUnit($this->faker->randomElement(QuantityUnit::cases()));
                     $production->setNotes($this->faker->optional()->sentence());
-                    $production->setCreatedAt(DateTimeImmutable::createFromMutable($this->faker->dateTimeThisYear()));
 
                     $production->setProductionType(
                         $this->getReference(

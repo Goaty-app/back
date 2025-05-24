@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Interface\HasOwner;
 use App\Repository\HerdRepository;
 use App\Trait\HasOwnerTrait;
-use DateTimeImmutable;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: HerdRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -22,6 +23,7 @@ class Herd implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -36,10 +38,6 @@ class Herd implements HasOwner
     #[ORM\Column(length: 100, nullable: true)]
     #[Groups(['herd'])]
     private ?string $location = null;
-
-    #[ORM\Column]
-    #[Groups(['herd'])]
-    private ?DateTimeImmutable $createdAt = null;
 
     /**
      * @var Collection<int, Production>
@@ -91,18 +89,6 @@ class Herd implements HasOwner
     public function setLocation(?string $location): static
     {
         $this->location = $location;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

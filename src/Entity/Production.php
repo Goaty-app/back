@@ -7,7 +7,7 @@ use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\ProductionRepository;
 use App\Trait\HasOwnerTrait;
-use DateTimeImmutable;
+use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductionRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -24,6 +25,7 @@ class Production implements HasOwner, HasHerd
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -50,10 +52,6 @@ class Production implements HasOwner, HasHerd
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['production'])]
     private ?string $notes = null;
-
-    #[ORM\Column]
-    #[Groups(['production'])]
-    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'productions')]
     #[ORM\JoinColumn(nullable: false)]
@@ -126,18 +124,6 @@ class Production implements HasOwner, HasHerd
     public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

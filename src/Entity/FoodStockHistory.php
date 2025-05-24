@@ -6,12 +6,13 @@ use App\Enum\Operation;
 use App\Interface\HasOwner;
 use App\Repository\FoodStockHistoryRepository;
 use App\Trait\HasOwnerTrait;
-use DateTimeImmutable;
+use App\Traits\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: FoodStockHistoryRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -21,6 +22,7 @@ class FoodStockHistory implements HasOwner
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,10 +37,6 @@ class FoodStockHistory implements HasOwner
     #[ORM\Column]
     #[Groups(['foodStockHistory'])]
     private ?float $quantity = null;
-
-    #[ORM\Column]
-    #[Groups(['foodStockHistory'])]
-    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodStockHistories')]
     #[ORM\JoinColumn(nullable: false)]
@@ -70,18 +68,6 @@ class FoodStockHistory implements HasOwner
     public function setQuantity(string $quantity): static
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

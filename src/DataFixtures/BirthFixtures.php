@@ -8,7 +8,6 @@ use App\Entity\Breeding;
 use App\Entity\User;
 use App\Enum\Gender;
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -88,7 +87,6 @@ class BirthFixtures extends Fixture implements DependentFixtureInterface
                     /** @var DateTimeInterface $birthDateFaker */
                     $birthDateFaker = $this->faker->dateTimeBetween($minBirthDate, $maxBirthDate);
 
-                    $child->setCreatedAt(DateTimeImmutable::createFromMutable($birthDateFaker));
                     $birth->setBirthDate($birthDateFaker);
 
                     $birth->setBirthWeight($this->faker->optional(0.8)->randomFloat(2, 0.5, 5.0));

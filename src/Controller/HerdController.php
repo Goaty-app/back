@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Herd;
 use App\Repository\HerdRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +58,6 @@ final class HerdController extends AbstractCachedController
         }
 
         $herd->setOwner($this->getUser());
-        $herd->setCreatedAt(new DateTimeImmutable());
 
         $entityManager->persist($herd);
         $entityManager->flush();

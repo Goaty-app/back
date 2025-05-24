@@ -7,7 +7,6 @@ use App\Entity\Herd;
 use App\Repository\FoodStockRepository;
 use App\Service\FoodStockService;
 use App\Service\HerdService;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +77,6 @@ final class FoodStockController extends AbstractCachedController
         $foodStock->setOwner($this->getUser())
             ->setHerd($herd)
             ->setQuantity(0.0)
-            ->setCreatedAt(new DateTimeImmutable())
         ;
 
         $entityManager->persist($foodStock);
