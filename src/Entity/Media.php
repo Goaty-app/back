@@ -2,18 +2,29 @@
 
 namespace App\Entity;
 
+use App\Interface\HasOwner;
 use App\Repository\MediaRepository;
+use App\Trait\HasOwnerTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
-class Media
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
+#[ORM\AssociationOverrides([
+    new ORM\AssociationOverride(name: 'owner', inversedBy: 'herds'),
+])]
+class Media implements HasOwner
 {
+    use HasOwnerTrait;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

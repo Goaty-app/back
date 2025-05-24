@@ -62,6 +62,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $foodStocks;
 
     /**
+     * @var Collection<int, FoodStockHistory>
+     */
+    #[ORM\OneToMany(targetEntity: FoodStockHistory::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $foodStockHistories;
+
+    /**
      * @var Collection<int, FoodStockType>
      */
     #[ORM\OneToMany(targetEntity: FoodStockType::class, mappedBy: 'owner', orphanRemoval: true)]
@@ -70,32 +76,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Animal>
      */
-    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $animals;
 
     /**
      * @var Collection<int, AnimalType>
      */
-    #[ORM\OneToMany(targetEntity: AnimalType::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: AnimalType::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $animalTypes;
 
     /**
      * @var Collection<int, Healthcare>
      */
-    #[ORM\OneToMany(targetEntity: Healthcare::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Healthcare::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $healthcares;
 
     /**
      * @var Collection<int, HealthcareType>
      */
-    #[ORM\OneToMany(targetEntity: HealthcareType::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: HealthcareType::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $healthcareTypes;
 
     /**
      * @var Collection<int, Breeding>
      */
-    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $breedings;
+
+    /**
+     * @var Collection<int, Birth>
+     */
+    #[ORM\OneToMany(targetEntity: Birth::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $births;
+
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $medias;
 
     public function __construct()
     {
@@ -103,12 +121,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->productions = new ArrayCollection();
         $this->productionTypes = new ArrayCollection();
         $this->foodStocks = new ArrayCollection();
+        $this->foodStockHistories = new ArrayCollection();
         $this->foodStockTypes = new ArrayCollection();
         $this->animals = new ArrayCollection();
         $this->animalTypes = new ArrayCollection();
         $this->healthcares = new ArrayCollection();
         $this->healthcareTypes = new ArrayCollection();
         $this->breedings = new ArrayCollection();
+        $this->births = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -365,6 +386,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, FoodStockHistory>
+     */
+    public function getFoodStockHistories(): Collection
+    {
+        return $this->foodStockHistories;
+    }
+
+    public function addFoodStockHistory(FoodStockHistory $foodStockHistory): static
+    {
+        if (!$this->foodStockHistories->contains($foodStockHistory)) {
+            $this->foodStockHistories->add($foodStockHistory);
+            $foodStockHistory->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodStockHistory(FoodStockHistory $foodStockHistory): static
+    {
+        if ($this->foodStockHistories->removeElement($foodStockHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($foodStockHistory->getOwner() === $this) {
+                $foodStockHistory->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, FoodStockType>
      */
     public function getFoodStockTypes(): Collection
@@ -478,6 +529,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($breeding->getOwner() === $this) {
                 $breeding->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Birth>
+     */
+    public function getBirths(): Collection
+    {
+        return $this->births;
+    }
+
+    public function addBirth(Birth $birth): static
+    {
+        if (!$this->births->contains($birth)) {
+            $this->births->add($birth);
+            $birth->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBirth(Birth $birth): static
+    {
+        if ($this->births->removeElement($birth)) {
+            // set the owning side to null (unless already changed)
+            if ($birth->getOwner() === $this) {
+                $birth->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            // set the owning side to null (unless already changed)
+            if ($media->getOwner() === $this) {
+                $media->setOwner(null);
             }
         }
 
