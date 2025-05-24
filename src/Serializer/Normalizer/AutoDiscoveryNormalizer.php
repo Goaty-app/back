@@ -116,6 +116,13 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
             ['DELETE'],
         );
 
+        // Remove everythig after '?' in the href
+        foreach (['create', 'update', 'delete'] as $key) {
+            if (isset($links[$key]['href']) && \is_string($links[$key]['href'])) {
+                $links[$key]['href'] = explode('?', $links[$key]['href'], 2)[0];
+            }
+        }
+
         return array_filter($links);
     }
 
