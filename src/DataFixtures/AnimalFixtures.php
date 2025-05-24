@@ -22,6 +22,8 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
     public const PREFIX = 'animal-';
 
     private static array $refs = [];
+    private static array $femaleRefs = [];
+    private static array $maleRefs = [];
 
     private Generator $faker;
 
@@ -105,6 +107,11 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
                     $ref = self::PREFIX.$herdRefKey.'-'.$i;
                     $this->addReference($ref, $animal);
                     self::$refs[$userRefKey][] = $ref;
+                    if (Gender::FEMALE === $animal->getGender()) {
+                        self::$femaleRefs[$userRefKey][] = $ref;
+                    } else {
+                        self::$maleRefs[$userRefKey][] = $ref;
+                    }
                 }
             }
         }
@@ -114,5 +121,15 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
     public static function getRefs(string $userOwnerKey): array
     {
         return self::$refs[$userOwnerKey] ?? [];
+    }
+
+    public static function getFemaleRefs(string $userOwnerKey): array
+    {
+        return self::$femaleRefs[$userOwnerKey] ?? [];
+    }
+
+    public static function getMaleRefs(string $userOwnerKey): array
+    {
+        return self::$maleRefs[$userOwnerKey] ?? [];
     }
 }
