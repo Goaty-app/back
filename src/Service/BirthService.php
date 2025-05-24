@@ -5,8 +5,10 @@ namespace App\Service;
 use App\Entity\Animal;
 use App\Entity\Birth;
 use App\Entity\Breeding;
+use App\Repository\BirthRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -14,7 +16,7 @@ class BirthService
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, private BirthRepository $birthRepository)
     {
         $this->entityManager = $entityManager;
     }
@@ -53,6 +55,13 @@ class BirthService
 
         /** @var Animal */
         $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($childId, $currentUser);
+
+        // Hack to make a ManyToOne like a OneToOne
+        if ($this->birthRepository->findOneByChildExcludingId($animal, $birth->getId())) {
+            throw new ConflictHttpException(
+                'animal already linked to a birth',
+            );
+        }
 
         if (!$animal) {
             throw new NotFoundHttpException();

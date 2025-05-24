@@ -70,9 +70,13 @@ class Animal implements HasOwner, HasHerd
     #[Groups(['animal'])]
     private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'child', cascade: ['persist', 'remove'])]
+    // Hack to make a ManyToOne like a OneToOne
+    /**
+     * @var Collection<int, Birth>
+     */
+    #[ORM\OneToMany(targetEntity: Birth::class, mappedBy: 'child', orphanRemoval: true)]
     #[Groups(['animal'])]
-    private ?Birth $birth = null;
+    private Collection $birth;
 
     /**
      * @var Collection<int, Healthcare>
@@ -317,19 +321,20 @@ class Animal implements HasOwner, HasHerd
         return new ArrayCollection([...$this->femaleBreedings, ...$this->maleBreedings]);
     }
 
+    // Hack to make a ManyToOne like a OneToOne
     public function getBirth(): ?Birth
     {
-        return $this->birth;
+        return $this->birth[0];
     }
 
+    // Hack to make a ManyToOne like a OneToOne
     public function setBirth(Birth $birth): static
     {
         // set the owning side of the relation if necessary
         if ($birth->getChild() !== $this) {
             $birth->setChild($this);
+            $this->birth = new Collection([$birth]);
         }
-
-        $this->birth = $birth;
 
         return $this;
     }

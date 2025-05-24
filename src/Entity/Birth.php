@@ -12,9 +12,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-/**
- * This entity is not soft deleted because of the one to one relation with Animal.
- */
 #[ORM\Entity(repositoryClass: BirthRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -47,7 +44,8 @@ class Birth implements HasOwner
     #[Groups(['birth'])]
     private ?Breeding $breeding = null;
 
-    #[ORM\OneToOne(inversedBy: 'birth')]
+    // Hack to make a ManyToOne like a OneToOne
+    #[ORM\ManyToOne(inversedBy: 'birth')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['birth'])]
     private ?Animal $child = null;
@@ -105,11 +103,13 @@ class Birth implements HasOwner
         return $this;
     }
 
+    // Hack to make a ManyToOne like a OneToOne
     public function getChild(): ?Animal
     {
         return $this->child;
     }
 
+    // Hack to make a ManyToOne like a OneToOne
     public function setChild(Animal $child): static
     {
         $this->child = $child;
