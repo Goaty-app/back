@@ -37,19 +37,19 @@ class FoodStock implements HasOwner, HasHerd
     private ?Herd $herd = null;
 
     #[ORM\Column]
-    #[Groups(['foodStock', 'foodStockHistory'])]
+    #[Groups(['foodStock'])]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
-    #[Groups(['foodStock', 'foodStockHistory'])]
+    #[Groups(['foodStock'])]
     private ?QuantityUnit $quantityUnit = null;
 
     #[ORM\Column]
-    #[Groups(['foodStock', 'foodStockHistory'])]
+    #[Groups(['foodStock'])]
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['foodStock', 'foodStockHistory'])]
+    #[Groups(['foodStock'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodStocks')]

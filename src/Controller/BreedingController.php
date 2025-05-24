@@ -120,6 +120,7 @@ final class BreedingController extends AbstractCachedController
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
+            $this->getTag(BirthController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -135,6 +136,7 @@ final class BreedingController extends AbstractCachedController
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
+            $this->getTag(BirthController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

@@ -30,15 +30,15 @@ class Herd implements HasOwner
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
+    #[Groups(['herd'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
+    #[Groups(['herd'])]
     private ?string $location = null;
 
     #[ORM\Column]
-    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
+    #[Groups(['herd'])]
     private ?DateTimeImmutable $createdAt = null;
 
     /**
@@ -53,15 +53,18 @@ class Herd implements HasOwner
     #[ORM\OneToMany(targetEntity: FoodStock::class, mappedBy: 'herd', orphanRemoval: true)]
     private Collection $foodStocks;
 
+    /**
+     * @var Collection<int, Animal>
+     */
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'herd', orphanRemoval: true)]
+    private Collection $animals;
+
     public function __construct()
     {
         $this->productions = new ArrayCollection();
         $this->foodStocks = new ArrayCollection();
         $this->animals = new ArrayCollection();
     }
-
-    #[ORM\OneToMany(mappedBy: 'herd', targetEntity: Animal::class)]
-    private Collection $animals;
 
     public function getId(): ?int
     {

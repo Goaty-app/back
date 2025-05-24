@@ -8,6 +8,7 @@ use App\Trait\HasOwnerTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -15,6 +16,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
  * This entity is not soft deleted because of the one to one relation with Animal.
  */
 #[ORM\Entity(repositoryClass: BirthRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'births'),
 ])]
