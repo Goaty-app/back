@@ -11,11 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class FoodStockService
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function updateFoodStockType(FoodStock $foodStock, Request $request, UserInterface $currentUser): void
