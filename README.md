@@ -37,3 +37,7 @@ Vider le cache
 ```sh
 docker compose exec php bin/console cache:clear
 ```
+
+## Base de données
+
+![Base de données](Database.png)
