@@ -59,7 +59,7 @@ abstract class AbstractCachedController extends AbstractController
         $serializer = $this->serializer;
 
         return $this->cache->get(
-            $this->buildInCacheKey(static::getCacheKey()),
+            $this->buildInCacheKey(static::getCacheKey(), $value),
             function (ItemInterface $item) use ($repository, $serializer, $groups, $column, $value) {
                 $item->tag($this->buildTags([
                     static::getCacheKey(),
