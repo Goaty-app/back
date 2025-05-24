@@ -76,7 +76,6 @@ final class BreedingController extends AbstractCachedController
         $breeding = $serializer->deserialize($request->getContent(), Breeding::class, 'json');
 
         $errors = $validator->validate($breeding);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -107,10 +106,16 @@ final class BreedingController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
         BreedingService $breedingService,
     ): JsonResponse {
         /** @var Breeding */
         $breeding = $serializer->deserialize($request->getContent(), Breeding::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $breeding]);
+
+        $errors = $validator->validate($breeding);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $breedingService->updateFemale($breeding, $request, $this->getUser());
         $breedingService->updateMale($breeding, $request, $this->getUser());

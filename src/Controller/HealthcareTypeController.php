@@ -58,7 +58,6 @@ final class HealthcareTypeController extends AbstractCachedController
         $healthcareType = $serializer->deserialize($request->getContent(), HealthcareType::class, 'json');
 
         $errors = $validator->validate($healthcareType);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -84,9 +83,15 @@ final class HealthcareTypeController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var HealthcareType */
         $healthcareType = $serializer->deserialize($request->getContent(), HealthcareType::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $healthcareType]);
+
+        $errors = $validator->validate($healthcareType);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $entityManager->persist($healthcareType);
         $entityManager->flush();

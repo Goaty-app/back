@@ -58,7 +58,6 @@ final class FoodStockTypeController extends AbstractCachedController
         $foodStockType = $serializer->deserialize($request->getContent(), FoodStockType::class, 'json');
 
         $errors = $validator->validate($foodStockType);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -84,9 +83,15 @@ final class FoodStockTypeController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var FoodStockType */
         $foodStockType = $serializer->deserialize($request->getContent(), FoodStockType::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStockType]);
+
+        $errors = $validator->validate($foodStockType);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $entityManager->persist($foodStockType);
         $entityManager->flush();

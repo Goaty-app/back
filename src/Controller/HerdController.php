@@ -54,7 +54,6 @@ final class HerdController extends AbstractCachedController
         $herd = $serializer->deserialize($request->getContent(), Herd::class, 'json');
 
         $errors = $validator->validate($herd);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -81,9 +80,15 @@ final class HerdController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var Herd */
         $herd = $serializer->deserialize($request->getContent(), Herd::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $herd]);
+
+        $errors = $validator->validate($herd);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $entityManager->persist($herd);
         $entityManager->flush();

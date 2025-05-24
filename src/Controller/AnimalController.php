@@ -69,7 +69,6 @@ final class AnimalController extends AbstractCachedController
         $animal = $serializer->deserialize($request->getContent(), Animal::class, 'json');
 
         $errors = $validator->validate($animal);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -101,10 +100,16 @@ final class AnimalController extends AbstractCachedController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         AnimalService $animalService,
+        ValidatorInterface $validator,
         HerdService $herdService,
     ): JsonResponse {
         /** @var Animal */
         $animal = $serializer->deserialize($request->getContent(), Animal::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $animal]);
+
+        $errors = $validator->validate($animal);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $herdService->updateHerd($animal, $request, $this->getUser());
         $animalService->updateAnimalType($animal, $request, $this->getUser());

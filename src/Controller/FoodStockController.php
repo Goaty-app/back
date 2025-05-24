@@ -69,7 +69,6 @@ final class FoodStockController extends AbstractCachedController
         $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json');
 
         $errors = $validator->validate($foodStock);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -102,10 +101,16 @@ final class FoodStockController extends AbstractCachedController
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
         FoodStockService $foodStockService,
+        ValidatorInterface $validator,
         HerdService $herdService,
     ): JsonResponse {
         /** @var FoodStock */
         $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStock, AbstractNormalizer::IGNORED_ATTRIBUTES => ['quantity']]);
+
+        $errors = $validator->validate($foodStock);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $herdService->updateHerd($foodStock, $request, $this->getUser());
         $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());

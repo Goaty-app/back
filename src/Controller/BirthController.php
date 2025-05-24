@@ -55,7 +55,6 @@ final class BirthController extends AbstractCachedController
         $birth = $serializer->deserialize($request->getContent(), Birth::class, 'json');
 
         $errors = $validator->validate($birth);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -85,10 +84,16 @@ final class BirthController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
         BirthService $birthService,
     ): JsonResponse {
         /** @var Birth */
         $birth = $serializer->deserialize($request->getContent(), Birth::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $birth]);
+
+        $errors = $validator->validate($birth);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $birthService->updateChild($birth, $request, $this->getUser());
         $birthService->updateBreeding($birth, $request, $this->getUser());
