@@ -21,7 +21,7 @@ class AnimalService
     public function updateAnimalType(Animal $animal, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $animalTypeId = $requestData['animal_type_id'] ?? null;
+        $animalTypeId = $requestData['animalTypeId'] ?? null;
 
         if (!$animalTypeId) {
             return;

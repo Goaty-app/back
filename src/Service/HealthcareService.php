@@ -21,7 +21,7 @@ class HealthcareService
     public function updateHealthcareType(Healthcare $healthcare, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $healthcareTypeId = $requestData['healthcare_type_id'] ?? null;
+        $healthcareTypeId = $requestData['healthcareTypeId'] ?? null;
 
         if (!$healthcareTypeId) {
             return;

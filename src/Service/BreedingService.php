@@ -21,7 +21,7 @@ class BreedingService
     public function updateFemale(Breeding $breeding, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $femaleId = $requestData['female_id'] ?? null;
+        $femaleId = $requestData['femaleId'] ?? null;
 
         if (!$femaleId) {
             return;
@@ -44,7 +44,7 @@ class BreedingService
     public function updateMale(Breeding $breeding, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $maleId = $requestData['male_id'] ?? null;
+        $maleId = $requestData['maleId'] ?? null;
 
         if (!$maleId) {
             return;
