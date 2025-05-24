@@ -21,7 +21,7 @@ class HerdService
     public function updateHerd(HasHerd $hasHerd, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
-        $herdId = $requestData['herd_id'] ?? null;
+        $herdId = $requestData['herdId'] ?? null;
 
         if (!$herdId) {
             return;
