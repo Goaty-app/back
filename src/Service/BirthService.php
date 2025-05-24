@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Service;
+
+use App\Entity\Animal;
+use App\Entity\Birth;
+use App\Entity\Breeding;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class BirthService
+{
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function updateBreeding(Birth $birth, Request $request, UserInterface $currentUser): void
+    {
+        $requestData = json_decode($request->getContent(), true);
+        $breedingId = $requestData['breedingId'] ?? null;
+
+        if (!$breedingId) {
+            return;
+        }
+
+        /** @var Breeding */
+        $breeding = $this->entityManager->getRepository(Breeding::class)->findOneByIdAndOwner($breedingId, $currentUser);
+
+        if (!$breeding) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($breeding->getOwner() !== $currentUser) {
+            throw new NotFoundHttpException();
+        }
+
+        $birth->setBreeding($breeding);
+    }
+
+    public function updateChild(Birth $birth, Request $request, UserInterface $currentUser): void
+    {
+        $requestData = json_decode($request->getContent(), true);
+        $childId = $requestData['childId'] ?? null;
+
+        if (!$childId) {
+            return;
+        }
+
+        /** @var Animal */
+        $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($childId, $currentUser);
+
+        if (!$animal) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($animal->getOwner() !== $currentUser) {
+            throw new NotFoundHttpException();
+        }
+
+        $birth->setChild($animal);
+    }
+}

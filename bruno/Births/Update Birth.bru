@@ -1,0 +1,19 @@
+meta {
+  name: Update Birth
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{URL}}/{{API}}/birth/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "birthDate": "2022-04-01",
+    "breedingId": 1
+  }
+  
+}

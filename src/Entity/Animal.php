@@ -29,7 +29,7 @@ class Animal implements HasOwner, HasHerd
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal', 'healthcare', 'breeding'])]
+    #[Groups(['animal', 'healthcare', 'breeding', 'birth'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]
@@ -70,6 +70,10 @@ class Animal implements HasOwner, HasHerd
     #[Groups(['animal'])]
     private ?DateTimeImmutable $createdAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'child', cascade: ['persist', 'remove'])]
+    #[Groups(['animal'])]
+    private ?Birth $birth = null;
+
     /**
      * @var Collection<int, Healthcare>
      */
@@ -79,13 +83,13 @@ class Animal implements HasOwner, HasHerd
     /**
      * @var Collection<int, Breeding>
      */
-    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'female')]
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'female', orphanRemoval: true)]
     private Collection $femaleBreedings;
 
     /**
      * @var Collection<int, Breeding>
      */
-    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'male')]
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'male', orphanRemoval: true)]
     private Collection $maleBreedings;
 
     public function __construct()
@@ -311,5 +315,22 @@ class Animal implements HasOwner, HasHerd
     public function getBreedings(): Collection
     {
         return new ArrayCollection([...$this->femaleBreedings, ...$this->maleBreedings]);
+    }
+
+    public function getBirth(): ?Birth
+    {
+        return $this->birth;
+    }
+
+    public function setBirth(Birth $birth): static
+    {
+        // set the owning side of the relation if necessary
+        if ($birth->getChild() !== $this) {
+            $birth->setChild($this);
+        }
+
+        $this->birth = $birth;
+
+        return $this;
     }
 }

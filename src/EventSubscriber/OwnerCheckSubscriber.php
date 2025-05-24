@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\Animal;
 use App\Entity\AnimalType;
+use App\Entity\Birth;
 use App\Entity\Breeding;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
@@ -26,6 +27,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
 {
     private const ENTITY_PARAM_MAP = [
         'herd'             => Herd::class,
+        'birth'            => Birth::class,
         'breeding'         => Breeding::class,
         'production'       => Production::class,
         'productionType'   => ProductionType::class,

@@ -8,6 +8,8 @@ use App\Repository\BreedingRepository;
 use App\Trait\HasOwnerTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -27,7 +29,7 @@ class Breeding implements HasOwner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['breeding'])]
+    #[Groups(['breeding', 'birth'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'femaleBreedings')]
@@ -57,6 +59,17 @@ class Breeding implements HasOwner
     #[ORM\Column]
     #[Groups(['animal'])]
     private ?DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, Birth>
+     */
+    #[ORM\OneToMany(targetEntity: Birth::class, mappedBy: 'breeding', orphanRemoval: true)]
+    private Collection $births;
+
+    public function __construct()
+    {
+        $this->births = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -143,6 +156,36 @@ class Breeding implements HasOwner
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Birth>
+     */
+    public function getBirths(): Collection
+    {
+        return $this->births;
+    }
+
+    public function addBirth(Birth $birth): static
+    {
+        if (!$this->births->contains($birth)) {
+            $this->births->add($birth);
+            $birth->setBreeding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBirth(Birth $birth): static
+    {
+        if ($this->births->removeElement($birth)) {
+            // set the owning side to null (unless already changed)
+            if ($birth->getBreeding() === $this) {
+                $birth->setBreeding(null);
+            }
+        }
 
         return $this;
     }
