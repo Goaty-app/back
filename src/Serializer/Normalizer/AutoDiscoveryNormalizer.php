@@ -59,7 +59,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
         $classCamel = lcfirst($classShortName);
 
         $classCamelCreate = $this->getEntitySpecificParams($object, $data);
-        $data['_links'] = $this->generateLinks($classSnake, $classCamel, $data['id'], $classCamelCreate);
+        $data['_links'] = $this->generateLinks($context, $classSnake, $classCamel, $data['id'], $classCamelCreate);
 
         return $data;
     }
@@ -82,9 +82,9 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
         return [];
     }
 
-    private function generateLinks(string $classSnake, string $classCamel, int $id, array $classCamelCreate): array
+    private function generateLinks(array $context, string $classSnake, string $classCamel, int $id, array $classCamelCreate): array
     {
-        $links = [];
+        $links = $context['_links'] ?? [];
 
         $links['self'] = $this->generateLink(
             "api_{$classSnake}_get",

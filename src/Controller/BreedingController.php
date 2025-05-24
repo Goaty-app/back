@@ -58,7 +58,12 @@ final class BreedingController extends AbstractCachedController
         Breeding $breeding,
         SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($breeding, 'json', ['groups' => ['breeding']]);
+        $jsonData = $serializer->serialize($breeding, 'json', ['groups' => ['breeding'], '_links' => [
+            'mother' => [
+                'href' => 'test',
+                'methods' => 'GET',
+            ],
+        ]]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
