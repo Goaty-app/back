@@ -8,7 +8,6 @@ use App\Entity\Herd;
 use App\Entity\User;
 use App\Enum\QuantityUnit;
 use App\Faker\Provider\FoodStockNamesProvider;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -71,9 +70,6 @@ class FoodStockFixtures extends Fixture implements DependentFixtureInterface
                     $foodStock->setName($this->faker->unique()->getStockName());
                     $foodStock->setQuantity(0);
                     $foodStock->setQuantityUnit($this->faker->randomElement(QuantityUnit::cases()));
-                    $foodStock->setCreatedAt(DateTimeImmutable::createFromMutable(
-                        $this->faker->dateTimeBetween($herd->getCreatedAt()->format('Y-m-d H:i:s'), 'now'),
-                    ));
 
                     $manager->persist($foodStock);
 

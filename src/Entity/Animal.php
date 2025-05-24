@@ -8,7 +8,7 @@ use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
 use App\Trait\HasOwnerTrait;
-use DateTimeImmutable;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
@@ -25,6 +26,7 @@ class Animal implements HasOwner, HasHerd
 {
     use HasOwnerTrait;
     use SoftDeleteableEntity;
+    use TimestampableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -65,10 +67,6 @@ class Animal implements HasOwner, HasHerd
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['animal'])]
     private ?AnimalType $animalType = null;
-
-    #[ORM\Column]
-    #[Groups(['animal'])]
-    private ?DateTimeImmutable $createdAt = null;
 
     // Hack to make a ManyToOne like a OneToOne
     /**
@@ -207,18 +205,6 @@ class Animal implements HasOwner, HasHerd
     public function setAnimalType(?AnimalType $animalType): static
     {
         $this->animalType = $animalType;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

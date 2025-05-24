@@ -7,7 +7,6 @@ use App\Entity\Production;
 use App\Repository\ProductionRepository;
 use App\Service\HerdService;
 use App\Service\ProductionService;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +76,6 @@ final class ProductionController extends AbstractCachedController
 
         $production->setOwner($this->getUser())
             ->setHerd($herd)
-            ->setCreatedAt(new DateTimeImmutable())
         ;
 
         $entityManager->persist($production);

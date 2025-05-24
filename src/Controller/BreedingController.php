@@ -7,7 +7,6 @@ use App\Entity\Breeding;
 use App\Entity\Interface\OwnedEntityRepository;
 use App\Repository\BreedingRepository;
 use App\Service\BreedingService;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,9 +82,7 @@ final class BreedingController extends AbstractCachedController
         $breedingService->updateFemale($breeding, $request, $this->getUser());
         $breedingService->updateMale($breeding, $request, $this->getUser());
 
-        $breeding->setOwner($this->getUser())
-            ->setCreatedAt(new DateTimeImmutable())
-        ;
+        $breeding->setOwner($this->getUser());
 
         $entityManager->persist($breeding);
         $entityManager->flush();

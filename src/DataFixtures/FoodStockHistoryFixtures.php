@@ -6,7 +6,6 @@ use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Entity\User;
 use App\Enum\Operation;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -62,10 +61,6 @@ class FoodStockHistoryFixtures extends Fixture implements DependentFixtureInterf
                     $foodStockHistory->setFoodStock($foodStock);
                     $foodStockHistory->setOperation($this->faker->randomElement($this->weightedOperations));
                     $foodStockHistory->setQuantity($this->faker->randomFloat(2, 1, 1000));
-                    $historyCreatedAt = DateTimeImmutable::createFromMutable(
-                        $this->faker->dateTimeBetween($foodStock->getCreatedAt()->format('Y-m-d H:i:s'), 'now'),
-                    );
-                    $foodStockHistory->setCreatedAt($historyCreatedAt);
 
                     $manager->persist($foodStockHistory);
 

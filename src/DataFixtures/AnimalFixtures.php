@@ -10,7 +10,6 @@ use App\Enum\Country;
 use App\Enum\Gender;
 use App\Faker\Provider\AnimalNamesProvider;
 use App\Faker\Provider\AnimalStatusProvider;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -94,13 +93,6 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
                     $animal->setOriginCountry($this->faker->randomElement(Country::cases()));
                     $animal->setBehaviorNotes($this->faker->optional(0.3)->sentence());
                     $animal->setStatus($this->faker->getStatus());
-
-                    $herdCreationDateObject = $herd->getCreatedAt();
-                    $herdCreationDateString = $herdCreationDateObject->format('Y-m-d H:i:s');
-                    $animalCreatedAt = DateTimeImmutable::createFromMutable(
-                        $this->faker->dateTimeBetween($herdCreationDateString, 'now'),
-                    );
-                    $animal->setCreatedAt($animalCreatedAt);
 
                     $manager->persist($animal);
 

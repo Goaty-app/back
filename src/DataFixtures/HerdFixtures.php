@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Herd;
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -49,11 +48,6 @@ class HerdFixtures extends Fixture implements DependentFixtureInterface
                 $herd->setOwner($owner)
                     ->setName('Troupeau de '.$this->faker->word())
                     ->setLocation($this->faker->city())
-                    ->setCreatedAt(
-                        DateTimeImmutable::createFromMutable(
-                            $this->faker->dateTimeThisDecade(),
-                        ),
-                    )
                 ;
 
                 $manager->persist($herd);
