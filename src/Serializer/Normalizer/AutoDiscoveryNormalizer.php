@@ -9,6 +9,7 @@ use App\Entity\FoodStockHistory;
 use App\Entity\FoodStockType;
 use App\Entity\Healthcare;
 use App\Entity\HealthcareType;
+use App\Entity\Herd;
 use App\Entity\Production;
 use App\Entity\ProductionType;
 use Exception;
@@ -49,8 +50,6 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
 
     public function normalize($object, ?string $format = null, array $context = []): array
     {
-        // Disable autodiscovery for childs
-        $context['autodiscovery_applied'] = true;
         $data = $this->normalizer->normalize($object, $format, $context);
         $classShortName = (new ReflectionClass($object))->getShortName();
         $classSnake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $classShortName));
@@ -64,7 +63,10 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
 
     private function getEntitySpecificParams(object $object, array $data): array
     {
-        $entityClass = $object::class;
+        $reflector = new ReflectionClass($object);
+        $parentClassReflector = $reflector->getParentClass();
+
+        $entityClass = $parentClassReflector ? $parentClassReflector->getName() : $reflector->getName();
 
         if (\array_key_exists($entityClass, $this->entityToCamelCreate)) {
             $paramName = $this->entityToCamelCreate[$entityClass];
@@ -138,7 +140,8 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
 
     private function supportsType($data): bool
     {
-        return $data instanceof Animal
+        return $data instanceof Herd
+            || $data instanceof Animal
             || $data instanceof AnimalType
             || $data instanceof Production
             || $data instanceof ProductionType
@@ -152,6 +155,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
     public function getSupportedTypes(?string $format): array
     {
         return [
+            Herd::class             => true,
             Animal::class           => true,
             AnimalType::class       => true,
             Production::class       => true,
