@@ -11,11 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProductionService
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function updateProductionType(Production $production, Request $request, UserInterface $currentUser): void

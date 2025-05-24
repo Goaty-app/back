@@ -14,11 +14,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class BirthService
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager, private BirthRepository $birthRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private BirthRepository $birthRepository)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function updateBreeding(Birth $birth, Request $request, UserInterface $currentUser): void
