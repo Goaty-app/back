@@ -29,7 +29,7 @@ class Animal implements HasOwner, HasHerd
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['animal', 'healthcare'])]
+    #[Groups(['animal', 'healthcare', 'breeding'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Herd::class)]
@@ -76,9 +76,23 @@ class Animal implements HasOwner, HasHerd
     #[ORM\OneToMany(targetEntity: Healthcare::class, mappedBy: 'animal', orphanRemoval: true)]
     private Collection $healthcares;
 
+    /**
+     * @var Collection<int, Breeding>
+     */
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'female')]
+    private Collection $femaleBreedings;
+
+    /**
+     * @var Collection<int, Breeding>
+     */
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'male')]
+    private Collection $maleBreedings;
+
     public function __construct()
     {
         $this->healthcares = new ArrayCollection();
+        $this->femaleBreedings = new ArrayCollection();
+        $this->maleBreedings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,5 +243,73 @@ class Animal implements HasOwner, HasHerd
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Breeding>
+     */
+    public function getFemaleBreedings(): Collection
+    {
+        return $this->femaleBreedings;
+    }
+
+    public function addFemaleBreeding(Breeding $femaleBreeding): static
+    {
+        if (!$this->femaleBreedings->contains($femaleBreeding)) {
+            $this->femaleBreedings->add($femaleBreeding);
+            $femaleBreeding->setFemale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFemaleBreeding(Breeding $femaleBreeding): static
+    {
+        if ($this->femaleBreedings->removeElement($femaleBreeding)) {
+            // set the owning side to null (unless already changed)
+            if ($femaleBreeding->getFemale() === $this) {
+                $femaleBreeding->setFemale(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Breeding>
+     */
+    public function getMaleBreedings(): Collection
+    {
+        return $this->maleBreedings;
+    }
+
+    public function addMaleBreeding(Breeding $maleBreeding): static
+    {
+        if (!$this->maleBreedings->contains($maleBreeding)) {
+            $this->maleBreedings->add($maleBreeding);
+            $maleBreeding->setMale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMaleBreeding(Breeding $maleBreeding): static
+    {
+        if ($this->maleBreedings->removeElement($maleBreeding)) {
+            // set the owning side to null (unless already changed)
+            if ($maleBreeding->getMale() === $this) {
+                $maleBreeding->setMale(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Breeding>
+     */
+    public function getBreedings(): Collection
+    {
+        return new ArrayCollection([...$this->femaleBreedings, ...$this->maleBreedings]);
     }
 }

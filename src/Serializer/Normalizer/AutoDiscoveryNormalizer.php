@@ -4,6 +4,7 @@ namespace App\Serializer\Normalizer;
 
 use App\Entity\Animal;
 use App\Entity\AnimalType;
+use App\Entity\Breeding;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Entity\FoodStockType;
@@ -32,6 +33,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
 
     private const ENTITIES_WITH_ANIMAL = [
         Healthcare::class,
+        Breeding::class,
     ];
 
     private array $entityToCamelCreate = [];
@@ -149,7 +151,8 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
             || $data instanceof FoodStockType
             || $data instanceof FoodStockHistory
             || $data instanceof Healthcare
-            || $data instanceof HealthcareType;
+            || $data instanceof HealthcareType
+            || $data instanceof Breeding;
     }
 
     public function getSupportedTypes(?string $format): array
@@ -165,6 +168,7 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
             FoodStockHistory::class => true,
             Healthcare::class       => true,
             HealthcareType::class   => true,
+            Breeding::class         => true,
         ];
     }
 }

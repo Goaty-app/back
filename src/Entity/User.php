@@ -80,10 +80,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $animalTypes;
 
     /**
+     * @var Collection<int, Healthcare>
+     */
+    #[ORM\OneToMany(targetEntity: Healthcare::class, mappedBy: 'owner')]
+    private Collection $healthcares;
+
+    /**
      * @var Collection<int, HealthcareType>
      */
     #[ORM\OneToMany(targetEntity: HealthcareType::class, mappedBy: 'owner')]
     private Collection $healthcareTypes;
+
+    /**
+     * @var Collection<int, Breeding>
+     */
+    #[ORM\OneToMany(targetEntity: Breeding::class, mappedBy: 'owner')]
+    private Collection $breedings;
 
     public function __construct()
     {
@@ -94,7 +106,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->foodStockTypes = new ArrayCollection();
         $this->animals = new ArrayCollection();
         $this->animalTypes = new ArrayCollection();
+        $this->healthcares = new ArrayCollection();
         $this->healthcareTypes = new ArrayCollection();
+        $this->breedings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +395,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Healthcare>
+     */
+    public function getHealthcares(): Collection
+    {
+        return $this->healthcares;
+    }
+
+    public function addHealthcare(Healthcare $healthcare): static
+    {
+        if (!$this->healthcares->contains($healthcare)) {
+            $this->healthcares->add($healthcare);
+            $healthcare->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHealthcare(Healthcare $healthcare): static
+    {
+        if ($this->healthcares->removeElement($healthcare)) {
+            // set the owning side to null (unless already changed)
+            if ($healthcare->getOwner() === $this) {
+                $healthcare->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, HealthcareType>
      */
     public function getHealthcareTypes(): Collection
@@ -404,6 +448,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($healthcareType->getOwner() === $this) {
                 $healthcareType->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Breeding>
+     */
+    public function getBreedings(): Collection
+    {
+        return $this->breedings;
+    }
+
+    public function addBreeding(Breeding $breeding): static
+    {
+        if (!$this->breedings->contains($breeding)) {
+            $this->breedings->add($breeding);
+            $breeding->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreeding(Breeding $breeding): static
+    {
+        if ($this->breedings->removeElement($breeding)) {
+            // set the owning side to null (unless already changed)
+            if ($breeding->getOwner() === $this) {
+                $breeding->setOwner(null);
             }
         }
 
