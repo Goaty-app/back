@@ -62,7 +62,6 @@ final class FoodStockHistoryController extends AbstractCachedController
         $foodStockHistory = $serializer->deserialize($request->getContent(), FoodStockHistory::class, 'json');
 
         $errors = $validator->validate($foodStockHistory);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }

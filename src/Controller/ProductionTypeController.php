@@ -58,7 +58,6 @@ final class ProductionTypeController extends AbstractCachedController
         $productionType = $serializer->deserialize($request->getContent(), ProductionType::class, 'json');
 
         $errors = $validator->validate($productionType);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -84,9 +83,15 @@ final class ProductionTypeController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var ProductionType */
         $productionType = $serializer->deserialize($request->getContent(), ProductionType::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $productionType]);
+
+        $errors = $validator->validate($productionType);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $entityManager->persist($productionType);
         $entityManager->flush();

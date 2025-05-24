@@ -69,7 +69,6 @@ final class ProductionController extends AbstractCachedController
         $production = $serializer->deserialize($request->getContent(), Production::class, 'json');
 
         $errors = $validator->validate($production);
-
         if ($errors->count() > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
@@ -100,11 +99,17 @@ final class ProductionController extends AbstractCachedController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
         ProductionService $productionService,
         HerdService $herdService,
     ): JsonResponse {
         /** @var Production */
         $production = $serializer->deserialize($request->getContent(), Production::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $production]);
+
+        $errors = $validator->validate($production);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $herdService->updateHerd($production, $request, $this->getUser());
         $productionService->updateProductionType($production, $request, $this->getUser());
