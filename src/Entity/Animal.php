@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -39,12 +40,18 @@ class Animal implements HasOwner, HasHerd
     #[Groups(['animal'])]
     private ?Herd $herd = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)]
     #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 50,
+    )]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 50,
+    )]
     private ?string $idNumber = null;
 
     #[ORM\Column(enumType: Gender::class, nullable: true)]
@@ -57,10 +64,16 @@ class Animal implements HasOwner, HasHerd
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $behaviorNotes = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]

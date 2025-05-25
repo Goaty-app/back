@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductionRepository::class)]
@@ -51,6 +52,9 @@ class Production implements HasOwner, HasHerd
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['production'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $notes = null;
 
     #[ORM\ManyToOne(inversedBy: 'productions')]

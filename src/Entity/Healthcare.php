@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: HealthcareRepository::class)]
@@ -38,6 +39,9 @@ class Healthcare implements HasOwner
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'healthcares')]

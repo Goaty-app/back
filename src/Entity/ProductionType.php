@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductionTypeRepository::class)]
@@ -33,6 +34,9 @@ class ProductionType implements HasOwner
 
     #[ORM\Column(length: 50)]
     #[Groups(['production', 'productionType'])]
+    #[Assert\Length(
+        max: 50,
+    )]
     private ?string $name = null;
 
     /**
