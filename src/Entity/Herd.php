@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: HerdRepository::class)]
@@ -33,10 +34,16 @@ class Herd implements HasOwner
 
     #[ORM\Column(length: 50)]
     #[Groups(['herd'])]
+    #[Assert\Length(
+        max: 50,
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     #[Groups(['herd'])]
+    #[Assert\Length(
+        max: 100,
+    )]
     private ?string $location = null;
 
     /**

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: FoodStockHistoryRepository::class)]
@@ -36,6 +37,7 @@ class FoodStockHistory implements HasOwner
 
     #[ORM\Column]
     #[Groups(['foodStockHistory'])]
+    #[Assert\PositiveOrZero]
     private ?float $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodStockHistories')]

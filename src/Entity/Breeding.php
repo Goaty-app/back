@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: BreedingRepository::class)]
@@ -52,6 +53,7 @@ class Breeding implements HasOwner
 
     #[ORM\Column(nullable: true)]
     #[Groups(['breeding'])]
+    #[Assert\PositiveOrZero]
     private ?int $expectedChildCount = null;
 
     #[ORM\Column(enumType: BreedingStatus::class, nullable: true)]

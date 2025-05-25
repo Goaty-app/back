@@ -13,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
@@ -36,18 +37,30 @@ class Media implements HasOwner
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $realName = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $realPath = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $publicPath = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $mime = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
