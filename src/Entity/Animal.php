@@ -42,6 +42,7 @@ class Animal implements HasOwner, HasHerd
 
     #[ORM\Column(length: 50, nullable: true)]
     #[Groups(['animal'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 50,
     )]
@@ -49,6 +50,7 @@ class Animal implements HasOwner, HasHerd
 
     #[ORM\Column(length: 50)]
     #[Groups(['animal'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 50,
     )]
@@ -64,6 +66,7 @@ class Animal implements HasOwner, HasHerd
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['animal'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]
@@ -71,6 +74,7 @@ class Animal implements HasOwner, HasHerd
 
     #[ORM\Column(length: 255)]
     #[Groups(['animal'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]

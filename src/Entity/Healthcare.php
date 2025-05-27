@@ -39,6 +39,7 @@ class Healthcare implements HasOwner
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['healthcare'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]

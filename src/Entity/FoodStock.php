@@ -41,6 +41,7 @@ class FoodStock implements HasOwner, HasHerd
 
     #[ORM\Column]
     #[Groups(['foodStock'])]
+    #[Assert\Type(type: 'float')]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
@@ -49,6 +50,7 @@ class FoodStock implements HasOwner, HasHerd
 
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]

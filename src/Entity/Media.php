@@ -37,6 +37,7 @@ class Media implements HasOwner
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]
@@ -44,6 +45,7 @@ class Media implements HasOwner
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]
@@ -51,6 +53,7 @@ class Media implements HasOwner
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]
@@ -58,6 +61,7 @@ class Media implements HasOwner
 
     #[ORM\Column(length: 255)]
     #[Groups(['media', 'healthcare'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]

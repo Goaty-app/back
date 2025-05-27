@@ -53,6 +53,7 @@ class Breeding implements HasOwner
 
     #[ORM\Column(nullable: true)]
     #[Groups(['breeding'])]
+    #[Assert\Type(type: 'int')]
     #[Assert\PositiveOrZero]
     private ?int $expectedChildCount = null;
 

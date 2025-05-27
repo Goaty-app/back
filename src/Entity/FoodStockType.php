@@ -34,6 +34,7 @@ class FoodStockType implements HasOwner
 
     #[ORM\Column(length: 50)]
     #[Groups(['foodStockType', 'foodStock'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 50,
     )]
