@@ -37,6 +37,7 @@ class FoodStockHistory implements HasOwner
 
     #[ORM\Column]
     #[Groups(['foodStockHistory'])]
+    #[Assert\Type(type: 'float')]
     #[Assert\PositiveOrZero]
     private ?float $quantity = null;
 

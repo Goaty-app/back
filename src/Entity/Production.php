@@ -44,6 +44,7 @@ class Production implements HasOwner, HasHerd
 
     #[ORM\Column]
     #[Groups(['production'])]
+    #[Assert\Type(type: 'float')]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]

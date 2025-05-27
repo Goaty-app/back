@@ -34,6 +34,7 @@ class ProductionType implements HasOwner
 
     #[ORM\Column(length: 50)]
     #[Groups(['production', 'productionType'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 50,
     )]

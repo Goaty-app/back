@@ -38,11 +38,13 @@ class Birth implements HasOwner
 
     #[ORM\Column(nullable: true)]
     #[Groups(['birth'])]
+    #[Assert\Type(type: 'float')]
     #[Assert\PositiveOrZero]
     private ?float $birthWeight = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['birth'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 255,
     )]

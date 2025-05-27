@@ -34,6 +34,7 @@ class Herd implements HasOwner
 
     #[ORM\Column(length: 50)]
     #[Groups(['herd'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 50,
     )]
@@ -41,6 +42,7 @@ class Herd implements HasOwner
 
     #[ORM\Column(length: 100, nullable: true)]
     #[Groups(['herd'])]
+    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 100,
     )]
