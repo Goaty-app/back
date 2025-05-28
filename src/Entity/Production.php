@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Contract\HerdAwareInterface;
 use App\Enum\QuantityUnit;
-use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\ProductionRepository;
 use App\Trait\OwnableEntityTrait;
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'productions'),
 ])]
-class Production implements HasOwner, HasHerd
+class Production implements HasOwner, HerdAwareInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;
