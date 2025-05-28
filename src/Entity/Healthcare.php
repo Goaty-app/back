@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Interface\HasOwner;
 use App\Repository\HealthcareRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Healthcare implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

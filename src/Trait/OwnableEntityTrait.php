@@ -5,7 +5,7 @@ namespace App\Trait;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-trait HasOwnerTrait
+trait OwnableEntityTrait
 {
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]

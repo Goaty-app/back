@@ -6,7 +6,7 @@ use App\Enum\QuantityUnit;
 use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\ProductionRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Production implements HasOwner, HasHerd
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Interface\HasOwner;
 use App\Repository\BirthRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Birth implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

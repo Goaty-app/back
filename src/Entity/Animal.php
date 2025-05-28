@@ -7,7 +7,7 @@ use App\Enum\Gender;
 use App\Interface\HasHerd;
 use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Animal implements HasOwner, HasHerd
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 
