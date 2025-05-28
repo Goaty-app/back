@@ -4,7 +4,7 @@ namespace App\Trait;
 
 use App\Entity\User;
 
-trait OwnedEntityRepositoryTrait
+trait FindsByOwnerRepositoryTrait
 {
     public function findByOwner(User $user): array
     {
