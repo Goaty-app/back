@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Interface\OwnedEntityRepository;
+use App\Contract\OwnerScopedRepositoryInterface;
 use App\Trait\UserCacheNamingTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -35,7 +35,7 @@ abstract class AbstractCachedController extends AbstractController
         $this->serializer = $serializer;
     }
 
-    protected function getAllCachedItems(OwnedEntityRepository $repository, array $groups = [])
+    protected function getAllCachedItems(OwnerScopedRepositoryInterface $repository, array $groups = [])
     {
         $serializer = $this->serializer;
 
@@ -54,7 +54,7 @@ abstract class AbstractCachedController extends AbstractController
         );
     }
 
-    protected function getInCachedItems(OwnedEntityRepository $repository, string $column, int $value, array $groups = [])
+    protected function getInCachedItems(OwnerScopedRepositoryInterface $repository, string $column, int $value, array $groups = [])
     {
         $serializer = $this->serializer;
 
@@ -73,7 +73,7 @@ abstract class AbstractCachedController extends AbstractController
         );
     }
 
-    protected function getInCachedItemsCustomRequest(OwnedEntityRepository $repository, int $value, callable $dataFetcherCallback, array $groups = [])
+    protected function getInCachedItemsCustomRequest(OwnerScopedRepositoryInterface $repository, int $value, callable $dataFetcherCallback, array $groups = [])
     {
         $serializer = $this->serializer;
 

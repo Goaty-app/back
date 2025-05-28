@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Interface;
+namespace App\Contract;
 
 use App\Entity\User;
 
-interface OwnedEntityRepository
+interface OwnerScopedRepositoryInterface
 {
     public function findByOwner(User $user): array;
 

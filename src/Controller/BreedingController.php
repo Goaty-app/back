@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\Animal;
 use App\Entity\Breeding;
-use App\Entity\Interface\OwnedEntityRepository;
 use App\Repository\BreedingRepository;
 use App\Service\BreedingService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +42,7 @@ final class BreedingController extends AbstractCachedController
         $cacheReturn = $this->getInCachedItemsCustomRequest(
             $breedingRepository,
             $animal->getId(),
-            fn (OwnedEntityRepository $repository, int $value) => [
+            fn (OwnerScopedRepositoryInterface $repository, int $value) => [
                 ...$repository->findByOwnerFlex('male', $value, $this->getUser()),
                 ...$repository->findByOwnerFlex('female', $value, $this->getUser()),
             ],

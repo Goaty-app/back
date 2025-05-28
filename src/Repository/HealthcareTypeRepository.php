@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
+use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\HealthcareType;
-use App\Entity\Interface\OwnedEntityRepository;
 use App\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<HealthcareType>
  */
-class HealthcareTypeRepository extends ServiceEntityRepository implements OwnedEntityRepository
+class HealthcareTypeRepository extends ServiceEntityRepository implements OwnerScopedRepositoryInterface
 {
     use FindsByOwnerRepositoryTrait;
 

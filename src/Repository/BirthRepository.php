@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
+use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\Animal;
 use App\Entity\Birth;
-use App\Entity\Interface\OwnedEntityRepository;
 use App\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Birth>
  */
-class BirthRepository extends ServiceEntityRepository implements OwnedEntityRepository
+class BirthRepository extends ServiceEntityRepository implements OwnerScopedRepositoryInterface
 {
     use FindsByOwnerRepositoryTrait;
 
