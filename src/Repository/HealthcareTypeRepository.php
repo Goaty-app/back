@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\HealthcareType;
 use App\Entity\Interface\OwnedEntityRepository;
-use App\Trait\OwnedEntityRepositoryTrait;
+use App\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HealthcareTypeRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
-    use OwnedEntityRepositoryTrait;
+    use FindsByOwnerRepositoryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

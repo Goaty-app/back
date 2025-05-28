@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Animal;
 use App\Entity\Birth;
 use App\Entity\Interface\OwnedEntityRepository;
-use App\Trait\OwnedEntityRepositoryTrait;
+use App\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BirthRepository extends ServiceEntityRepository implements OwnedEntityRepository
 {
-    use OwnedEntityRepositoryTrait;
+    use FindsByOwnerRepositoryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
