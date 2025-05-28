@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Interface\HasOwner;
+use App\Contract\OwnableInterface;
 use App\Repository\FoodStockTypeRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'foodStockType'),
 ])]
-class FoodStockType implements HasOwner
+class FoodStockType implements OwnableInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;

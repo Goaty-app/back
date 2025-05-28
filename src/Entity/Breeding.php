@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Contract\OwnableInterface;
 use App\Enum\BreedingStatus;
-use App\Interface\HasOwner;
 use App\Repository\BreedingRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'breedings'),
 ])]
-class Breeding implements HasOwner
+class Breeding implements OwnableInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;
