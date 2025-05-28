@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Contract\OwnableInterface;
 use App\Repository\HealthcareRepository;
 use App\Trait\OwnableEntityTrait;
-use App\Traits\TimestampableTrait;
+use App\Trait\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;

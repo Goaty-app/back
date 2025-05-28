@@ -7,7 +7,7 @@ use App\Contract\OwnableInterface;
 use App\Enum\QuantityUnit;
 use App\Repository\ProductionRepository;
 use App\Trait\OwnableEntityTrait;
-use App\Traits\TimestampableTrait;
+use App\Trait\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

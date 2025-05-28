@@ -6,7 +6,7 @@ use App\Contract\OwnableInterface;
 use App\Enum\BreedingStatus;
 use App\Repository\BreedingRepository;
 use App\Trait\OwnableEntityTrait;
-use App\Traits\TimestampableTrait;
+use App\Trait\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
