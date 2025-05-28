@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Interface\OwnedEntityRepository;
+use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\ProductionType;
 use App\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<ProductionType>
  */
-class ProductionTypeRepository extends ServiceEntityRepository implements OwnedEntityRepository
+class ProductionTypeRepository extends ServiceEntityRepository implements OwnerScopedRepositoryInterface
 {
     use FindsByOwnerRepositoryTrait;
 
