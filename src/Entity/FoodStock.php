@@ -42,6 +42,7 @@ class FoodStock implements OwnableInterface, HerdAwareInterface
     #[ORM\Column]
     #[Groups(['foodStock'])]
     #[Assert\Type(type: 'float')]
+    #[Assert\NotBlank()]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
@@ -51,6 +52,7 @@ class FoodStock implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 255,
     )]

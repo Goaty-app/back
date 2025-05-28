@@ -51,6 +51,7 @@ class Animal implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(length: 50)]
     #[Groups(['animal'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
     )]
@@ -75,6 +76,7 @@ class Animal implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(length: 255)]
     #[Groups(['animal'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 255,
     )]
