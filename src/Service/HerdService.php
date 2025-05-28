@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
+use App\Contract\HerdAwareInterface;
 use App\Entity\Herd;
-use App\Interface\HasHerd;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,7 +15,7 @@ class HerdService
     {
     }
 
-    public function updateHerd(HasHerd $hasHerd, Request $request, UserInterface $currentUser): void
+    public function updateHerd(HerdAwareInterface $HerdAwareInterface, Request $request, UserInterface $currentUser): void
     {
         $requestData = json_decode($request->getContent(), true);
         $herdId = $requestData['herdId'] ?? null;
@@ -35,6 +35,6 @@ class HerdService
             throw new NotFoundHttpException();
         }
 
-        $hasHerd->setHerd($herd);
+        $HerdAwareInterface->setHerd($herd);
     }
 }

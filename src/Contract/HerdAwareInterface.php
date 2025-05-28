@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Interface;
+namespace App\Contract;
 
 use App\Entity\Herd;
 
-interface HasHerd
+interface HerdAwareInterface
 {
     public function getHerd(): ?Herd;
 
