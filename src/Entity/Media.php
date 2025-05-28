@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Interface\HasOwner;
+use App\Contract\OwnableInterface;
 use App\Repository\MediaRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -23,7 +23,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'herds'),
 ])]
-class Media implements HasOwner
+class Media implements OwnableInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;

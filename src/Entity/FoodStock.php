@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Contract\HerdAwareInterface;
+use App\Contract\OwnableInterface;
 use App\Enum\QuantityUnit;
-use App\Interface\HasOwner;
 use App\Repository\FoodStockRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'foodStocks'),
 ])]
-class FoodStock implements HasOwner, HerdAwareInterface
+class FoodStock implements OwnableInterface, HerdAwareInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;

@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Contract\HerdAwareInterface;
+use App\Contract\OwnableInterface;
 use App\Enum\Country;
 use App\Enum\Gender;
-use App\Interface\HasOwner;
 use App\Repository\AnimalRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'animals'),
 ])]
-class Animal implements HasOwner, HerdAwareInterface
+class Animal implements OwnableInterface, HerdAwareInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;

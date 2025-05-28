@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Contract\OwnableInterface;
 use App\Entity\Animal;
 use App\Entity\AnimalType;
 use App\Entity\Birth;
@@ -16,7 +17,6 @@ use App\Entity\Media;
 use App\Entity\Production;
 use App\Entity\ProductionType;
 use App\Entity\User;
-use App\Interface\HasOwner;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -77,7 +77,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            if ($entity instanceof HasOwner) {
+            if ($entity instanceof OwnableInterface) {
                 $this->checkOwnership($entity);
             }
 
@@ -85,7 +85,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function checkOwnership(HasOwner $entity): void
+    private function checkOwnership(OwnableInterface $entity): void
     {
         /** @var User $user */
         $user = $this->security->getUser();

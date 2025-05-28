@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Interface\HasOwner;
+use App\Contract\OwnableInterface;
 use App\Repository\HealthcareRepository;
 use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(name: 'owner', inversedBy: 'healthcares'),
 ])]
-class Healthcare implements HasOwner
+class Healthcare implements OwnableInterface
 {
     use OwnableEntityTrait;
     use SoftDeleteableEntity;
