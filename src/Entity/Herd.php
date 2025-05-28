@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Contract\OwnableInterface;
 use App\Repository\HerdRepository;
 use App\Trait\OwnableEntityTrait;
-use App\Traits\TimestampableTrait;
+use App\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
