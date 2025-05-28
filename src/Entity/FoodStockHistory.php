@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Enum\Operation;
 use App\Interface\HasOwner;
 use App\Repository\FoodStockHistoryRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class FoodStockHistory implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Interface\HasOwner;
 use App\Repository\MediaRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -25,7 +25,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 ])]
 class Media implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

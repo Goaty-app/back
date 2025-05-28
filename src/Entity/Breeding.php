@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Enum\BreedingStatus;
 use App\Interface\HasOwner;
 use App\Repository\BreedingRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Breeding implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 

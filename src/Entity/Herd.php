@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Interface\HasOwner;
 use App\Repository\HerdRepository;
-use App\Trait\HasOwnerTrait;
+use App\Trait\OwnableEntityTrait;
 use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 class Herd implements HasOwner
 {
-    use HasOwnerTrait;
+    use OwnableEntityTrait;
     use SoftDeleteableEntity;
     use TimestampableTrait;
 
