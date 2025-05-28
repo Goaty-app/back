@@ -6,7 +6,7 @@ use App\Contract\OwnableInterface;
 use App\Enum\Operation;
 use App\Repository\FoodStockHistoryRepository;
 use App\Trait\OwnableEntityTrait;
-use App\Traits\TimestampableTrait;
+use App\Trait\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
