@@ -8,13 +8,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FoodStockTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'name'            => 'Silo 1',
         'quantityUnit'    => QuantityUnit::KILOGRAM->value,
         'foodStockTypeId' => 1,
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'name' => 'Silo 2',
     ];
 

@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AnimalTypeTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'name' => 'Chèvre naine',
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'name' => "Cochon d'Inde",
     ];
 

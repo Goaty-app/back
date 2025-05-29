@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BreedingTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'femaleId' => 1,
         'maleId'   => 2,
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'matingDateStart'    => '2025-01-01T00:00:00+00:00',
         'matingDateEnd'      => '2025-02-01T00:00:00+00:00',
         'expectedChildCount' => 5,

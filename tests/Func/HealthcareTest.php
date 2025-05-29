@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HealthcareTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'healthcareTypeId' => 1,
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'description' => 'Vaccination',
     ];
 

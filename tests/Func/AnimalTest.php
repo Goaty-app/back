@@ -7,13 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AnimalTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'idNumber'     => 'GOAT-001',
         'status'       => 'Adult',
         'animalTypeId' => 1,
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'name'          => 'Napoléon Bonabroute',
         'behaviorNotes' => 'Ne broute plus',
         'originCountry' => 'FR',
