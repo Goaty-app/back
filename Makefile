@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := clean
 
 fix:
-	docker compose exec php ./vendor/bin/php-cs-fixer fix src
+	docker compose exec php ./vendor/bin/php-cs-fixer fix
 
 build:
 	docker compose build --no-cache
