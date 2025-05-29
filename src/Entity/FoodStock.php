@@ -51,6 +51,7 @@ class FoodStock implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 255,
     )]

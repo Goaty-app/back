@@ -45,6 +45,7 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[ORM\Column]
     #[Groups(['production'])]
     #[Assert\Type(type: 'float')]
+    #[Assert\NotBlank()]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
