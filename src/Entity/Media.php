@@ -21,7 +21,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
-    new ORM\AssociationOverride(name: 'owner', inversedBy: 'herds'),
+    new ORM\AssociationOverride(name: 'owner', inversedBy: 'medias'),
 ])]
 class Media implements OwnableInterface
 {

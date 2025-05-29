@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: HealthcareTypeRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: false)]
 #[ORM\AssociationOverrides([
-    new ORM\AssociationOverride(name: 'owner', inversedBy: 'healthCareTypes'),
+    new ORM\AssociationOverride(name: 'owner', inversedBy: 'healthcareTypes'),
 ])]
 class HealthcareType implements OwnableInterface
 {

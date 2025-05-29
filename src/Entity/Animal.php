@@ -35,7 +35,7 @@ class Animal implements OwnableInterface, HerdAwareInterface
     #[Groups(['animal', 'healthcare', 'breeding', 'birth'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Herd::class)]
+    #[ORM\ManyToOne(targetEntity: Herd::class, inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['animal'])]
     private ?Herd $herd = null;
