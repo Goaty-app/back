@@ -92,5 +92,6 @@ abstract class AbstractCachedController extends AbstractController
                 return $jsonData;
             },
         );
+
     }
 }

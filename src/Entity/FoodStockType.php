@@ -35,6 +35,7 @@ class FoodStockType implements OwnableInterface
     #[ORM\Column(length: 50)]
     #[Groups(['foodStockType', 'foodStock'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
     )]
