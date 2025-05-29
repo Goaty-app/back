@@ -35,6 +35,7 @@ class HealthcareType implements OwnableInterface
     #[ORM\Column(length: 50)]
     #[Groups(['healthcareType', 'healthcare'])]
     #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
     )]

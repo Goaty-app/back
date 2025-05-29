@@ -38,6 +38,7 @@ class FoodStockHistory implements OwnableInterface
     #[ORM\Column]
     #[Groups(['foodStockHistory'])]
     #[Assert\Type(type: 'float')]
+    #[Assert\NotBlank()]
     #[Assert\PositiveOrZero]
     private ?float $quantity = null;
 
