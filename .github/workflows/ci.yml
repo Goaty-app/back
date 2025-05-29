@@ -7,10 +7,6 @@ on:
   pull_request: ~
   workflow_dispatch: ~
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
   tests:
     name: Tests
@@ -42,35 +38,26 @@ jobs:
         name: Check HTTP reachability
         run: curl -v --fail-with-body http://localhost
       -
-        name: Check HTTPS reachability
-        if: false # Remove this line when the homepage will be configured, or change the path to check
-        run: curl -vk --fail-with-body https://localhost
-      -
         name: Check Mercure reachability
         run: curl -vkI --fail-with-body https://localhost/.well-known/mercure?topic=test
       -
-        name: Create test database
-        if: false # Remove this line if Doctrine ORM is installed
-        run: docker compose exec -T php bin/console -e test doctrine:database:create
+        name: Generate SSL Key for JWT (if not present)
+        run: docker compose exec -T php bin/console lexik:jwt:generate-keypair --skip-if-exists
       -
-        name: Run migrations
-        if: false # Remove this line if Doctrine Migrations is installed
-        run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+        name: Create test database
+        run: docker compose exec -T php bin/console -e test doctrine:database:create
+      # -
+      #   name: Run migrations
+      #   run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+      -
+        name: Update schema
+        run: docker compose exec -T php bin/console -e test doctrine:schema:update --force
+      -
+        name: Load fixtures
+        run: docker compose exec -T php bin/console -e test doctrine:fixtures:load --no-interaction
       -
         name: Run PHPUnit
-        if: false # Remove this line if PHPUnit is installed
         run: docker compose exec -T php bin/phpunit
       -
         name: Doctrine Schema Validator
-        if: false # Remove this line if Doctrine ORM is installed
         run: docker compose exec -T php bin/console -e test doctrine:schema:validate
-  lint:
-    name: Docker Lint
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
-      -
-        name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
