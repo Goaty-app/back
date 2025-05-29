@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BirthTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'childId' => 1,
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'birthDate'   => '2025-01-01T00:00:00+00:00',
         'birthWeight' => 2500.0,
         'notes'       => 'Great',

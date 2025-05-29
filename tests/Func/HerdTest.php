@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HerdTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'name' => 'Troupeau des Écrins',
     ];
 
-    protected static $optionalPayload = [
-        'name' => 'Hautes-Alpes',
+    public static $optionalPayload = [
+        'location' => 'Hautes-Alpes',
     ];
 
     public function testCreate(): int

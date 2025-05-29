@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FoodStockTypeTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'name' => 'Fouin',
     ];
 
-    protected static $optionalPayload = [
+    public static $optionalPayload = [
         'name' => 'Blé',
     ];
 

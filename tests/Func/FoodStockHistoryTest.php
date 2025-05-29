@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FoodStockHistoryTest extends AbstractApiTestCase
 {
-    protected static $requiredPayload = [
+    public static $requiredPayload = [
         'quantity'  => 500.0,
         'operation' => Operation::PLUS->value,
     ];

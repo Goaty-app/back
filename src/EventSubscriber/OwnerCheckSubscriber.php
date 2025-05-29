@@ -21,7 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class OwnerCheckSubscriber implements EventSubscriberInterface
@@ -91,7 +91,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         $user = $this->security->getUser();
 
         if (!$user || $entity->getOwner()?->getId() !== $user->getId()) {
-            throw new NotFoundHttpException();
+            throw new BadRequestHttpException();
         }
     }
 }
