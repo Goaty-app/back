@@ -5,6 +5,13 @@
 fix:
 	docker compose exec php ./vendor/bin/php-cs-fixer fix
 
+test:
+	docker compose exec php bin/console doctrine:database:drop --env=test --force --if-exists
+	docker compose exec php bin/console doctrine:database:create --env=test
+	docker compose exec php bin/console doctrine:schema:update --force --env=test
+	docker compose exec php bin/console doctrine:fixtures:load --env=test --no-interaction
+	docker compose exec php bin/phpunit
+
 build:
 	docker compose build --no-cache
 
