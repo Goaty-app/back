@@ -1,6 +1,9 @@
-.PHONY: down up db build schema fixtures cache clean
+.PHONY: down up db build schema fixtures cache clean debug
 
 .DEFAULT_GOAL := clean
+
+debug:
+	XDEBUG_MODE=debug docker compose up --pull always -d --wait
 
 fix:
 	docker compose exec php ./vendor/bin/php-cs-fixer fix
