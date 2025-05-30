@@ -12,7 +12,7 @@ class BirthTest extends AbstractApiTestCase
     ];
 
     public static $optionalPayload = [
-        'birthDate'   => '2025-01-01T00:00:00+00:00',
+        'birthDate'   => '2025-01-01 00:00:00',
         'birthWeight' => 2500.0,
         'notes'       => 'Great',
         'breedingId'  => 1,

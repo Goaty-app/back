@@ -2,8 +2,12 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumDumperTrait;
+
 enum QuantityUnit: string
 {
+    use EnumDumperTrait;
+
     // Unités métriques
     case KILOGRAM = 'kg';
     case GRAM = 'g';

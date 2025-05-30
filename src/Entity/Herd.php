@@ -34,7 +34,6 @@ class Herd implements OwnableInterface
 
     #[ORM\Column(length: 50)]
     #[Groups(['herd'])]
-    #[Assert\Type(type: 'string')]
     #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
@@ -43,7 +42,6 @@ class Herd implements OwnableInterface
 
     #[ORM\Column(length: 100, nullable: true)]
     #[Groups(['herd'])]
-    #[Assert\Type(type: 'string')]
     #[Assert\Length(
         max: 100,
     )]

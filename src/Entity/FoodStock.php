@@ -39,28 +39,27 @@ class FoodStock implements OwnableInterface, HerdAwareInterface
     #[Groups(['foodStock'])]
     private ?Herd $herd = null;
 
-    #[ORM\Column]
-    #[Groups(['foodStock'])]
-    #[Assert\Type(type: 'float')]
-    private ?float $quantity = null;
-
-    #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
-    #[Groups(['foodStock'])]
-    private ?QuantityUnit $quantityUnit = null;
-
     #[ORM\Column(length: 255)]
     #[Groups(['foodStock'])]
-    #[Assert\Type(type: 'string')]
     #[Assert\NotBlank()]
     #[Assert\Length(
         max: 255,
     )]
     private ?string $name = null;
 
+    #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
+    #[Groups(['foodStock'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    private ?QuantityUnit $quantityUnit = null;
+
     #[ORM\ManyToOne(inversedBy: 'foodStocks')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['foodStock'])]
     private ?FoodStockType $foodStockType = null;
+
+    #[ORM\Column]
+    #[Groups(['foodStock'])]
+    private float $quantity = 0;
 
     /**
      * @var Collection<int, FoodStockHistory>

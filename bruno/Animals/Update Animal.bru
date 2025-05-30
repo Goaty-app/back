@@ -12,10 +12,18 @@ patch {
 
 body:json {
   {
+    // Implicit
     "herdId": 2,
-    "name": "Seguin",
-    "idNumber": "GOAT-069",
+  
+    // Required (in create)
+    "idNumber": "GOAT-002",
+    "status": "Child",
+    "animalTypeId": 2,
+  
+    // Optional
+    "name": "Napoléon Bonabroute",
+    "behaviorNotes": "Ne broute plus",
+    "originCountry": "FR",
     "gender": "male"
   }
-  
 }

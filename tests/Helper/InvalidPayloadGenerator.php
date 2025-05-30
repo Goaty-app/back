@@ -34,7 +34,7 @@ class InvalidPayloadGenerator
 {
     private EntityAttributeInspector $inspector;
 
-    private array $fieldsToExclude = [
+    private array $defaultFieldsToExclude = [
         'createdAt',
         'updatedAt',
         'deletedAt',
@@ -51,7 +51,7 @@ class InvalidPayloadGenerator
     public function generateInvalidData(
         string $entityClassName,
         array $baseValidPayload,
-        array $fieldsToConsider = [],
+        array $fieldsToExclude = [],
     ): iterable {
         $inspectedFields = $this->inspector->inspectEntityFields($entityClassName);
 
@@ -65,11 +65,11 @@ class InvalidPayloadGenerator
         }
 
         foreach ($inspectedFields as $propertyName => $info) {
-            if (!empty($fieldsToConsider) && !\in_array($propertyName, $fieldsToConsider, true)) {
+            if (\in_array($propertyName, $fieldsToExclude, true)) {
                 continue;
             }
 
-            if (\in_array($propertyName, $this->fieldsToExclude, true)) {
+            if (\in_array($propertyName, $this->defaultFieldsToExclude, true)) {
                 continue;
             }
 

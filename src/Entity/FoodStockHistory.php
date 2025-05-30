@@ -31,16 +31,15 @@ class FoodStockHistory implements OwnableInterface
     #[Groups(['foodStockHistory'])]
     private ?int $id = null;
 
-    #[ORM\Column(enumType: Operation::class, nullable: false)]
-    #[Groups(['foodStockHistory'])]
-    private ?Operation $operation = null;
-
     #[ORM\Column]
     #[Groups(['foodStockHistory'])]
-    #[Assert\Type(type: 'float')]
     #[Assert\NotBlank()]
     #[Assert\PositiveOrZero]
     private ?float $quantity = null;
+
+    #[ORM\Column(enumType: Operation::class, nullable: false)]
+    #[Groups(['foodStockHistory'])]
+    private ?Operation $operation = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodStockHistories')]
     #[ORM\JoinColumn(nullable: false)]

@@ -45,20 +45,22 @@ class Breeding implements OwnableInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['breeding'])]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
     private ?DateTimeInterface $matingDateStart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['breeding'])]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
     private ?DateTimeInterface $matingDateEnd = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['breeding'])]
-    #[Assert\Type(type: 'int')]
     #[Assert\PositiveOrZero]
     private ?int $expectedChildCount = null;
 
     #[ORM\Column(enumType: BreedingStatus::class, nullable: true)]
     #[Groups(['breeding'])]
+    #[Assert\Choice(callback: [BreedingStatus::class, 'enumValues'])]
     private ?BreedingStatus $status = null;
 
     /**
@@ -142,7 +144,7 @@ class Breeding implements OwnableInterface
         return $this->status;
     }
 
-    public function setStatus(BreedingStatus $status): static
+    public function setStatus(?BreedingStatus $status): static
     {
         $this->status = $status;
 

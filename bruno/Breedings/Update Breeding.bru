@@ -12,8 +12,14 @@ patch {
 
 body:json {
   {
-    "maleId": 3,
-    "matingDateStart": "2025-05-11"
-  }
+    // Required (in create)
+    "femaleId": 3,
+    "maleId": 4,
   
+    // Optional
+    "matingDateStart": "2025-01-01 12:00:00",
+    "matingDateEnd": "2025-02-01 12:00:00",
+    "expectedChildCount": 5,
+    "status": "Pregnant"
+  }
 }

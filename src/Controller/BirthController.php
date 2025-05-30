@@ -2,22 +2,36 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateBirthDto;
+use App\Dto\UpdateBirthDto;
 use App\Entity\Birth;
 use App\Repository\BirthRepository;
 use App\Service\BirthService;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_birth_')]
 final class BirthController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+        protected readonly BirthService $birthService,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'births';
@@ -35,44 +49,36 @@ final class BirthController extends AbstractCachedController
     #[Route('/v1/birth/{birth}', name: 'get', methods: ['GET'])]
     public function get(
         Birth $birth,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($birth, 'json', ['groups' => ['birth']]);
+        $jsonData = $this->serializer->serialize($birth, 'json', ['groups' => ['birth']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/birth', name: 'create', methods: ['POST'])]
     public function create(
-        Request $request,
+        #[MapRequestPayload]
+        CreateBirthDto $birthDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
         BirthService $birthService,
     ): JsonResponse {
         /** @var Birth */
-        $birth = $serializer->deserialize($request->getContent(), Birth::class, 'json');
+        $birth = $this->createWithDto($birthDto, Birth::class);
 
-        $errors = $validator->validate($birth);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $birthService->updateChild($birth, $request, $this->getUser());
-        $birthService->updateBreeding($birth, $request, $this->getUser());
+        $birthService->updateChild($birth, $birthDto, $this->getUser());
+        $birthService->updateBreeding($birth, $birthDto, $this->getUser());
 
         $birth->setOwner($this->getUser());
 
-        $entityManager->persist($birth);
-        $entityManager->flush();
+        $this->em->persist($birth);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
             $this->getTag(AnimalController::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($birth, 'json', ['groups' => ['birth']]);
+        $jsonData = $this->serializer->serialize($birth, 'json', ['groups' => ['birth']]);
         $location = $urlGenerator->generate('api_birth_get', ['birth' => $birth->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -81,25 +87,18 @@ final class BirthController extends AbstractCachedController
     #[Route('/v1/birth/{birth}', name: 'update', methods: ['PATCH'])]
     public function update(
         Birth $birth,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
+        #[MapRequestPayload]
+        UpdateBirthDto $birthDto,
         BirthService $birthService,
     ): JsonResponse {
         /** @var Birth */
-        $birth = $serializer->deserialize($request->getContent(), Birth::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $birth]);
+        $birth = $this->updateWithDto($birthDto, Birth::class, $birth);
 
-        $errors = $validator->validate($birth);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $birthService->updateChild($birth, $birthDto, $this->getUser());
+        $birthService->updateBreeding($birth, $birthDto, $this->getUser());
 
-        $birthService->updateChild($birth, $request, $this->getUser());
-        $birthService->updateBreeding($birth, $request, $this->getUser());
-
-        $entityManager->persist($birth);
-        $entityManager->flush();
+        $this->em->persist($birth);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
@@ -112,10 +111,9 @@ final class BirthController extends AbstractCachedController
     #[Route('/v1/birth/{birth}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Birth $birth,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($birth);
-        $entityManager->flush();
+        $this->em->remove($birth);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),

@@ -2,22 +2,35 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateFoodStockHistoryDto;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Enum\Operation;
 use App\Repository\FoodStockHistoryRepository;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_food_stock_history_')]
 final class FoodStockHistoryController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'foodStockHistories';
@@ -41,9 +54,8 @@ final class FoodStockHistoryController extends AbstractCachedController
     #[Route('/v1/food-stock-history/{foodStockHistory}', name: 'get', methods: ['GET'])]
     public function get(
         FoodStockHistory $foodStockHistory,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($foodStockHistory, 'json', ['groups' => ['foodStockHistory']]);
+        $jsonData = $this->serializer->serialize($foodStockHistory, 'json', ['groups' => ['foodStockHistory']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
@@ -51,39 +63,32 @@ final class FoodStockHistoryController extends AbstractCachedController
     #[Route('/v1/food-stock/{foodStock}/food-stock-history', name: 'create', methods: ['POST'])]
     public function create(
         FoodStock $foodStock,
-        Request $request,
+        #[MapRequestPayload]
+        CreateFoodStockHistoryDto $foodStockHistoryDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var FoodStockHistory */
-        $foodStockHistory = $serializer->deserialize($request->getContent(), FoodStockHistory::class, 'json');
-
-        $errors = $validator->validate($foodStockHistory);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $foodStockHistory = $this->createWithDto($foodStockHistoryDto, FoodStockHistory::class);
 
         match ($foodStockHistory->getOperation()) {
             Operation::PLUS  => $foodStock->setQuantity($foodStock->getQuantity() + $foodStockHistory->getQuantity()),
             Operation::MINUS => $foodStock->setQuantity($foodStock->getQuantity() - $foodStockHistory->getQuantity()),
         };
 
-        $entityManager->persist($foodStock);
+        $this->em->persist($foodStock);
 
         $foodStockHistory->setOwner($this->getUser())
             ->setFoodStock($foodStock)
         ;
 
-        $entityManager->persist($foodStockHistory);
-        $entityManager->flush();
+        $this->em->persist($foodStockHistory);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($foodStockHistory, 'json', ['groups' => ['foodStockHistory']]);
+        $jsonData = $this->serializer->serialize($foodStockHistory, 'json', ['groups' => ['foodStockHistory']]);
         $location = $urlGenerator->generate('api_food_stock_history_get', ['foodStockHistory' => $foodStockHistory->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -92,7 +97,6 @@ final class FoodStockHistoryController extends AbstractCachedController
     #[Route('/v1/food-stock-history/{foodStockHistory}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         FoodStockHistory $foodStockHistory,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
         $foodStock = $foodStockHistory->getFoodStock();
 
@@ -101,10 +105,10 @@ final class FoodStockHistoryController extends AbstractCachedController
             Operation::MINUS => $foodStock->setQuantity($foodStock->getQuantity() + $foodStockHistory->getQuantity()),
         };
 
-        $entityManager->persist($foodStock);
+        $this->em->persist($foodStock);
 
-        $entityManager->remove($foodStockHistory);
-        $entityManager->flush();
+        $this->em->remove($foodStockHistory);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),

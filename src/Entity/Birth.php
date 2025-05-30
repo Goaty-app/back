@@ -32,33 +32,32 @@ class Birth implements OwnableInterface
     #[Groups(['birth', 'animal'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['birth'])]
-    private ?DateTimeInterface $birthDate = null;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['birth'])]
-    #[Assert\Type(type: 'float')]
-    #[Assert\PositiveOrZero]
-    private ?float $birthWeight = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['birth'])]
-    #[Assert\Type(type: 'string')]
-    #[Assert\Length(
-        max: 255,
-    )]
-    private ?string $notes = null;
-
-    #[ORM\ManyToOne(inversedBy: 'births')]
-    #[Groups(['birth'])]
-    private ?Breeding $breeding = null;
-
     // Hack to make a ManyToOne like a OneToOne
     #[ORM\ManyToOne(inversedBy: 'birth')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['birth'])]
     private ?Animal $child = null;
+
+    #[ORM\ManyToOne(inversedBy: 'births')]
+    #[Groups(['birth'])]
+    private ?Breeding $breeding = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['birth'])]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    private ?DateTimeInterface $birthDate = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['birth'])]
+    #[Assert\PositiveOrZero]
+    private ?float $birthWeight = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['birth'])]
+    #[Assert\Length(
+        max: 255,
+    )]
+    private ?string $notes = null;
 
     public function getId(): ?int
     {

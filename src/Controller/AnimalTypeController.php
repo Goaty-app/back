@@ -2,21 +2,34 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateAnimalTypeDto;
+use App\Dto\UpdateAnimalTypeDto;
 use App\Entity\AnimalType;
 use App\Repository\AnimalTypeRepository;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_animal_type_')]
 final class AnimalTypeController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'animalTypes';
@@ -39,39 +52,31 @@ final class AnimalTypeController extends AbstractCachedController
     #[Route('/v1/animal-type/{animalType}', name: 'get', methods: ['GET'])]
     public function get(
         AnimalType $animalType,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($animalType, 'json', ['groups' => ['animalType']]);
+        $jsonData = $this->serializer->serialize($animalType, 'json', ['groups' => ['animalType']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/animal-type', name: 'create', methods: ['POST'])]
     public function create(
-        Request $request,
+        #[MapRequestPayload]
+        CreateAnimalTypeDto $animalTypeDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var AnimalType */
-        $animalType = $serializer->deserialize($request->getContent(), AnimalType::class, 'json');
-
-        $errors = $validator->validate($animalType);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $animalType = $this->createWithDto($animalTypeDto, AnimalType::class);
 
         $animalType->setOwner($this->getUser());
 
-        $entityManager->persist($animalType);
-        $entityManager->flush();
+        $this->em->persist($animalType);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($animalType, 'json', ['groups' => ['animalType']]);
+        $jsonData = $this->serializer->serialize($animalType, 'json', ['groups' => ['animalType']]);
         $location = $urlGenerator->generate('api_animal_type_get', ['animalType' => $animalType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -80,21 +85,14 @@ final class AnimalTypeController extends AbstractCachedController
     #[Route('/v1/animal-type/{animalType}', name: 'update', methods: ['PATCH'])]
     public function update(
         AnimalType $animalType,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
+        #[MapRequestPayload]
+        UpdateAnimalTypeDto $animalTypeDto,
     ): JsonResponse {
         /** @var AnimalType */
-        $animalType = $serializer->deserialize($request->getContent(), AnimalType::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $animalType]);
+        $animalType = $this->updateWithDto($animalTypeDto, AnimalType::class, $animalType);
 
-        $errors = $validator->validate($animalType);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $entityManager->persist($animalType);
-        $entityManager->flush();
+        $this->em->persist($animalType);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),
@@ -106,10 +104,9 @@ final class AnimalTypeController extends AbstractCachedController
     #[Route('/v1/animal-type/{animalType}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         AnimalType $animalType,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($animalType);
-        $entityManager->flush();
+        $this->em->remove($animalType);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),

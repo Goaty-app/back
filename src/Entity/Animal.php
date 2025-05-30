@@ -38,44 +38,20 @@ class Animal implements OwnableInterface, HerdAwareInterface
     #[ORM\ManyToOne(targetEntity: Herd::class, inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['animal'])]
+    #[Assert\NotNull()]
     private ?Herd $herd = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['animal'])]
-    #[Assert\Type(type: 'string')]
-    #[Assert\Length(
-        max: 50,
-    )]
-    private ?string $name = null;
 
     #[ORM\Column(length: 50)]
     #[Groups(['animal'])]
-    #[Assert\Type(type: 'string')]
     #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
     )]
     private ?string $idNumber = null;
 
-    #[ORM\Column(enumType: Gender::class, nullable: true)]
-    #[Groups(['animal'])]
-    private ?Gender $gender = null;
-
-    #[ORM\Column(enumType: Country::class, nullable: true)]
-    #[Groups(['animal'])]
-    private ?Country $originCountry = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['animal'])]
-    #[Assert\Type(type: 'string')]
-    #[Assert\Length(
-        max: 255,
-    )]
-    private ?string $behaviorNotes = null;
-
     #[ORM\Column(length: 255)]
     #[Groups(['animal'])]
-    #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank()]
     #[Assert\Length(
         max: 255,
     )]
@@ -84,7 +60,32 @@ class Animal implements OwnableInterface, HerdAwareInterface
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['animal'])]
+    #[Assert\NotNull()]
     private ?AnimalType $animalType = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 50,
+    )]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['animal'])]
+    #[Assert\Length(
+        max: 255,
+    )]
+    private ?string $behaviorNotes = null;
+
+    #[ORM\Column(enumType: Country::class, nullable: true)]
+    #[Groups(['animal'])]
+    #[Assert\Choice(callback: [Country::class, 'enumValues'])]
+    private ?Country $originCountry = null;
+
+    #[ORM\Column(enumType: Gender::class, nullable: true)]
+    #[Groups(['animal'])]
+    #[Assert\Choice(callback: [Gender::class, 'enumValues'])]
+    private ?Gender $gender = null;
 
     // Hack to make a ManyToOne like a OneToOne
     /**

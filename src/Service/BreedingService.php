@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
+use App\Dto\CreateBreedingDto;
+use App\Dto\UpdateBreedingDto;
 use App\Entity\Animal;
 use App\Entity\Breeding;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,17 +16,17 @@ class BreedingService
     {
     }
 
-    public function updateFemale(Breeding $breeding, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $femaleId = $requestData['femaleId'] ?? null;
-
-        if (!$femaleId) {
+    public function updateFemale(
+        Breeding $breeding,
+        CreateBreedingDto|UpdateBreedingDto $breedingDto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$breedingDto->femaleId) {
             return;
         }
 
         /** @var Animal */
-        $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($femaleId, $currentUser);
+        $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($breedingDto->femaleId, $currentUser);
 
         if (!$animal) {
             throw new NotFoundHttpException();
@@ -38,17 +39,17 @@ class BreedingService
         $breeding->setFemale($animal);
     }
 
-    public function updateMale(Breeding $breeding, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $maleId = $requestData['maleId'] ?? null;
-
-        if (!$maleId) {
+    public function updateMale(
+        Breeding $breeding,
+        CreateBreedingDto|UpdateBreedingDto $breedingDto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$breedingDto->maleId) {
             return;
         }
 
         /** @var Animal */
-        $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($maleId, $currentUser);
+        $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($breedingDto->maleId, $currentUser);
 
         if (!$animal) {
             throw new NotFoundHttpException();

@@ -2,24 +2,38 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateProductionDto;
+use App\Dto\UpdateProductionDto;
 use App\Entity\Herd;
 use App\Entity\Production;
 use App\Repository\ProductionRepository;
 use App\Service\HerdService;
 use App\Service\ProductionService;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_production_')]
 final class ProductionController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+        protected readonly ProductionService $productionService,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'productions';
@@ -47,9 +61,8 @@ final class ProductionController extends AbstractCachedController
     #[Route('/v1/production/{production}', name: 'get', methods: ['GET'])]
     public function get(
         Production $production,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($production, 'json', ['groups' => ['production']]);
+        $jsonData = $this->serializer->serialize($production, 'json', ['groups' => ['production']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
@@ -57,35 +70,27 @@ final class ProductionController extends AbstractCachedController
     #[Route('/v1/herd/{herd}/production', name: 'create', methods: ['POST'])]
     public function create(
         Herd $herd,
-        Request $request,
+        #[MapRequestPayload]
+        CreateProductionDto $productionDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        ProductionService $productionService,
     ): JsonResponse {
         /** @var Production */
-        $production = $serializer->deserialize($request->getContent(), Production::class, 'json');
+        $production = $this->createWithDto($productionDto, Production::class);
 
-        $errors = $validator->validate($production);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $productionService->updateProductionType($production, $request, $this->getUser());
+        $this->productionService->updateProductionType($production, $productionDto, $this->getUser());
 
         $production->setOwner($this->getUser())
             ->setHerd($herd)
         ;
 
-        $entityManager->persist($production);
-        $entityManager->flush();
+        $this->em->persist($production);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($production, 'json', ['groups' => ['production']]);
+        $jsonData = $this->serializer->serialize($production, 'json', ['groups' => ['production']]);
         $location = $urlGenerator->generate('api_production_get', ['production' => $production->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -94,26 +99,18 @@ final class ProductionController extends AbstractCachedController
     #[Route('/v1/production/{production}', name: 'update', methods: ['PATCH'])]
     public function update(
         Production $production,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        ProductionService $productionService,
+        #[MapRequestPayload]
+        UpdateProductionDto $productionDto,
         HerdService $herdService,
     ): JsonResponse {
         /** @var Production */
-        $production = $serializer->deserialize($request->getContent(), Production::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $production]);
+        $production = $this->updateWithDto($productionDto, Production::class, $production);
 
-        $errors = $validator->validate($production);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $herdService->updateHerd($production, $productionDto, $this->getUser());
+        $this->productionService->updateProductionType($production, $productionDto, $this->getUser());
 
-        $herdService->updateHerd($production, $request, $this->getUser());
-        $productionService->updateProductionType($production, $request, $this->getUser());
-
-        $entityManager->persist($production);
-        $entityManager->flush();
+        $this->em->persist($production);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
@@ -125,10 +122,9 @@ final class ProductionController extends AbstractCachedController
     #[Route('/v1/production/{production}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Production $production,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($production);
-        $entityManager->flush();
+        $this->em->remove($production);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),

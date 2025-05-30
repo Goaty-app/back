@@ -9,14 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductionTest extends AbstractApiTestCase
 {
     public static $requiredPayload = [
-        'production_date'  => '2025-01-01T00:00:00+00:00',
+        'production_date'  => '2025-01-01 00:00:00',
         'quantity'         => 1500.0,
         'quantityUnit'     => QuantityUnit::OUNCE->value,
         'productionTypeId' => 1,
     ];
 
     public static $optionalPayload = [
-        'expiration_date' => '2025-02-01T00:00:00+00:00',
+        'expiration_date' => '2025-02-01 00:00:00',
         'notes'           => 'Production de lait',
     ];
 
