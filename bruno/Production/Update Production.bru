@@ -12,11 +12,17 @@ patch {
 
 body:json {
   {
+    // Implicit
     "herdId": 2,
-    "production_date": "2025-01-01",
-    "expiration_date": "2025-01-01",
-    "quantity": 30.1,
-    "quantityUnit": "kg",
-    "notes": "Petite note"
+  
+    // Required (in create)
+    "production_date": "2025-01-05 12:00:00",
+    "quantity": 750,
+    "quantityUnit": "oz",
+    "productionTypeId": 2,
+  
+    // Optional
+    "expiration_date": "2025-02-01 12:00:00",
+    "notes": "Production de lait"
   }
 }

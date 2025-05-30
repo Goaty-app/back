@@ -3,6 +3,8 @@
 namespace App\Tests\Func;
 
 use App\Tests\Helper\TestLoginHelper; // Ou la méthode que tu utilises pour te connecter
+use DateTime;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,6 +90,7 @@ class AbstractApiTestCase extends WebTestCase
     final protected function assertCreatedModel(array $data): void
     {
         foreach (array_merge(static::$implicitPayload, static::$requiredPayload) as $key => $value) {
+            $value = $this->convertDateIfNeeded($value);
             if ($this->isRelateKey($key)) {
                 $this->assertSame($value, $data[$this->getRelateKeyValue($key)]['id']);
             } else {
@@ -99,6 +102,7 @@ class AbstractApiTestCase extends WebTestCase
     final protected function assertUpdateModel(array $data): void
     {
         foreach (array_merge(static::$implicitPayload, static::$requiredPayload, static::$optionalPayload) as $key => $value) {
+            $value = $this->convertDateIfNeeded($value);
             if ($this->isRelateKey($key)) {
                 $this->assertSame($value, $data[$this->getRelateKeyValue($key)]['id']);
             } else {
@@ -176,18 +180,21 @@ class AbstractApiTestCase extends WebTestCase
         return array_find($data, fn ($row) => $row['id'] === $id);
     }
 
-    final public function create(string $uri, array $payload): int
+    private function convertDateIfNeeded(mixed $value): mixed
     {
-        $this->client->request(
-            'POST',
-            $this->generateFullUrl($uri),
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
-            json_encode($payload),
-        );
+        if (!\is_string($value)) {
+            return $value;
+        }
 
-        return json_decode($this->client->getResponse()->getContent(), true)['id'];
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+
+        if (false !== $dateTime) {
+            $dateTime->setTimezone(new DateTimeZone('UTC'));
+
+            return $dateTime->format('Y-m-d\TH:i:s+00:00');
+        }
+
+        return $value;
     }
 
     private function generateFullUrl(string $uri)

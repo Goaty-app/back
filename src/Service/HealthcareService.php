@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
+use App\Dto\CreateHealthcareDto;
+use App\Dto\UpdateHealthcareDto;
 use App\Entity\Healthcare;
 use App\Entity\HealthcareType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,17 +16,17 @@ class HealthcareService
     {
     }
 
-    public function updateHealthcareType(Healthcare $healthcare, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $healthcareTypeId = $requestData['healthcareTypeId'] ?? null;
-
-        if (!$healthcareTypeId) {
+    public function updateHealthcareType(
+        Healthcare $healthcare,
+        CreateHealthcareDto|UpdateHealthcareDto $healthcareDto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$healthcareDto->healthcareTypeId) {
             return;
         }
 
         /** @var HealthcareType */
-        $healthcareType = $this->entityManager->getRepository(HealthcareType::class)->findOneByIdAndOwner($healthcareTypeId, $currentUser);
+        $healthcareType = $this->entityManager->getRepository(HealthcareType::class)->findOneByIdAndOwner($healthcareDto->healthcareTypeId, $currentUser);
 
         if (!$healthcareType) {
             throw new NotFoundHttpException();

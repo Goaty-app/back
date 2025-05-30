@@ -2,21 +2,34 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateHerdDto;
+use App\Dto\UpdateHerdDto;
 use App\Entity\Herd;
 use App\Repository\HerdRepository;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_herd_')]
 final class HerdController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'herds';
@@ -34,39 +47,31 @@ final class HerdController extends AbstractCachedController
     #[Route('/v1/herd/{herd}', name: 'get', methods: ['GET'])]
     public function get(
         Herd $herd,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($herd, 'json', ['groups' => ['herd']]);
+        $jsonData = $this->serializer->serialize($herd, 'json', ['groups' => ['herd']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/herd', name: 'create', methods: ['POST'])]
     public function create(
-        Request $request,
+        #[MapRequestPayload]
+        CreateHerdDto $herdDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var Herd */
-        $herd = $serializer->deserialize($request->getContent(), Herd::class, 'json');
-
-        $errors = $validator->validate($herd);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $herd = $this->createWithDto($herdDto, Herd::class);
 
         $herd->setOwner($this->getUser());
 
-        $entityManager->persist($herd);
-        $entityManager->flush();
+        $this->em->persist($herd);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($herd, 'json', ['groups' => ['herd']]);
+        $jsonData = $this->serializer->serialize($herd, 'json', ['groups' => ['herd']]);
         $location = $urlGenerator->generate('api_herd_get', ['herd' => $herd->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -75,21 +80,14 @@ final class HerdController extends AbstractCachedController
     #[Route('/v1/herd/{herd}', name: 'update', methods: ['PATCH'])]
     public function update(
         Herd $herd,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
+        #[MapRequestPayload]
+        UpdateHerdDto $herdDto,
     ): JsonResponse {
         /** @var Herd */
-        $herd = $serializer->deserialize($request->getContent(), Herd::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $herd]);
+        $herd = $this->updateWithDto($herdDto, Herd::class, $herd);
 
-        $errors = $validator->validate($herd);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $entityManager->persist($herd);
-        $entityManager->flush();
+        $this->em->persist($herd);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getUserTag(),
@@ -101,10 +99,9 @@ final class HerdController extends AbstractCachedController
     #[Route('/v1/herd/{herd}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Herd $herd,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($herd);
-        $entityManager->flush();
+        $this->em->remove($herd);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getUserTag(),

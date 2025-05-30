@@ -14,8 +14,8 @@ class BreedingTest extends AbstractApiTestCase
     ];
 
     public static $optionalPayload = [
-        'matingDateStart'    => '2025-01-01T00:00:00+00:00',
-        'matingDateEnd'      => '2025-02-01T00:00:00+00:00',
+        'matingDateStart'    => '2025-01-01 00:00:00',
+        'matingDateEnd'      => '2025-02-01 00:00:00',
         'expectedChildCount' => 5,
         'status'             => BreedingStatus::PREGNANT->value,
     ];

@@ -33,18 +33,7 @@ class Healthcare implements OwnableInterface
     #[Groups(['healthcare'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['healthcare'])]
-    private ?DateTimeInterface $care_date = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['healthcare'])]
-    #[Assert\Type(type: 'string')]
-    #[Assert\Length(
-        max: 255,
-    )]
-    private ?string $description = null;
-
+    // Animal assignment is immutable after creation
     #[ORM\ManyToOne(inversedBy: 'healthcares')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['healthcare'])]
@@ -54,6 +43,17 @@ class Healthcare implements OwnableInterface
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['healthcare'])]
     private ?HealthcareType $healthcareType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['healthcare'])]
+    #[Assert\Length(
+        max: 255,
+    )]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['healthcare'])]
+    private ?DateTimeInterface $care_date = null;
 
     /**
      * @var Collection<int, Media>

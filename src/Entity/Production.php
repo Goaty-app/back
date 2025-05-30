@@ -34,23 +34,38 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[Groups(['production'])]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'productions')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['production'])]
+    private ?Herd $herd = null;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['production'])]
+    #[Assert\NotBlank()]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
     private ?DateTimeInterface $production_date = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Groups(['production'])]
-    private ?DateTimeInterface $expiration_date = null;
 
     #[ORM\Column]
     #[Groups(['production'])]
-    #[Assert\Type(type: 'float')]
     #[Assert\NotBlank()]
     private ?float $quantity = null;
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['production'])]
+    #[Assert\NotBlank()]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
     private ?QuantityUnit $quantityUnit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'production')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['production'])]
+    #[Assert\NotBlank()]
+    private ?ProductionType $productionType = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['production'])]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    private ?DateTimeInterface $expiration_date = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['production'])]
@@ -58,16 +73,6 @@ class Production implements OwnableInterface, HerdAwareInterface
         max: 255,
     )]
     private ?string $notes = null;
-
-    #[ORM\ManyToOne(inversedBy: 'productions')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['production'])]
-    private ?Herd $herd = null;
-
-    #[ORM\ManyToOne(inversedBy: 'production')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['production'])]
-    private ?ProductionType $productionType = null;
 
     public function getId(): ?int
     {

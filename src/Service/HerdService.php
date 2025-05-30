@@ -3,29 +3,32 @@
 namespace App\Service;
 
 use App\Contract\HerdAwareInterface;
+use App\Dto\UpdateAnimalDto;
+use App\Dto\UpdateFoodStockDto;
+use App\Dto\UpdateProductionDto;
 use App\Entity\Herd;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class HerdService
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
-    public function updateHerd(HerdAwareInterface $HerdAwareInterface, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $herdId = $requestData['herdId'] ?? null;
-
-        if (!$herdId) {
+    public function updateHerd(
+        HerdAwareInterface $HerdAwareInterface,
+        UpdateAnimalDto|UpdateFoodStockDto|UpdateProductionDto $dto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$dto->herdId) {
             return;
         }
 
         /** @var Herd */
-        $herd = $this->entityManager->getRepository(Herd::class)->findOneByIdAndOwner($herdId, $currentUser);
+        $herd = $this->entityManager->getRepository(Herd::class)->findOneByIdAndOwner($dto->herdId, $currentUser);
 
         if (!$herd) {
             throw new NotFoundHttpException();

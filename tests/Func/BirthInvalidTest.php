@@ -12,7 +12,7 @@ class BirthInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('birth', $payload, Response::HTTP_BAD_REQUEST);
+        $this->postRequest('birth', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

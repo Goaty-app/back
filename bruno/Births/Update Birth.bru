@@ -12,9 +12,13 @@ patch {
 
 body:json {
   {
-    "birthDate": "2022-04-01",
-    "breedingId": 1,
-    "childId": 2
-  }
+    // Required (in create)
+    "childId": 1,
   
+    // Optional
+    "birthDate": "2025-01-01 12:00:00",
+    "birthWeight": 2500,
+    "notes": "Great",
+    "breedingId": 1
+  }
 }

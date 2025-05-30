@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
+use App\Dto\CreateFoodStockDto;
+use App\Dto\UpdateFoodStockDto;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,17 +16,17 @@ class FoodStockService
     {
     }
 
-    public function updateFoodStockType(FoodStock $foodStock, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $foodStockTypeId = $requestData['foodStockTypeId'] ?? null;
-
-        if (!$foodStockTypeId) {
+    public function updateFoodStockType(
+        FoodStock $foodStock,
+        CreateFoodStockDto|UpdateFoodStockDto $foodStockDto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$foodStockDto->foodStockTypeId) {
             return;
         }
 
         /** @var FoodStockType */
-        $foodStockType = $this->entityManager->getRepository(FoodStockType::class)->findOneByIdAndOwner($foodStockTypeId, $currentUser);
+        $foodStockType = $this->entityManager->getRepository(FoodStockType::class)->findOneByIdAndOwner($foodStockDto->foodStockTypeId, $currentUser);
 
         if (!$foodStockType) {
             throw new NotFoundHttpException();

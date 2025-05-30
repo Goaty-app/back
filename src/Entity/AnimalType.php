@@ -34,7 +34,6 @@ class AnimalType implements OwnableInterface
 
     #[ORM\Column(length: 50)]
     #[Groups(['animalType', 'animal'])]
-    #[Assert\Type(type: 'string')]
     #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,

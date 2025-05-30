@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
+use App\Dto\CreateAnimalDto;
+use App\Dto\UpdateAnimalDto;
 use App\Entity\Animal;
 use App\Entity\AnimalType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,17 +16,17 @@ class AnimalService
     {
     }
 
-    public function updateAnimalType(Animal $animal, Request $request, UserInterface $currentUser): void
-    {
-        $requestData = json_decode($request->getContent(), true);
-        $animalTypeId = $requestData['animalTypeId'] ?? null;
-
-        if (!$animalTypeId) {
+    public function updateAnimalType(
+        Animal $animal,
+        CreateAnimalDto|UpdateAnimalDto $animalDto,
+        UserInterface $currentUser,
+    ): void {
+        if (!$animalDto->animalTypeId) {
             return;
         }
 
         /** @var AnimalType */
-        $animalType = $this->entityManager->getRepository(AnimalType::class)->findOneByIdAndOwner($animalTypeId, $currentUser);
+        $animalType = $this->entityManager->getRepository(AnimalType::class)->findOneByIdAndOwner($animalDto->animalTypeId, $currentUser);
 
         if (!$animalType) {
             throw new NotFoundHttpException();

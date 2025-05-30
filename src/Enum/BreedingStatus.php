@@ -2,9 +2,13 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumDumperTrait;
+
 enum BreedingStatus: string
 {
-    case NOT_ELIGIBLE = 'Not Eligible';
+    use EnumDumperTrait;
+
+    case NOT_ELIGIBLE = 'NotEligible';
     case OPEN = 'Open';
     case BRED = 'Bred';
     case PREGNANT = 'Pregnant';

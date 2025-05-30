@@ -2,24 +2,38 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateFoodStockDto;
+use App\Dto\UpdateFoodStockDto;
 use App\Entity\FoodStock;
 use App\Entity\Herd;
 use App\Repository\FoodStockRepository;
 use App\Service\FoodStockService;
 use App\Service\HerdService;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_food_stock_')]
 final class FoodStockController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+        protected readonly FoodStockService $foodStockService,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'foodStocks';
@@ -47,9 +61,8 @@ final class FoodStockController extends AbstractCachedController
     #[Route('/v1/food-stock/{foodStock}', name: 'get', methods: ['GET'])]
     public function get(
         FoodStock $foodStock,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($foodStock, 'json', ['groups' => ['foodStock']]);
+        $jsonData = $this->serializer->serialize($foodStock, 'json', ['groups' => ['foodStock']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
@@ -57,36 +70,28 @@ final class FoodStockController extends AbstractCachedController
     #[Route('/v1/herd/{herd}/food-stock', name: 'create', methods: ['POST'])]
     public function create(
         Herd $herd,
-        Request $request,
+        #[MapRequestPayload]
+        CreateFoodStockDto $foodStockDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        FoodStockService $foodStockService,
     ): JsonResponse {
         /** @var FoodStock */
-        $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json');
+        $foodStock = $this->createWithDto($foodStockDto, FoodStock::class);
 
-        $errors = $validator->validate($foodStock);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());
+        $this->foodStockService->updateFoodStockType($foodStock, $foodStockDto, $this->getUser());
 
         $foodStock->setOwner($this->getUser())
             ->setHerd($herd)
             ->setQuantity(0.0)
         ;
 
-        $entityManager->persist($foodStock);
-        $entityManager->flush();
+        $this->em->persist($foodStock);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($foodStock, 'json', ['groups' => ['foodStock']]);
+        $jsonData = $this->serializer->serialize($foodStock, 'json', ['groups' => ['foodStock']]);
         $location = $urlGenerator->generate('api_food_stock_get', ['foodStock' => $foodStock->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -95,26 +100,18 @@ final class FoodStockController extends AbstractCachedController
     #[Route('/v1/food-stock/{foodStock}', name: 'update', methods: ['PATCH'])]
     public function update(
         FoodStock $foodStock,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        FoodStockService $foodStockService,
-        ValidatorInterface $validator,
+        #[MapRequestPayload]
+        UpdateFoodStockDto $foodStockDto,
         HerdService $herdService,
     ): JsonResponse {
         /** @var FoodStock */
-        $foodStock = $serializer->deserialize($request->getContent(), FoodStock::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $foodStock, AbstractNormalizer::IGNORED_ATTRIBUTES => ['quantity']]);
+        $foodStock = $this->updateWithDto($foodStockDto, FoodStock::class, $foodStock);
 
-        $errors = $validator->validate($foodStock);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $herdService->updateHerd($foodStock, $foodStockDto, $this->getUser());
+        $this->foodStockService->updateFoodStockType($foodStock, $foodStockDto, $this->getUser());
 
-        $herdService->updateHerd($foodStock, $request, $this->getUser());
-        $foodStockService->updateFoodStockType($foodStock, $request, $this->getUser());
-
-        $entityManager->persist($foodStock);
-        $entityManager->flush();
+        $this->em->persist($foodStock);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),
@@ -126,10 +123,9 @@ final class FoodStockController extends AbstractCachedController
     #[Route('/v1/food-stock/{foodStock}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         FoodStock $foodStock,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($foodStock);
-        $entityManager->flush();
+        $this->em->remove($foodStock);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getGroupCacheKey()),

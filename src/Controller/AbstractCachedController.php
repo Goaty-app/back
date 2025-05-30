@@ -13,8 +13,8 @@ abstract class AbstractCachedController extends AbstractController
 {
     use UserCacheNamingTrait;
 
-    protected TagAwareCacheInterface $cache;
-    protected SerializerInterface $serializer;
+    protected readonly TagAwareCacheInterface $cache;
+    protected readonly SerializerInterface $serializer;
 
     /**
      * Get the cache key from the Controller.
@@ -27,12 +27,6 @@ abstract class AbstractCachedController extends AbstractController
     public static function getGroupCacheKey(): string
     {
         return static::getCacheKey().'Group';
-    }
-
-    public function __construct(TagAwareCacheInterface $cache, SerializerInterface $serializer)
-    {
-        $this->cache = $cache;
-        $this->serializer = $serializer;
     }
 
     protected function getAllCachedItems(OwnerScopedRepositoryInterface $repository, array $groups = [])

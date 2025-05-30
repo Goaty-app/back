@@ -3,23 +3,37 @@
 namespace App\Controller;
 
 use App\Contract\OwnerScopedRepositoryInterface;
+use App\Dto\CreateBreedingDto;
+use App\Dto\UpdateBreedingDto;
 use App\Entity\Animal;
 use App\Entity\Breeding;
 use App\Repository\BreedingRepository;
 use App\Service\BreedingService;
+use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('api', name: 'api_breeding_')]
 final class BreedingController extends AbstractCachedController
 {
+    use ParseDtoTrait;
+
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        protected readonly SerializerInterface $serializer,
+        protected readonly EntityManagerInterface $em,
+        protected readonly DenormalizerInterface $denormalizer,
+        protected readonly BreedingService $breedingService,
+    ) {
+    }
+
     public static function getCacheKey(): string
     {
         return 'breedings';
@@ -55,43 +69,34 @@ final class BreedingController extends AbstractCachedController
     #[Route('/v1/breeding/{breeding}', name: 'get', methods: ['GET'])]
     public function get(
         Breeding $breeding,
-        SerializerInterface $serializer,
     ): JsonResponse {
-        $jsonData = $serializer->serialize($breeding, 'json', ['groups' => ['breeding']]);
+        $jsonData = $this->serializer->serialize($breeding, 'json', ['groups' => ['breeding']]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/breeding', name: 'create', methods: ['POST'])]
     public function create(
-        Request $request,
+        #[MapRequestPayload]
+        CreateBreedingDto $breedingDto,
         UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        BreedingService $breedingService,
     ): JsonResponse {
         /** @var Breeding */
-        $breeding = $serializer->deserialize($request->getContent(), Breeding::class, 'json');
+        $breeding = $this->createWithDto($breedingDto, Breeding::class);
 
-        $errors = $validator->validate($breeding);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $breedingService->updateFemale($breeding, $request, $this->getUser());
-        $breedingService->updateMale($breeding, $request, $this->getUser());
+        $this->breedingService->updateFemale($breeding, $breedingDto, $this->getUser());
+        $this->breedingService->updateMale($breeding, $breedingDto, $this->getUser());
 
         $breeding->setOwner($this->getUser());
 
-        $entityManager->persist($breeding);
-        $entityManager->flush();
+        $this->em->persist($breeding);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
         ]);
 
-        $jsonData = $serializer->serialize($breeding, 'json', ['groups' => ['breeding']]);
+        $jsonData = $this->serializer->serialize($breeding, 'json', ['groups' => ['breeding']]);
         $location = $urlGenerator->generate('api_breeding_get', ['breeding' => $breeding->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
@@ -100,25 +105,17 @@ final class BreedingController extends AbstractCachedController
     #[Route('/v1/breeding/{breeding}', name: 'update', methods: ['PATCH'])]
     public function update(
         Breeding $breeding,
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        BreedingService $breedingService,
+        #[MapRequestPayload]
+        UpdateBreedingDto $breedingDto,
     ): JsonResponse {
         /** @var Breeding */
-        $breeding = $serializer->deserialize($request->getContent(), Breeding::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $breeding]);
+        $breeding = $this->updateWithDto($breedingDto, Breeding::class, $breeding);
 
-        $errors = $validator->validate($breeding);
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
+        $this->breedingService->updateFemale($breeding, $breedingDto, $this->getUser());
+        $this->breedingService->updateMale($breeding, $breedingDto, $this->getUser());
 
-        $breedingService->updateFemale($breeding, $request, $this->getUser());
-        $breedingService->updateMale($breeding, $request, $this->getUser());
-
-        $entityManager->persist($breeding);
-        $entityManager->flush();
+        $this->em->persist($breeding);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),
@@ -131,10 +128,9 @@ final class BreedingController extends AbstractCachedController
     #[Route('/v1/breeding/{breeding}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Breeding $breeding,
-        EntityManagerInterface $entityManager,
     ): JsonResponse {
-        $entityManager->remove($breeding);
-        $entityManager->flush();
+        $this->em->remove($breeding);
+        $this->em->flush();
 
         $this->cache->invalidateTags([
             $this->getTag(static::getCacheKey()),

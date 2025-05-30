@@ -12,7 +12,13 @@ patch {
 
 body:json {
   {
-    "foodStockTypeId": 2,
-    "quantityUnit": "g"
+    // Implicit
+    "herdId": 2,
+  
+    // Required (in create)
+    "name": "Silo 2",
+    "quantityUnit": "oz",
+    "foodStockTypeId": 2
   }
+  
 }
