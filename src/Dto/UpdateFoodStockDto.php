@@ -15,7 +15,7 @@ class UpdateFoodStockDto
     )]
     public ?string $name = null;
 
-    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'], message: 'assert.choice')]
     public ?string $quantityUnit = null;
 
     #[Assert\Positive()]

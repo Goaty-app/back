@@ -14,7 +14,7 @@ class CreateFoodStockDto
     public string $name;
 
     #[Assert\NotBlank()]
-    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'], message: 'assert.choice')]
     public string $quantityUnit;
 
     #[Assert\NotNull()]

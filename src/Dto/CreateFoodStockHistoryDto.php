@@ -12,6 +12,6 @@ class CreateFoodStockHistoryDto
     public float $quantity;
 
     #[Assert\NotBlank()]
-    #[Assert\Choice(callback: [Operation::class, 'enumValues'])]
+    #[Assert\Choice(callback: [Operation::class, 'enumValues'], message: 'assert.choice')]
     public string $operation;
 }

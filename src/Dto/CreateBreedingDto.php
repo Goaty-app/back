@@ -15,15 +15,15 @@ class CreateBreedingDto
     #[Assert\Positive()]
     public int $maleId;
 
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     public ?string $matingDateStart = null;
 
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     public ?string $matingDateEnd = null;
 
     #[Assert\PositiveOrZero]
     public ?int $expectedChildCount = null;
 
-    #[Assert\Choice(callback: [BreedingStatus::class, 'enumValues'])]
+    #[Assert\Choice(callback: [BreedingStatus::class, 'enumValues'], message: 'assert.choice')]
     public ?string $status = null;
 }

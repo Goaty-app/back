@@ -44,7 +44,7 @@ class Birth implements OwnableInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['birth'])]
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     private ?DateTimeInterface $birthDate = null;
 
     #[ORM\Column(nullable: true)]
