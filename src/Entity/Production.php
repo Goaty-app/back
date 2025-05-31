@@ -42,7 +42,7 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['production'])]
     #[Assert\NotBlank()]
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     private ?DateTimeInterface $production_date = null;
 
     #[ORM\Column]
@@ -53,7 +53,7 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['production'])]
     #[Assert\NotBlank()]
-    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'], message: 'assert.choice')]
     private ?QuantityUnit $quantityUnit = null;
 
     #[ORM\ManyToOne(inversedBy: 'production')]
@@ -64,7 +64,7 @@ class Production implements OwnableInterface, HerdAwareInterface
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['production'])]
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     private ?DateTimeInterface $expiration_date = null;
 
     #[ORM\Column(length: 255, nullable: true)]

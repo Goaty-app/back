@@ -49,7 +49,7 @@ class FoodStock implements OwnableInterface, HerdAwareInterface
 
     #[ORM\Column(enumType: QuantityUnit::class, nullable: false)]
     #[Groups(['foodStock'])]
-    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'], message: 'assert.choice')]
     private ?QuantityUnit $quantityUnit = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodStocks')]

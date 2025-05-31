@@ -34,9 +34,9 @@ class UpdateAnimalDto
     )]
     public ?string $behaviorNotes = null;
 
-    #[Assert\Choice(callback: [Country::class, 'enumValues'])]
+    #[Assert\Choice(callback: [Country::class, 'enumValues'], message: 'assert.choice')]
     public ?string $originCountry = null;
 
-    #[Assert\Choice(callback: [Gender::class, 'enumValues'])]
+    #[Assert\Choice(callback: [Gender::class, 'enumValues'], message: 'assert.choice')]
     public ?string $gender = null;
 }

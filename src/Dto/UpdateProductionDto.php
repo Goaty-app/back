@@ -10,18 +10,18 @@ class UpdateProductionDto
     #[Assert\Positive()]
     public ?int $herdId = null;
 
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     public ?string $production_date = null;
 
     public ?float $quantity = null;
 
-    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'])]
+    #[Assert\Choice(callback: [QuantityUnit::class, 'enumValues'], message: 'assert.choice')]
     public ?string $quantityUnit = null;
 
     #[Assert\Positive()]
     public ?int $productionTypeId = null;
 
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     public ?string $expiration_date = null;
 
     #[Assert\Length(

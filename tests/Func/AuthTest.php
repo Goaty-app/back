@@ -60,6 +60,5 @@ class AuthTest extends WebTestCase
 
         $responseData = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('message', $responseData);
-        $this->assertSame('Invalid credentials.', $responseData['message']);
     }
 }

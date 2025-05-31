@@ -12,7 +12,7 @@ class UpdateBirthDto
     #[Assert\Positive()]
     public ?int $breedingId = null;
 
-    #[Assert\DateTime(format: 'Y-m-d H:i:s')]
+    #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
     public ?string $birthDate = null;
 
     #[Assert\Type(type: 'float')]

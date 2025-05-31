@@ -79,12 +79,12 @@ class Animal implements OwnableInterface, HerdAwareInterface
 
     #[ORM\Column(enumType: Country::class, nullable: true)]
     #[Groups(['animal'])]
-    #[Assert\Choice(callback: [Country::class, 'enumValues'])]
+    #[Assert\Choice(callback: [Country::class, 'enumValues'], message: 'assert.choice')]
     private ?Country $originCountry = null;
 
     #[ORM\Column(enumType: Gender::class, nullable: true)]
     #[Groups(['animal'])]
-    #[Assert\Choice(callback: [Gender::class, 'enumValues'])]
+    #[Assert\Choice(callback: [Gender::class, 'enumValues'], message: 'assert.choice')]
     private ?Gender $gender = null;
 
     // Hack to make a ManyToOne like a OneToOne
