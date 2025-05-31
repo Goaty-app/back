@@ -35,11 +35,6 @@ final class AnimalTypeController extends AbstractCachedController
         return 'animalTypes';
     }
 
-    public static function getGroupCacheKey(): string
-    {
-        return AnimalController::getGroupCacheKey();
-    }
-
     #[Route('/v1/animal-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         AnimalTypeRepository $animalTypeRepository,
@@ -95,7 +90,8 @@ final class AnimalTypeController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(AnimalController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -109,7 +105,8 @@ final class AnimalTypeController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(AnimalController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
