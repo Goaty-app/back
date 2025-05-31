@@ -36,38 +36,4 @@ abstract class AbstractCachedController extends AbstractController
             },
         );
     }
-
-    protected function getInCachedItems(OwnerScopedRepositoryInterface $repository, string $column, int $value, array $groups = [])
-    {
-        $serializer = $this->serializer;
-
-        return $this->cache->get(
-            $this->buildInCacheKey(static::getCacheKey(), $value),
-            function (ItemInterface $item) use ($repository, $serializer, $groups, $column, $value) {
-                $item->tag($this->buildTags(static::getCacheKey()));
-                $data = $repository->findByOwnerFlex($column, $value, $this->getUser());
-                $jsonData = $serializer->serialize($data, 'json', $groups);
-
-                return $jsonData;
-            },
-        );
-    }
-
-    protected function getInCachedItemsCustomRequest(OwnerScopedRepositoryInterface $repository, int $value, callable $dataFetcherCallback, array $groups = [])
-    {
-        $serializer = $this->serializer;
-
-        return $this->cache->get(
-            $this->buildInCacheKey(static::getCacheKey(), $value),
-            function (ItemInterface $item) use ($repository, $serializer, $value, $groups, $dataFetcherCallback) {
-                $item->tag($this->buildTags(static::getCacheKey()));
-
-                $data = $dataFetcherCallback($repository, $value);
-
-                $jsonData = $serializer->serialize($data, 'json', $groups);
-
-                return $jsonData;
-            },
-        );
-    }
 }

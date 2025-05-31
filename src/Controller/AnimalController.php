@@ -53,9 +53,13 @@ final class AnimalController extends AbstractCachedController
         Herd $herd,
         AnimalRepository $animalRepository,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItems($animalRepository, 'herd', $herd->getId(), ['groups' => ['animal']]);
+        $data = $this->serializer->serialize(
+            $animalRepository->findByOwnerFlex('herd', $herd->getId(), $this->getUser()),
+            'json',
+            ['groups' => ['animal']],
+        );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/animal/{animal}', name: 'get', methods: ['GET'])]

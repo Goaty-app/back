@@ -41,9 +41,13 @@ final class FoodStockHistoryController extends AbstractCachedController
         FoodStock $foodStock,
         FoodStockHistoryRepository $foodStockHistory,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItems($foodStockHistory, 'foodStock', $foodStock->getId(), ['groups' => ['foodStockHistory']]);
+        $data = $this->serializer->serialize(
+            $foodStockHistory->findByOwnerFlex('foodStock', $foodStock->getId(), $this->getUser()),
+            'json',
+            ['groups' => ['foodStockHistory']],
+        );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/food-stock-history/{foodStockHistory}', name: 'get', methods: ['GET'])]

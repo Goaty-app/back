@@ -13,14 +13,6 @@ trait UserCacheNamingTrait
     }
 
     /**
-     * Build cache key for 'AllIn'.
-     */
-    private function buildInCacheKey(string $baseKey, int $value): string
-    {
-        return \sprintf('%s_in_%s_controller_%s_key', $baseKey, $value, $this->getUser()->getId());
-    }
-
-    /**
      * Get cache tag.
      */
     protected function getTag(string $baseKey): string
