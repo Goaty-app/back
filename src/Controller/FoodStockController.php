@@ -53,9 +53,13 @@ final class FoodStockController extends AbstractCachedController
         Herd $herd,
         FoodStockRepository $foodStockRepository,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItems($foodStockRepository, 'herd', $herd->getId(), ['groups' => ['foodStock']]);
+        $data = $this->serializer->serialize(
+            $foodStockRepository->findByOwnerFlex('herd', $herd->getId(), $this->getUser()),
+            'json',
+            ['groups' => ['foodStock']],
+        );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/food-stock/{foodStock}', name: 'get', methods: ['GET'])]
