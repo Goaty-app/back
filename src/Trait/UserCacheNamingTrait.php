@@ -29,14 +29,6 @@ trait UserCacheNamingTrait
     }
 
     /**
-     * Get cache tags.
-     */
-    private function getTags(array $baseKeys): array
-    {
-        return array_map(fn ($baseKey) => $this->getTag($baseKey), $baseKeys);
-    }
-
-    /**
      * Get user cache (useful to reset cache from the user).
      */
     protected function getUserTag(): string
@@ -47,10 +39,10 @@ trait UserCacheNamingTrait
     /**
      * Build tags (cache key, cache group key, cache user key).
      */
-    private function buildTags(array $baseKeys): array
+    private function buildTags(string $baseKey): array
     {
         return [
-            ...$this->getTags($baseKeys),
+            $this->getTag($baseKey),
             $this->getUserTag(),
         ];
     }

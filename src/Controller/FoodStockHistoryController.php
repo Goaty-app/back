@@ -36,11 +36,6 @@ final class FoodStockHistoryController extends AbstractCachedController
         return 'foodStockHistories';
     }
 
-    public static function getGroupCacheKey(): string
-    {
-        return FoodStockController::getGroupCacheKey();
-    }
-
     #[Route('/v1/food-stock/{foodStock}/food-stock-history', name: 'get_all_in', methods: ['GET'])]
     public function getAll(
         FoodStock $foodStock,
@@ -85,7 +80,8 @@ final class FoodStockHistoryController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(FoodStockController::getCacheKey()),
         ]);
 
         $jsonData = $this->serializer->serialize($foodStockHistory, 'json', ['groups' => ['foodStockHistory']]);
@@ -111,7 +107,8 @@ final class FoodStockHistoryController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(FoodStockController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

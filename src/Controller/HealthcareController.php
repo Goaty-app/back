@@ -112,7 +112,7 @@ final class HealthcareController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -126,7 +126,7 @@ final class HealthcareController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

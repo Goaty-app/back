@@ -35,11 +35,6 @@ final class FoodStockTypeController extends AbstractCachedController
         return 'foodStockTypes';
     }
 
-    public static function getGroupCacheKey(): string
-    {
-        return FoodStockController::getGroupCacheKey();
-    }
-
     #[Route('/v1/food-stock-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         FoodStockTypeRepository $foodStockTypeRepository,
@@ -95,7 +90,8 @@ final class FoodStockTypeController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(FoodStockController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -109,7 +105,8 @@ final class FoodStockTypeController extends AbstractCachedController
         $this->em->flush();
 
         $this->cache->invalidateTags([
-            $this->getTag(static::getGroupCacheKey()),
+            $this->getTag(static::getCacheKey()),
+            $this->getTag(FoodStockController::getCacheKey()),
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
