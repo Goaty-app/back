@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Contract\OwnerScopedRepositoryInterface;
 use App\Dto\CreateBreedingDto;
 use App\Dto\UpdateBreedingDto;
 use App\Entity\Animal;
@@ -53,17 +52,16 @@ final class BreedingController extends AbstractCachedController
         Animal $animal,
         BreedingRepository $breedingRepository,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItemsCustomRequest(
-            $breedingRepository,
-            $animal->getId(),
-            fn (OwnerScopedRepositoryInterface $repository, int $value) => [
-                ...$repository->findByOwnerFlex('male', $value, $this->getUser()),
-                ...$repository->findByOwnerFlex('female', $value, $this->getUser()),
+        $data = $this->serializer->serialize(
+            [
+                ...$breedingRepository->findByOwnerFlex('male', $animal->getId(), $this->getUser()),
+                ...$breedingRepository->findByOwnerFlex('female', $animal->getId(), $this->getUser()),
             ],
+            'json',
             ['groups' => ['breeding']],
         );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/breeding/{breeding}', name: 'get', methods: ['GET'])]

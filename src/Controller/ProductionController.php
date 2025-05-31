@@ -53,9 +53,13 @@ final class ProductionController extends AbstractCachedController
         Herd $herd,
         ProductionRepository $productionRepository,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItems($productionRepository, 'herd', $herd->getId(), ['groups' => ['production']]);
+        $data = $this->serializer->serialize(
+            $productionRepository->findByOwnerFlex('herd', $herd->getId(), $this->getUser()),
+            'json',
+            ['groups' => ['production']],
+        );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/production/{production}', name: 'get', methods: ['GET'])]
