@@ -53,9 +53,13 @@ final class HealthcareController extends AbstractCachedController
         Animal $animal,
         HealthcareRepository $healthcareRepository,
     ): JsonResponse {
-        $cacheReturn = $this->getInCachedItems($healthcareRepository, 'animal', $animal->getId(), ['groups' => ['healthcare']]);
+        $data = $this->serializer->serialize(
+            $healthcareRepository->findByOwnerFlex('animal', $animal->getId(), $this->getUser()),
+            'json',
+            ['groups' => ['healthcare']],
+        );
 
-        return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/healthcare/{healthcare}', name: 'get', methods: ['GET'])]
