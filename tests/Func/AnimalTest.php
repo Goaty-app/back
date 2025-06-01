@@ -4,6 +4,7 @@ namespace App\Tests\Func;
 
 use PHPUnit\Framework\Attributes\Depends;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class AnimalTest extends AbstractApiTestCase
 {
@@ -26,11 +27,19 @@ class AnimalTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
+        $service = $this->createMock(TagAwareCacheInterface::class);
+        $service->expects($this->once())
+            ->method('invalidateTags')
+            ->willReturnCallback(fn ($tags): bool => true)
+        ;
+        self::getContainer()->set(TagAwareCacheInterface::class, $service);
+
         $responseData = $this->postRequest('herd/1/animal');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
+        // Mocking is incompatible with this line (uncommented pour fail the test pipeline)
         $this->assertCacheCollectionCreated('animal', $responseData['id']);
 
         return $responseData['id'];
