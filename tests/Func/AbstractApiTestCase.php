@@ -24,6 +24,7 @@ class AbstractApiTestCase extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
         $this->client = TestLoginHelper::login($this->client);
+        $this->client->disableReboot(); // https://github.com/symfony/symfony/discussions/54915#discussioncomment-9443700
         $this->overrideSetUp();
     }
 
