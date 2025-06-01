@@ -23,8 +23,10 @@ class HealthcareTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('animal/1/healthcare');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('healthcare', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -35,8 +37,8 @@ class HealthcareTest extends AbstractApiTestCase
         $responseData = $this->getRequest('healthcare');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -45,9 +47,9 @@ class HealthcareTest extends AbstractApiTestCase
         $responseData = $this->getRequest('animal/1/healthcare');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
-        $this->assertSame($createdId, $this->filterCreated($responseData, $createdId)['id']);
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
+        $this->assertSame($createdId, $this->filterCollection($responseData, $createdId)['id']);
     }
 
     #[Depends('testCreate')]
@@ -55,7 +57,7 @@ class HealthcareTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("healthcare/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -68,9 +70,11 @@ class HealthcareTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("healthcare/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('healthcare', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -80,5 +84,7 @@ class HealthcareTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("healthcare/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('healthcare', $createdId);
     }
 }

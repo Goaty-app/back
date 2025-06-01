@@ -19,8 +19,10 @@ class FoodStockTypeTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('food-stock-type');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('food-stock-type', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -31,8 +33,8 @@ class FoodStockTypeTest extends AbstractApiTestCase
         $responseData = $this->getRequest('food-stock-type');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -40,7 +42,7 @@ class FoodStockTypeTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("food-stock-type/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -53,9 +55,11 @@ class FoodStockTypeTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("food-stock-type/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('food-stock-type', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -65,5 +69,7 @@ class FoodStockTypeTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("food-stock-type/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('food-stock-type', $createdId);
     }
 }

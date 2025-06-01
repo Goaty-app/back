@@ -24,8 +24,10 @@ class BreedingTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('breeding');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('breeding', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -36,8 +38,8 @@ class BreedingTest extends AbstractApiTestCase
         $responseData = $this->getRequest('breeding');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -46,9 +48,9 @@ class BreedingTest extends AbstractApiTestCase
         $responseData = $this->getRequest('animal/1/breeding');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
-        $this->assertSame($createdId, $this->filterCreated($responseData, $createdId)['id']);
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
+        $this->assertSame($createdId, $this->filterCollection($responseData, $createdId)['id']);
     }
 
     #[Depends('testCreate')]
@@ -56,7 +58,7 @@ class BreedingTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("breeding/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -69,9 +71,11 @@ class BreedingTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("breeding/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('breeding', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -81,5 +85,7 @@ class BreedingTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("breeding/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('breeding', $createdId);
     }
 }

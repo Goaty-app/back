@@ -22,8 +22,10 @@ class BirthTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('birth');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('birth', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -34,8 +36,8 @@ class BirthTest extends AbstractApiTestCase
         $responseData = $this->getRequest('birth');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -43,7 +45,7 @@ class BirthTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("birth/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -56,9 +58,11 @@ class BirthTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("birth/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('birth', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -68,5 +72,7 @@ class BirthTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("birth/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('birth', $createdId);
     }
 }

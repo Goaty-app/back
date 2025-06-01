@@ -21,7 +21,7 @@ class FoodStockHistoryTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('food-stock/1/food-stock-history');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
         return $responseData['id'];
@@ -33,8 +33,8 @@ class FoodStockHistoryTest extends AbstractApiTestCase
         $responseData = $this->getRequest('food-stock/1/food-stock-history');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -42,7 +42,7 @@ class FoodStockHistoryTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("food-stock-history/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
