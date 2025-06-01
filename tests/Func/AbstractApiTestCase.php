@@ -2,7 +2,7 @@
 
 namespace App\Tests\Func;
 
-use App\Tests\Helper\TestLoginHelper; // Ou la méthode que tu utilises pour te connecter
+use App\Tests\Helper\TestLoginHelper;
 use DateTime;
 use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -38,6 +38,9 @@ class AbstractApiTestCase extends WebTestCase
         static::$optionalPayload = [];
     }
 
+    /**
+     * GET request.
+     */
     final protected function getRequest(string $uri, array $parameters = [], int $expectedStatusCode = Response::HTTP_OK): ?array
     {
         $this->client->request('GET', $this->generateFullUrl($uri), $parameters);
@@ -52,6 +55,9 @@ class AbstractApiTestCase extends WebTestCase
         return json_decode($this->client->getResponse()->getContent(), true);
     }
 
+    /**
+     * POST request.
+     */
     final protected function postRequest(string $uri, ?array $payload = null, int $expectedStatusCode = Response::HTTP_CREATED): ?array
     {
         $this->client->request(
@@ -68,6 +74,9 @@ class AbstractApiTestCase extends WebTestCase
         return json_decode($this->client->getResponse()->getContent(), true);
     }
 
+    /**
+     * PATCH request.
+     */
     final protected function patchRequest(string $uri, ?array $payload = null, int $expectedStatusCode = Response::HTTP_NO_CONTENT): void
     {
         $this->client->request(
@@ -81,12 +90,28 @@ class AbstractApiTestCase extends WebTestCase
         $this->assertResponseStatusCodeSame($expectedStatusCode, $this->client->getResponse()->getContent());
     }
 
+    /**
+     * DELETE request.
+     */
     final protected function deleteRequest(string $uri, int $expectedStatusCode = Response::HTTP_NO_CONTENT): void
     {
         $this->client->request('DELETE', $this->generateFullUrl($uri));
         $this->assertResponseStatusCodeSame($expectedStatusCode, $this->client->getResponse()->getContent());
     }
 
+    /**
+     * GET request without test.
+     */
+    final protected function getRequestWithoutTest(string $uri, array $parameters = []): ?array
+    {
+        $this->client->request('GET', $this->generateFullUrl($uri), $parameters);
+
+        return json_decode($this->client->getResponse()->getContent(), true);
+    }
+
+    /**
+     * Assert if the created object matches its model.
+     */
     final protected function assertCreatedModel(array $data): void
     {
         foreach (array_merge(static::$implicitPayload, static::$requiredPayload) as $key => $value) {
@@ -99,6 +124,9 @@ class AbstractApiTestCase extends WebTestCase
         }
     }
 
+    /**
+     * Assert if the updated object matches its model.
+     */
     final protected function assertUpdateModel(array $data): void
     {
         foreach (array_merge(static::$implicitPayload, static::$requiredPayload, static::$optionalPayload) as $key => $value) {
@@ -111,7 +139,10 @@ class AbstractApiTestCase extends WebTestCase
         }
     }
 
-    final protected function assertModel(mixed $data): void
+    /**
+     * Assert if the object types match its model types.
+     */
+    final protected function assertModelTypes(mixed $data): void
     {
         $this->assertArrayHasKey('id', $data);
         $this->assertIsInt($data['id']);
@@ -175,11 +206,94 @@ class AbstractApiTestCase extends WebTestCase
         }
     }
 
-    final protected function filterCreated(array $data, int $id): array
+    /**
+     * Retrieve object from its collection.
+     */
+    final protected function filterCollection(array $data, int $id): ?array
     {
         return array_find($data, fn ($row) => $row['id'] === $id);
     }
 
+    /**
+     * Retrieve object from a related module collection.
+     */
+    final protected function filterRelatedCollection(array $data, int $id, string $key): ?array
+    {
+        return array_find($data, fn ($row) => $row[$this->getRelateKeyValue($key)]['id'] === $id);
+    }
+
+    /**
+     * Assert if a related module cache collection is updated (new object).
+     */
+    final protected function assertRelatedCacheCollectionCreated(string $relatedCollectionUri, int $id, string $collectionKey): void
+    {
+        $this->assertCreatedModel($this->filterRelatedCollection(
+            $this->getRequestWithoutTest($relatedCollectionUri),
+            $id,
+            $collectionKey,
+        ));
+    }
+
+    /**
+     * Assert if a related module cache collection is updated (update object).
+     */
+    final protected function assertRelatedCacheCollectionUpdated(string $relatedCollectionUri, int $id, string $collectionKey): void
+    {
+        $this->assertUpdateModel($this->filterRelatedCollection(
+            $this->getRequestWithoutTest($relatedCollectionUri),
+            $id,
+            $collectionKey,
+        ));
+    }
+
+    /**
+     * Assert if a related module cache collection is updated (delete object).
+     */
+    final protected function assertRelatedCacheCollectionDeleted(string $relatedCollectionUri, int $id, string $collectionKey): void
+    {
+        $this->assertNull($this->filterRelatedCollection(
+            $this->getRequestWithoutTest($relatedCollectionUri),
+            $id,
+            $collectionKey,
+        ));
+    }
+
+    /**
+     * Assert if the module cache collection is updated (new object).
+     */
+    final protected function assertCacheCollectionCreated(string $collectionUri, int $id): void
+    {
+        $this->assertCreatedModel($this->filterCollection(
+            $this->getRequestWithoutTest($collectionUri),
+            $id,
+        ));
+    }
+
+    /**
+     * Assert if the module cache collection is updated (update object).
+     */
+    final protected function assertCacheCollectionUpdated(string $collectionUri, int $id): void
+    {
+        $this->assertUpdateModel($this->filterCollection(
+            $this->getRequestWithoutTest($collectionUri),
+            $id,
+        ));
+    }
+
+    /**
+     * Assert if the module cache collection is updated (delete object).
+     */
+    final protected function assertCacheCollectionDeleted(string $collectionUri, int $id): void
+    {
+        $this->assertNull($this->filterCollection(
+            $this->getRequestWithoutTest($collectionUri),
+            $id,
+        ));
+    }
+
+    /**
+     * Convert field to date if the format is valid.
+     */
     private function convertDateIfNeeded(mixed $value): mixed
     {
         if (!\is_string($value)) {
@@ -197,16 +311,25 @@ class AbstractApiTestCase extends WebTestCase
         return $value;
     }
 
+    /**
+     * Generate the full uri.
+     */
     private function generateFullUrl(string $uri)
     {
         return self::API_ENDPOINT_BASE.'/'.$uri;
     }
 
+    /**
+     * Is the key a related module.
+     */
     private function isRelateKey(string $key): bool
     {
         return str_ends_with($key, 'Id');
     }
 
+    /**
+     * Get the real related module key.
+     */
     private function getRelateKeyValue(string $key): string
     {
         return substr($key, 0, -2);

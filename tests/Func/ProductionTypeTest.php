@@ -19,8 +19,10 @@ class ProductionTypeTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('production-type');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('production-type', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -31,8 +33,8 @@ class ProductionTypeTest extends AbstractApiTestCase
         $responseData = $this->getRequest('production-type');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -40,7 +42,7 @@ class ProductionTypeTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("production-type/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -53,9 +55,11 @@ class ProductionTypeTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("production-type/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('production-type', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -65,5 +69,7 @@ class ProductionTypeTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("production-type/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('production-type', $createdId);
     }
 }

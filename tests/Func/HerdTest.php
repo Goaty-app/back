@@ -19,8 +19,10 @@ class HerdTest extends AbstractApiTestCase
     {
         $responseData = $this->postRequest('herd');
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
+
+        $this->assertCacheCollectionCreated('herd', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -31,8 +33,8 @@ class HerdTest extends AbstractApiTestCase
         $responseData = $this->getRequest('herd');
 
         $this->assertIsArray($responseData);
-        $this->assertModel($this->filterCreated($responseData, $createdId));
-        $this->assertCreatedModel($this->filterCreated($responseData, $createdId));
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+        $this->assertCreatedModel($this->filterCollection($responseData, $createdId));
     }
 
     #[Depends('testCreate')]
@@ -40,7 +42,7 @@ class HerdTest extends AbstractApiTestCase
     {
         $responseData = $this->getRequest("herd/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
     }
@@ -53,9 +55,11 @@ class HerdTest extends AbstractApiTestCase
         // Verify if the data is updated
         $responseData = $this->getRequest("herd/{$createdId}");
 
-        $this->assertModel($responseData);
+        $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
+
+        $this->assertCacheCollectionUpdated('herd', $createdId);
     }
 
     #[Depends('testCreate')]
@@ -65,5 +69,7 @@ class HerdTest extends AbstractApiTestCase
 
         // Verify if the data is deleted
         $this->getRequest("herd/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+
+        $this->assertCacheCollectionDeleted('herd', $createdId);
     }
 }
