@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Trait;
+namespace App\Controller\Trait;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;

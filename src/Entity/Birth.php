@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Contract\OwnableInterface;
+use App\Entity\Contract\OwnableInterface;
+use App\Entity\Trait\OwnableEntityTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Repository\BirthRepository;
-use App\Trait\OwnableEntityTrait;
-use App\Trait\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

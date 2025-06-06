@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateHealthcareDto;
 use App\Dto\UpdateHealthcareDto;
 use App\Entity\Animal;
 use App\Entity\Healthcare;
 use App\Repository\HealthcareRepository;
 use App\Service\HealthcareService;
-use App\Trait\ParseDtoTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

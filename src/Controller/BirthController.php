@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateBirthDto;
 use App\Dto\UpdateBirthDto;
 use App\Entity\Birth;
 use App\Repository\BirthRepository;
 use App\Service\BirthService;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

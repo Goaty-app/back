@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Contract\OwnableInterface;
+use App\Entity\Contract\OwnableInterface;
+use App\Entity\Trait\OwnableEntityTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Enum\BreedingStatus;
 use App\Repository\BreedingRepository;
-use App\Trait\OwnableEntityTrait;
-use App\Trait\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

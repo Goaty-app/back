@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-use App\Trait\EnumDumperTrait;
+use App\Enum\Trait\EnumDumperTrait;
 
 enum Operation: string
 {

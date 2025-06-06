@@ -2,11 +2,11 @@
 
 namespace App\EventSubscriber;
 
-use App\Contract\OwnableInterface;
 use App\Entity\Animal;
 use App\Entity\AnimalType;
 use App\Entity\Birth;
 use App\Entity\Breeding;
+use App\Entity\Contract\OwnableInterface;
 use App\Entity\FoodStock;
 use App\Entity\FoodStockHistory;
 use App\Entity\FoodStockType;

@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateFoodStockTypeDto;
 use App\Dto\UpdateFoodStockTypeDto;
 use App\Entity\FoodStockType;
 use App\Repository\FoodStockTypeRepository;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
