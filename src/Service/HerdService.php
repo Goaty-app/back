@@ -10,11 +10,13 @@ use App\Entity\Herd;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HerdService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -31,11 +33,11 @@ class HerdService
         $herd = $this->entityManager->getRepository(Herd::class)->findOneByIdAndOwner($dto->herdId, $currentUser);
 
         if (!$herd) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
         }
 
         if ($herd->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
         }
 
         $HerdAwareInterface->setHerd($herd);

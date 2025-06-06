@@ -9,11 +9,14 @@ use App\Entity\HealthcareType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HealthcareService
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
+    ) {
     }
 
     public function updateHealthcareType(
@@ -29,11 +32,11 @@ class HealthcareService
         $healthcareType = $this->entityManager->getRepository(HealthcareType::class)->findOneByIdAndOwner($healthcareDto->healthcareTypeId, $currentUser);
 
         if (!$healthcareType) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
         }
 
         if ($healthcareType->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
         }
 
         $healthcare->setHealthcareType($healthcareType);
