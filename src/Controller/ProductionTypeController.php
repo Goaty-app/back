@@ -31,11 +31,6 @@ final class ProductionTypeController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'productionTypes';
-    }
-
     #[Route('/v1/production-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         ProductionTypeRepository $productionTypeRepository,

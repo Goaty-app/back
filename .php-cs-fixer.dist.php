@@ -14,7 +14,7 @@ $finder = (new PhpCsFixer\Finder())
         'bin/.phpunit',
     ])
     ->notPath([
-        'Kernel.php',
+        // 'Kernel.php',
         'bootstrap.php',
     ]);
 

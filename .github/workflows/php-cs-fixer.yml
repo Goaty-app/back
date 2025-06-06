@@ -35,7 +35,7 @@ jobs:
       - name: Run PHP-CS-Fixer
         id: php-cs-fixer
         run: |
-          OUTPUT=$(php ./vendor/bin/php-cs-fixer fix src --dry-run || true)
+          OUTPUT=$(php ./vendor/bin/php-cs-fixer fix --dry-run || true)
           echo "$OUTPUT"
 
           if echo "$OUTPUT" | grep -q "Found [1-9][0-9]* of [0-9]* files that can be fixed"; then

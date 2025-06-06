@@ -32,11 +32,6 @@ final class FoodStockHistoryController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'foodStockHistories';
-    }
-
     #[Route('/v1/food-stock/{foodStock}/food-stock-history', name: 'get_all_in', methods: ['GET'])]
     public function getAll(
         FoodStock $foodStock,

@@ -31,11 +31,6 @@ final class HerdController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'herds';
-    }
-
     #[Route('/v1/herd', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HerdRepository $herdRepository,
