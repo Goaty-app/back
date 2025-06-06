@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateProductionTypeDto;
 use App\Dto\UpdateProductionTypeDto;
 use App\Entity\ProductionType;
 use App\Repository\ProductionTypeRepository;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

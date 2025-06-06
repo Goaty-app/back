@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use App\Contract\HerdAwareInterface;
-use App\Contract\OwnableInterface;
+use App\Entity\Contract\OwnableInterface;
+use App\Entity\Trait\OwnableEntityTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Enum\QuantityUnit;
 use App\Repository\FoodStockRepository;
-use App\Trait\OwnableEntityTrait;
-use App\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

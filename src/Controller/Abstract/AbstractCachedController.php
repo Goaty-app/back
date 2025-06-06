@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Abstract;
 
 use App\Contract\OwnerScopedRepositoryInterface;
-use App\Trait\UserCacheNamingTrait;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -11,8 +11,6 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 abstract class AbstractCachedController extends AbstractController
 {
-    use UserCacheNamingTrait;
-
     protected readonly TagAwareCacheInterface $cache;
     protected readonly SerializerInterface $serializer;
 
@@ -35,5 +33,48 @@ abstract class AbstractCachedController extends AbstractController
                 return $jsonData;
             },
         );
+    }
+
+    /**
+     * Build cache key for 'All'.
+     */
+    private function buildAllCacheKey(string $baseKey): string
+    {
+        return \sprintf('%s_all_controller_%s_key', $baseKey, $this->getUserIdentifier());
+    }
+
+    /**
+     * Get cache tag.
+     */
+    protected function getTag(string $baseKey): string
+    {
+        return \sprintf('%s_tag_%s_cache', $baseKey, $this->getUserIdentifier());
+    }
+
+    /**
+     * Get user cache (useful to reset cache from the user).
+     */
+    protected function getUserTag(): string
+    {
+        return \sprintf('user_%s_cache', $this->getUserIdentifier());
+    }
+
+    /**
+     * Build tags (cache key, cache group key, cache user key).
+     */
+    private function buildTags(string $baseKey): array
+    {
+        return [
+            $this->getTag($baseKey),
+            $this->getUserTag(),
+        ];
+    }
+
+    private function getUserIdentifier(): string
+    {
+        /** @var User */
+        $user = $this->getUser();
+
+        return (string) $user->getId();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
 use App\Entity\Healthcare;
 use App\Entity\Media;
 use DateTime;

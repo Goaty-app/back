@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\HealthcareType;
-use App\Trait\FindsByOwnerRepositoryTrait;
+use App\Repository\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

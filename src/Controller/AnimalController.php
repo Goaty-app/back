@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateAnimalDto;
 use App\Dto\UpdateAnimalDto;
 use App\Entity\Animal;
@@ -9,7 +11,6 @@ use App\Entity\Herd;
 use App\Repository\AnimalRepository;
 use App\Service\AnimalService;
 use App\Service\HerdService;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

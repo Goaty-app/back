@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateAnimalTypeDto;
 use App\Dto\UpdateAnimalTypeDto;
 use App\Entity\AnimalType;
 use App\Repository\AnimalTypeRepository;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

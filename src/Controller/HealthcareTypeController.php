@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateHealthcareTypeDto;
 use App\Dto\UpdateHealthcareTypeDto;
 use App\Entity\HealthcareType;
 use App\Repository\HealthcareTypeRepository;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

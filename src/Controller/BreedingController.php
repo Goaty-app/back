@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateBreedingDto;
 use App\Dto\UpdateBreedingDto;
 use App\Entity\Animal;
 use App\Entity\Breeding;
 use App\Repository\BreedingRepository;
 use App\Service\BreedingService;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

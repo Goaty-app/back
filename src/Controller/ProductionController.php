@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Controller\Abstract\AbstractCachedController;
+use App\Controller\Trait\ParseDtoTrait;
 use App\Dto\CreateProductionDto;
 use App\Dto\UpdateProductionDto;
 use App\Entity\Herd;
@@ -9,7 +11,6 @@ use App\Entity\Production;
 use App\Repository\ProductionRepository;
 use App\Service\HerdService;
 use App\Service\ProductionService;
-use App\Trait\ParseDtoTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

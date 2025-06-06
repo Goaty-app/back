@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Trait;
+namespace App\Enum\Trait;
 
 use BackedEnum;
 
