@@ -33,11 +33,6 @@ final class BirthController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'births';
-    }
-
     #[Route('/v1/birth', name: 'get_all', methods: ['GET'])]
     public function getAll(
         BirthRepository $birthRepository,

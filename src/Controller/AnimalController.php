@@ -35,11 +35,6 @@ final class AnimalController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'animals';
-    }
-
     #[Route('/v1/animal', name: 'get_all', methods: ['GET'])]
     public function getAll(
         AnimalRepository $animalRepository,

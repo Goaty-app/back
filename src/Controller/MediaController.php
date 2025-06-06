@@ -16,11 +16,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class MediaController extends AbstractCachedController
 {
-    public static function getCacheKey(): string
-    {
-        return 'medias';
-    }
-
     #[Route('/', name: 'app_media')]
     public function index(): JsonResponse
     {

@@ -31,11 +31,6 @@ final class HealthcareTypeController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'HealthcareTypes';
-    }
-
     #[Route('/v1/healthcare-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HealthcareTypeRepository $healthcareTypeRepository,

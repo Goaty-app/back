@@ -34,11 +34,6 @@ final class BreedingController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'breedings';
-    }
-
     #[Route('/v1/breeding', name: 'get_all', methods: ['GET'])]
     public function getAll(
         BreedingRepository $breedingRepository,
