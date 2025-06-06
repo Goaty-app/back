@@ -2,9 +2,13 @@
 
 namespace App\Controller\Abstract;
 
+use App\Cache\AppCacheRegistry;
 use App\Contract\OwnerScopedRepositoryInterface;
 use App\Entity\User;
+use LogicException;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
@@ -15,9 +19,40 @@ abstract class AbstractCachedController extends AbstractController
     protected readonly SerializerInterface $serializer;
 
     /**
-     * Get the cache key from the Controller.
+     * Get the cache key from the Controller route name.
      */
-    abstract public static function getCacheKey(): string;
+    public static function getCacheKey(): string
+    {
+        $appCache = AppCacheRegistry::getCache();
+        $controllerCache = $appCache->getItem(static::buildControllerCacheKey());
+
+        if ($controllerCache->isHit()) {
+            return $controllerCache->get();
+        }
+
+        $attributes = (new ReflectionClass(static::class))->getAttributes(Route::class);
+        if (empty($attributes)) {
+            throw new LogicException('Unable to generate a cache key for '.static::class);
+        }
+
+        $routeName = $attributes[0]->newInstance()->getName();
+        if (!$routeName) {
+            throw new LogicException('Unable to generate a cache key for '.static::class);
+        }
+
+        $cacheKey = rtrim(
+            str_replace('api_', '', $routeName),
+            '_',
+        );
+        if (!$cacheKey) {
+            throw new LogicException('Unable to generate a cache key for '.static::class);
+        }
+
+        $controllerCache->set($cacheKey);
+        $appCache->save($controllerCache);
+
+        return $cacheKey;
+    }
 
     protected function getAllCachedItems(OwnerScopedRepositoryInterface $repository, array $groups = [])
     {
@@ -36,7 +71,15 @@ abstract class AbstractCachedController extends AbstractController
     }
 
     /**
-     * Build cache key for 'All'.
+     * Build cache key for the controller name.
+     */
+    private static function buildControllerCacheKey(): string
+    {
+        return 'controller_cache_'.preg_replace('/[^a-zA-Z0-9_]/', '_', static::class);
+    }
+
+    /**
+     * Build cache key for 'All' route.
      */
     private function buildAllCacheKey(string $baseKey): string
     {

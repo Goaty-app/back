@@ -31,11 +31,6 @@ final class FoodStockTypeController extends AbstractCachedController
     ) {
     }
 
-    public static function getCacheKey(): string
-    {
-        return 'foodStockTypes';
-    }
-
     #[Route('/v1/food-stock-type', name: 'get_all', methods: ['GET'])]
     public function getAll(
         FoodStockTypeRepository $foodStockTypeRepository,
