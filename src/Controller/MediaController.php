@@ -10,19 +10,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MediaController extends AbstractCachedController
 {
+    public function __construct(
+        protected readonly TagAwareCacheInterface $cache,
+        private readonly TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route('/', name: 'app_media')]
     public function index(): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path'    => 'src/Controller/MediaController.php',
-        ]);
+        throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
     }
 
     #[Route('/api/v1/media/{media}', name: 'api_get_media', methods: ['GET'])]
