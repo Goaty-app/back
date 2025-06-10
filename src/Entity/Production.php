@@ -43,7 +43,7 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[Groups(['production'])]
     #[Assert\NotBlank()]
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    private ?DateTimeInterface $production_date = null;
+    private ?DateTimeInterface $productionDate = null;
 
     #[ORM\Column]
     #[Groups(['production'])]
@@ -65,7 +65,7 @@ class Production implements OwnableInterface, HerdAwareInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['production'])]
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    private ?DateTimeInterface $expiration_date = null;
+    private ?DateTimeInterface $expirationDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['production'])]
@@ -81,24 +81,24 @@ class Production implements OwnableInterface, HerdAwareInterface
 
     public function getProductionDate(): ?DateTimeInterface
     {
-        return $this->production_date;
+        return $this->productionDate;
     }
 
-    public function setProductionDate(DateTimeInterface $production_date): static
+    public function setProductionDate(DateTimeInterface $productionDate): static
     {
-        $this->production_date = $production_date;
+        $this->productionDate = $productionDate;
 
         return $this;
     }
 
     public function getExpirationDate(): ?DateTimeInterface
     {
-        return $this->expiration_date;
+        return $this->expirationDate;
     }
 
-    public function setExpirationDate(?DateTimeInterface $expiration_date): static
+    public function setExpirationDate(?DateTimeInterface $expirationDate): static
     {
-        $this->expiration_date = $expiration_date;
+        $this->expirationDate = $expirationDate;
 
         return $this;
     }

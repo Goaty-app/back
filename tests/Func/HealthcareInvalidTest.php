@@ -23,7 +23,7 @@ class HealthcareInvalidTest extends AbstractApiTestCase
             Healthcare::class,
             array_merge(HealthcareTest::$requiredPayload, HealthcareTest::$optionalPayload),
             [
-                'care_date',
+                'careDate',
             ],
         );
     }

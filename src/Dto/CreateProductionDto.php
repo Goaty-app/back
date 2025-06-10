@@ -9,7 +9,7 @@ class CreateProductionDto
 {
     #[Assert\NotBlank()]
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    public string $production_date;
+    public string $productionDate;
 
     #[Assert\NotBlank()]
     public float $quantity;
@@ -23,7 +23,7 @@ class CreateProductionDto
     public int $productionTypeId;
 
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    public ?string $expiration_date = null;
+    public ?string $expirationDate = null;
 
     #[Assert\Length(
         max: 255,
