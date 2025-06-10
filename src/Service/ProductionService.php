@@ -9,13 +9,11 @@ use App\Entity\ProductionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductionService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
     ) {
     }
 
@@ -32,11 +30,11 @@ class ProductionService
         $productionType = $this->entityManager->getRepository(ProductionType::class)->findOneByIdAndOwner($productionDto->productionTypeId, $currentUser);
 
         if (!$productionType) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($productionType->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $production->setProductionType($productionType);

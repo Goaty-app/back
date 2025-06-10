@@ -9,13 +9,11 @@ use App\Entity\FoodStockType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FoodStockService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
     ) {
     }
 
@@ -32,11 +30,11 @@ class FoodStockService
         $foodStockType = $this->entityManager->getRepository(FoodStockType::class)->findOneByIdAndOwner($foodStockDto->foodStockTypeId, $currentUser);
 
         if (!$foodStockType) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($foodStockType->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $foodStock->setFoodStockType($foodStockType);

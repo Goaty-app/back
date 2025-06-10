@@ -15,20 +15,18 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MediaController extends AbstractCachedController
 {
     public function __construct(
         protected readonly TagAwareCacheInterface $cache,
-        private readonly TranslatorInterface $translator,
     ) {
     }
 
     #[Route('/', name: 'app_media')]
     public function index(): JsonResponse
     {
-        throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+        throw new NotFoundHttpException();
     }
 
     #[Route('/api/v1/medias/{media}', name: 'api_get_media', methods: ['GET'])]

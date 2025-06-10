@@ -23,7 +23,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OwnerCheckSubscriber implements EventSubscriberInterface
 {
@@ -46,7 +45,6 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly Security $security,
         private readonly EntityManagerInterface $entityManager,
-        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -76,7 +74,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
             $entity = $this->entityManager->getRepository($entityClass)->find($paramValue);
 
             if (!$entity) {
-                throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+                throw new NotFoundHttpException();
             }
 
             if ($entity instanceof OwnableInterface) {
@@ -93,7 +91,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
         $user = $this->security->getUser();
 
         if (!$user || $entity->getOwner()?->getId() !== $user->getId()) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
     }
 }

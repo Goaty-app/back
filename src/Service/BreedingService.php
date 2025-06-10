@@ -9,13 +9,11 @@ use App\Entity\Breeding;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BreedingService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
     ) {
     }
 
@@ -32,11 +30,11 @@ class BreedingService
         $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($breedingDto->femaleId, $currentUser);
 
         if (!$animal) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($animal->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $breeding->setFemale($animal);
@@ -55,11 +53,11 @@ class BreedingService
         $animal = $this->entityManager->getRepository(Animal::class)->findOneByIdAndOwner($breedingDto->maleId, $currentUser);
 
         if (!$animal) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($animal->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $breeding->setMale($animal);
