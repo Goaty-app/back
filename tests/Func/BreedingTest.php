@@ -22,12 +22,12 @@ class BreedingTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
-        $responseData = $this->postRequest('breeding');
+        $responseData = $this->postRequest('breedings');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
-        $this->assertCacheCollectionCreated('breeding', $responseData['id']);
+        $this->assertCacheCollectionCreated('breedings', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -35,7 +35,7 @@ class BreedingTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('breeding');
+        $responseData = $this->getRequest('breedings');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -45,7 +45,7 @@ class BreedingTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetInCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('animal/1/breeding');
+        $responseData = $this->getRequest('animals/1/breedings');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -56,7 +56,7 @@ class BreedingTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetById(int $createdId): void
     {
-        $responseData = $this->getRequest("breeding/{$createdId}");
+        $responseData = $this->getRequest("breedings/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -66,26 +66,26 @@ class BreedingTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testUpdate(int $createdId): void
     {
-        $this->patchRequest("breeding/{$createdId}");
+        $this->patchRequest("breedings/{$createdId}");
 
         // Verify if the data is updated
-        $responseData = $this->getRequest("breeding/{$createdId}");
+        $responseData = $this->getRequest("breedings/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
 
-        $this->assertCacheCollectionUpdated('breeding', $createdId);
+        $this->assertCacheCollectionUpdated('breedings', $createdId);
     }
 
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
-        $this->deleteRequest("breeding/{$createdId}");
+        $this->deleteRequest("breedings/{$createdId}");
 
         // Verify if the data is deleted
-        $this->getRequest("breeding/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+        $this->getRequest("breedings/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
 
-        $this->assertCacheCollectionDeleted('breeding', $createdId);
+        $this->assertCacheCollectionDeleted('breedings', $createdId);
     }
 }

@@ -17,12 +17,12 @@ class HealthcareTypeTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
-        $responseData = $this->postRequest('healthcare-type');
+        $responseData = $this->postRequest('healthcare-types');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
-        $this->assertCacheCollectionCreated('healthcare-type', $responseData['id']);
+        $this->assertCacheCollectionCreated('healthcare-types', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -30,7 +30,7 @@ class HealthcareTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('healthcare-type');
+        $responseData = $this->getRequest('healthcare-types');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -40,7 +40,7 @@ class HealthcareTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetById(int $createdId): void
     {
-        $responseData = $this->getRequest("healthcare-type/{$createdId}");
+        $responseData = $this->getRequest("healthcare-types/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -50,26 +50,26 @@ class HealthcareTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testUpdate(int $createdId): void
     {
-        $this->patchRequest("healthcare-type/{$createdId}");
+        $this->patchRequest("healthcare-types/{$createdId}");
 
         // Verify if the data is updated
-        $responseData = $this->getRequest("healthcare-type/{$createdId}");
+        $responseData = $this->getRequest("healthcare-types/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
 
-        $this->assertCacheCollectionUpdated('healthcare-type', $createdId);
+        $this->assertCacheCollectionUpdated('healthcare-types', $createdId);
     }
 
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
-        $this->deleteRequest("healthcare-type/{$createdId}");
+        $this->deleteRequest("healthcare-types/{$createdId}");
 
         // Verify if the data is deleted
-        $this->getRequest("healthcare-type/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+        $this->getRequest("healthcare-types/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
 
-        $this->assertCacheCollectionDeleted('healthcare-type', $createdId);
+        $this->assertCacheCollectionDeleted('healthcare-types', $createdId);
     }
 }

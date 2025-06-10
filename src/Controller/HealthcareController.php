@@ -35,7 +35,7 @@ final class HealthcareController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/healthcare', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/healthcares', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HealthcareRepository $healthcareRepository,
     ): JsonResponse {
@@ -44,7 +44,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal/{animal}/healthcare', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/animals/{animal}/healthcares', name: 'get_all_in', methods: ['GET'])]
     public function getAllIn(
         Animal $animal,
         HealthcareRepository $healthcareRepository,
@@ -58,7 +58,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/healthcare/{healthcare}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'get', methods: ['GET'])]
     public function get(
         Healthcare $healthcare,
     ): JsonResponse {
@@ -67,7 +67,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal/{animal}/healthcare', name: 'create', methods: ['POST'])]
+    #[Route('/v1/animals/{animal}/healthcares', name: 'create', methods: ['POST'])]
     public function create(
         Animal $animal,
         #[MapRequestPayload]
@@ -97,7 +97,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/healthcare/{healthcare}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'update', methods: ['PATCH'])]
     public function update(
         Healthcare $healthcare,
         #[MapRequestPayload]
@@ -118,7 +118,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/healthcare/{healthcare}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Healthcare $healthcare,
     ): JsonResponse {

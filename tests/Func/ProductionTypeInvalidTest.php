@@ -12,7 +12,7 @@ class ProductionTypeInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('production-type', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->postRequest('production-types', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

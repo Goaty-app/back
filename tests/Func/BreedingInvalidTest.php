@@ -12,7 +12,7 @@ class BreedingInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('breeding', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->postRequest('breedings', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

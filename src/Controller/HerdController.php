@@ -31,7 +31,7 @@ final class HerdController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/herd', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/herds', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HerdRepository $herdRepository,
     ): JsonResponse {
@@ -40,7 +40,7 @@ final class HerdController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herd/{herd}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/herds/{herd}', name: 'get', methods: ['GET'])]
     public function get(
         Herd $herd,
     ): JsonResponse {
@@ -49,7 +49,7 @@ final class HerdController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herd', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herds', name: 'create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload]
         CreateHerdDto $herdDto,
@@ -73,7 +73,7 @@ final class HerdController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/herd/{herd}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/herds/{herd}', name: 'update', methods: ['PATCH'])]
     public function update(
         Herd $herd,
         #[MapRequestPayload]
@@ -92,7 +92,7 @@ final class HerdController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/herd/{herd}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/herds/{herd}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Herd $herd,
     ): JsonResponse {

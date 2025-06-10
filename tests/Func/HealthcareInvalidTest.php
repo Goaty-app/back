@@ -12,7 +12,7 @@ class HealthcareInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('animal/1/healthcare', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->postRequest('animals/1/healthcares', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

@@ -17,7 +17,7 @@ class ProductionTest extends AbstractApiTestCase
 
     public static $optionalPayload = [
         'expiration_date' => '2025-02-01 00:00:00',
-        'notes'           => 'Production de lait',
+        'notes'           => 'productions de lait',
     ];
 
     protected static $implicitPayload = [
@@ -26,12 +26,12 @@ class ProductionTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
-        $responseData = $this->postRequest('herd/1/production');
+        $responseData = $this->postRequest('herds/1/productions');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
-        $this->assertCacheCollectionCreated('production', $responseData['id']);
+        $this->assertCacheCollectionCreated('productions', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -39,7 +39,7 @@ class ProductionTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('production');
+        $responseData = $this->getRequest('productions');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -49,7 +49,7 @@ class ProductionTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetInCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('herd/1/production');
+        $responseData = $this->getRequest('herds/1/productions');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -60,7 +60,7 @@ class ProductionTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetById(int $createdId): void
     {
-        $responseData = $this->getRequest("production/{$createdId}");
+        $responseData = $this->getRequest("productions/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -70,26 +70,26 @@ class ProductionTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testUpdate(int $createdId): void
     {
-        $this->patchRequest("production/{$createdId}");
+        $this->patchRequest("productions/{$createdId}");
 
         // Verify if the data is updated
-        $responseData = $this->getRequest("production/{$createdId}");
+        $responseData = $this->getRequest("productions/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
 
-        $this->assertCacheCollectionUpdated('production', $createdId);
+        $this->assertCacheCollectionUpdated('productions', $createdId);
     }
 
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
-        $this->deleteRequest("production/{$createdId}");
+        $this->deleteRequest("productions/{$createdId}");
 
         // Verify if the data is deleted
-        $this->getRequest("production/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+        $this->getRequest("productions/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
 
-        $this->assertCacheCollectionDeleted('production', $createdId);
+        $this->assertCacheCollectionDeleted('productions', $createdId);
     }
 }

@@ -31,7 +31,7 @@ final class MediaController extends AbstractCachedController
         throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
     }
 
-    #[Route('/api/v1/media/{media}', name: 'api_get_media', methods: ['GET'])]
+    #[Route('/api/v1/medias/{media}', name: 'api_get_media', methods: ['GET'])]
     public function get(
         Media $media,
         SerializerInterface $serializer,
@@ -52,7 +52,7 @@ final class MediaController extends AbstractCachedController
             new JsonResponse(null, Response::HTTP_NOT_FOUND);
     }
 
-    #[Route('/api/v1/healthcare/{healthcare}/media', name: 'api_healthcare_create_media', methods: ['POST'])]
+    #[Route('/api/v1/healthcares/{healthcare}/medias', name: 'api_healthcare_create_media', methods: ['POST'])]
     public function create(
         Healthcare $healthcare,
         Request $request,
