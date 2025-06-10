@@ -53,7 +53,7 @@ class Healthcare implements OwnableInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['healthcare'])]
-    private ?DateTimeInterface $care_date = null;
+    private ?DateTimeInterface $careDate = null;
 
     /**
      * @var Collection<int, Media>
@@ -70,12 +70,12 @@ class Healthcare implements OwnableInterface
 
     public function getCareDate(): ?DateTimeInterface
     {
-        return $this->care_date;
+        return $this->careDate;
     }
 
-    public function setCareDate(DateTimeInterface $care_date): static
+    public function setCareDate(DateTimeInterface $careDate): static
     {
-        $this->care_date = $care_date;
+        $this->careDate = $careDate;
 
         return $this;
     }

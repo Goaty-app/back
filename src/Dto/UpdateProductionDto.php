@@ -11,7 +11,7 @@ class UpdateProductionDto
     public ?int $herdId = null;
 
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    public ?string $production_date = null;
+    public ?string $productionDate = null;
 
     public ?float $quantity = null;
 
@@ -22,7 +22,7 @@ class UpdateProductionDto
     public ?int $productionTypeId = null;
 
     #[Assert\DateTime(format: 'Y-m-d H:i:s', message: 'assert.datetime')]
-    public ?string $expiration_date = null;
+    public ?string $expirationDate = null;
 
     #[Assert\Length(
         max: 255,
