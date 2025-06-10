@@ -38,6 +38,10 @@ Vider le cache
 docker compose exec php bin/console cache:clear
 ```
 
+## Tests
+
+Copier `.env.local` vers `.env.test.local`
+
 ## Base de données
 
 ![Base de données](Database.png)
