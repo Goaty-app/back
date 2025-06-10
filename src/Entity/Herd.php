@@ -33,7 +33,7 @@ class Herd implements OwnableInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['herd'])]
+    #[Groups(['herd', 'production', 'foodStock', 'animal'])]
     #[Assert\NotBlank()]
     #[Assert\Length(
         max: 50,
