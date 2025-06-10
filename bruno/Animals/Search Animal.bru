@@ -1,0 +1,15 @@
+meta {
+  name: Search Animal
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{URL}}/{{API}}/animal/search?name=Goat
+  body: none
+  auth: inherit
+}
+
+params:query {
+  name: Goat
+}

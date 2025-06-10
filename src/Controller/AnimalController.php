@@ -13,6 +13,7 @@ use App\Service\AnimalService;
 use App\Service\HerdService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
@@ -42,6 +43,21 @@ final class AnimalController extends AbstractCachedController
         $cacheReturn = $this->getAllCachedItems($animalRepository, ['groups' => ['animal']]);
 
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
+    }
+
+    #[Route('/v1/animal/search', name: 'search', methods: ['GET'])]
+    public function search(
+        AnimalRepository $animalRepository,
+        Request $request,
+    ): JsonResponse {
+        $name = trim($request->query->get('name') ?? '');
+        $data = $this->serializer->serialize(
+            $animalRepository->filterByOwnerFlex('name', $name, $this->getUser()),
+            'json',
+            ['groups' => ['animal']],
+        );
+
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     #[Route('/v1/herd/{herd}/animal', name: 'get_all_in', methods: ['GET'])]

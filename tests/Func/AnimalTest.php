@@ -82,6 +82,16 @@ class AnimalTest extends AbstractApiTestCase
         $this->assertCacheCollectionUpdated('animal', $createdId);
     }
 
+    #[Depends('testCreate', 'testUpdate')]
+    public function testSearch(int $createdId): void
+    {
+        $name = strtok(static::$optionalPayload['name'], ' ');
+        $responseData = $this->getRequest("animal/search?name={$name}");
+
+        $this->assertIsArray($responseData);
+        $this->assertModelTypes($this->filterCollection($responseData, $createdId));
+    }
+
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
