@@ -12,14 +12,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BirthService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
         private BirthRepository $birthRepository,
-        private TranslatorInterface $translator,
     ) {
     }
 
@@ -36,11 +34,11 @@ class BirthService
         $breeding = $this->entityManager->getRepository(Breeding::class)->findOneByIdAndOwner($birthDto->breedingId, $currentUser);
 
         if (!$breeding) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($breeding->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $birth->setBreeding($breeding);
@@ -66,11 +64,11 @@ class BirthService
         }
 
         if (!$animal) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         if ($animal->getOwner() !== $currentUser) {
-            throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
+            throw new NotFoundHttpException();
         }
 
         $birth->setChild($animal);
