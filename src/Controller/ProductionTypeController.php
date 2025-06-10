@@ -31,7 +31,7 @@ final class ProductionTypeController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/production-type', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/production-types', name: 'get_all', methods: ['GET'])]
     public function getAll(
         ProductionTypeRepository $productionTypeRepository,
     ): JsonResponse {
@@ -40,7 +40,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/production-type/{productionType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/production-types/{productionType}', name: 'get', methods: ['GET'])]
     public function get(
         ProductionType $productionType,
     ): JsonResponse {
@@ -49,7 +49,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/production-type', name: 'create', methods: ['POST'])]
+    #[Route('/v1/production-types', name: 'create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload]
         CreateProductionTypeDto $productionTypeDto,
@@ -73,7 +73,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/production-type/{productionType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/production-types/{productionType}', name: 'update', methods: ['PATCH'])]
     public function update(
         ProductionType $productionType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/production-type/{productionType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/production-types/{productionType}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         ProductionType $productionType,
     ): JsonResponse {

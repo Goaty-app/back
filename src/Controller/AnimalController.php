@@ -36,7 +36,7 @@ final class AnimalController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/animal', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/animals', name: 'get_all', methods: ['GET'])]
     public function getAll(
         AnimalRepository $animalRepository,
     ): JsonResponse {
@@ -45,7 +45,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal/search', name: 'search', methods: ['GET'])]
+    #[Route('/v1/animals/search', name: 'search', methods: ['GET'])]
     public function search(
         AnimalRepository $animalRepository,
         Request $request,
@@ -60,7 +60,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herd/{herd}/animal', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/herds/{herd}/animals', name: 'get_all_in', methods: ['GET'])]
     public function getAllIn(
         Herd $herd,
         AnimalRepository $animalRepository,
@@ -74,7 +74,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal/{animal}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/animals/{animal}', name: 'get', methods: ['GET'])]
     public function get(
         Animal $animal,
     ): JsonResponse {
@@ -83,7 +83,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herd/{herd}/animal', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herds/{herd}/animals', name: 'create', methods: ['POST'])]
     public function create(
         Herd $herd,
         #[MapRequestPayload]
@@ -112,7 +112,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/animal/{animal}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/animals/{animal}', name: 'update', methods: ['PATCH'])]
     public function update(
         Animal $animal,
         #[MapRequestPayload]
@@ -138,7 +138,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/animal/{animal}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/animals/{animal}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Animal $animal,
     ): JsonResponse {

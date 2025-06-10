@@ -12,7 +12,7 @@ class FoodStockHistoryInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('food-stock/1/food-stock-history', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->postRequest('food-stocks/1/food-stock-histories', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

@@ -76,7 +76,7 @@ class OwnerCheckSubscriber implements EventSubscriberInterface
             $entity = $this->entityManager->getRepository($entityClass)->find($paramValue);
 
             if (!$entity) {
-                continue;
+                throw new NotFoundHttpException($this->translator->trans('exception.not_found'));
             }
 
             if ($entity instanceof OwnableInterface) {

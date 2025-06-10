@@ -17,12 +17,12 @@ class FoodStockTypeTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
-        $responseData = $this->postRequest('food-stock-type');
+        $responseData = $this->postRequest('food-stock-types');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
 
-        $this->assertCacheCollectionCreated('food-stock-type', $responseData['id']);
+        $this->assertCacheCollectionCreated('food-stock-types', $responseData['id']);
 
         return $responseData['id'];
     }
@@ -30,7 +30,7 @@ class FoodStockTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('food-stock-type');
+        $responseData = $this->getRequest('food-stock-types');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -40,7 +40,7 @@ class FoodStockTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetById(int $createdId): void
     {
-        $responseData = $this->getRequest("food-stock-type/{$createdId}");
+        $responseData = $this->getRequest("food-stock-types/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -50,26 +50,26 @@ class FoodStockTypeTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testUpdate(int $createdId): void
     {
-        $this->patchRequest("food-stock-type/{$createdId}");
+        $this->patchRequest("food-stock-types/{$createdId}");
 
         // Verify if the data is updated
-        $responseData = $this->getRequest("food-stock-type/{$createdId}");
+        $responseData = $this->getRequest("food-stock-types/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertUpdateModel($responseData);
         $this->assertSame($createdId, $responseData['id']);
 
-        $this->assertCacheCollectionUpdated('food-stock-type', $createdId);
+        $this->assertCacheCollectionUpdated('food-stock-types', $createdId);
     }
 
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
-        $this->deleteRequest("food-stock-type/{$createdId}");
+        $this->deleteRequest("food-stock-types/{$createdId}");
 
         // Verify if the data is deleted
-        $this->getRequest("food-stock-type/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+        $this->getRequest("food-stock-types/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
 
-        $this->assertCacheCollectionDeleted('food-stock-type', $createdId);
+        $this->assertCacheCollectionDeleted('food-stock-types', $createdId);
     }
 }

@@ -31,7 +31,7 @@ final class HealthcareTypeController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/healthcare-type', name: 'get_all', methods: ['GET'])]
+    #[Route('/v1/healthcare-types', name: 'get_all', methods: ['GET'])]
     public function getAll(
         HealthcareTypeRepository $healthcareTypeRepository,
     ): JsonResponse {
@@ -40,7 +40,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/healthcare-type/{healthcareType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'get', methods: ['GET'])]
     public function get(
         HealthcareType $healthcareType,
     ): JsonResponse {
@@ -49,7 +49,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/healthcare-type', name: 'create', methods: ['POST'])]
+    #[Route('/v1/healthcare-types', name: 'create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload]
         CreateHealthcareTypeDto $healthcareTypeDto,
@@ -73,7 +73,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/healthcare-type/{healthcareType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'update', methods: ['PATCH'])]
     public function update(
         HealthcareType $healthcareType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/healthcare-type/{healthcareType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'delete', methods: ['DELETE'])]
     public function delete(
         HealthcareType $healthcareType,
     ): JsonResponse {

@@ -12,7 +12,7 @@ class HerdInvalidTest extends AbstractApiTestCase
     #[DataProvider('provideInvalidDataForCreation')]
     public function testCreateWithInvalidData(array $payload): void
     {
-        $this->postRequest('herd', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->postRequest('herds', $payload, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public static function provideInvalidDataForCreation(): iterable

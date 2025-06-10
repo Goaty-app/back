@@ -19,7 +19,7 @@ class FoodStockHistoryTest extends AbstractApiTestCase
 
     public function testCreate(): int
     {
-        $responseData = $this->postRequest('food-stock/1/food-stock-history');
+        $responseData = $this->postRequest('food-stocks/1/food-stock-histories');
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -30,7 +30,7 @@ class FoodStockHistoryTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetCollection(int $createdId): void
     {
-        $responseData = $this->getRequest('food-stock/1/food-stock-history');
+        $responseData = $this->getRequest('food-stocks/1/food-stock-histories');
 
         $this->assertIsArray($responseData);
         $this->assertModelTypes($this->filterCollection($responseData, $createdId));
@@ -40,7 +40,7 @@ class FoodStockHistoryTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testGetById(int $createdId): void
     {
-        $responseData = $this->getRequest("food-stock-history/{$createdId}");
+        $responseData = $this->getRequest("food-stock-histories/{$createdId}");
 
         $this->assertModelTypes($responseData);
         $this->assertCreatedModel($responseData);
@@ -50,8 +50,8 @@ class FoodStockHistoryTest extends AbstractApiTestCase
     #[Depends('testCreate')]
     public function testDelete(int $createdId): void
     {
-        $this->deleteRequest("food-stock-history/{$createdId}");
+        $this->deleteRequest("food-stock-histories/{$createdId}");
 
-        $this->getRequest("food-stock-history/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
+        $this->getRequest("food-stock-histories/{$createdId}", expectedStatusCode: Response::HTTP_NOT_FOUND);
     }
 }
