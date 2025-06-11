@@ -29,11 +29,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user', 'me'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'me'])]
     #[Assert\NotBlank()]
     #[Assert\Email()]
     #[UniqueUserEmail()]
