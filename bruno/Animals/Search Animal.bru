@@ -5,11 +5,15 @@ meta {
 }
 
 get {
-  url: {{URL}}/{{API}}/animals/search?name=Goat
+  url: {{URL}}/{{API}}/animals/search?name=Goat&gender=female
   body: none
   auth: inherit
 }
 
 params:query {
   name: Goat
+  gender: female
+  ~idNumber: ZS
+  ~status: Décédé
+  ~originCountry: MO
 }

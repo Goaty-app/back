@@ -11,6 +11,8 @@ use App\Entity\Herd;
 use App\Repository\AnimalRepository;
 use App\Service\AnimalService;
 use App\Service\HerdService;
+use App\Util\FilterMapping;
+use App\Util\FilterRule\EqualFilterRule;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,9 +52,16 @@ final class AnimalController extends AbstractCachedController
         AnimalRepository $animalRepository,
         Request $request,
     ): JsonResponse {
-        $name = trim($request->query->get('name') ?? '');
+        $mapping = (new FilterMapping($request))
+            ->add('name')
+            ->add('idNumber')
+            ->add('status')
+            ->add('gender', new EqualFilterRule())
+            ->add('originCountry', new EqualFilterRule())
+        ;
+
         $data = $this->serializer->serialize(
-            $animalRepository->filterByOwnerFlex('name', $name, $this->getUser()),
+            $animalRepository->filterByOwnerFlex($mapping, $this->getUser()),
             'json',
             ['groups' => ['animal']],
         );
