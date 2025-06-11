@@ -3,6 +3,8 @@
 namespace App\Repository\Trait;
 
 use App\Entity\User;
+use App\Util\FilterItem;
+use App\Util\FilterMapping;
 
 trait FindsByOwnerRepositoryTrait
 {
@@ -40,15 +42,21 @@ trait FindsByOwnerRepositoryTrait
         ;
     }
 
-    public function filterByOwnerFlex(string $column, string $value, User $user): array
+    public function filterByOwnerFlex(FilterMapping $filterMapping, User $user): array
     {
-        return $this->createQueryBuilder('e')
-            ->where("e.{$column} LIKE :value")
-            ->andWhere('e.owner = :owner')
-            ->setParameter('value', '%'.$value.'%')
+        $qb = $this->createQueryBuilder('e');
+
+        /** @var FilterItem $mapping */
+        foreach ($filterMapping->get() as $mapping) {
+            $qb->andWhere("e.{$mapping->getColumn()} {$mapping->getOperator()} :{$mapping->getColumn()}")
+                ->setParameter($mapping->getColumn(), $mapping->getValue())
+            ;
+        }
+
+        $qb->andWhere('e.owner = :owner')
             ->setParameter('owner', $user)
-            ->getQuery()
-            ->getResult()
         ;
+
+        return $qb->getQuery()->getResult();
     }
 }
