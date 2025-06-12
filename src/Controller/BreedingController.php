@@ -43,7 +43,7 @@ final class BreedingController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animals/{animal}/breedings', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/animals/{animal}/breedings', name: 'get_all_in', methods: ['GET'], requirements: ['animal' => '\d+'])]
     public function getAllIn(
         Animal $animal,
         BreedingRepository $breedingRepository,
@@ -60,7 +60,7 @@ final class BreedingController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/breedings/{breeding}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/breedings/{breeding}', name: 'get', methods: ['GET'], requirements: ['breeding' => '\d+'])]
     public function get(
         Breeding $breeding,
     ): JsonResponse {
@@ -96,7 +96,7 @@ final class BreedingController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/breedings/{breeding}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/breedings/{breeding}', name: 'update', methods: ['PATCH'], requirements: ['breeding' => '\d+'])]
     public function update(
         Breeding $breeding,
         #[MapRequestPayload]
@@ -118,7 +118,7 @@ final class BreedingController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/breedings/{breeding}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/breedings/{breeding}', name: 'delete', methods: ['DELETE'], requirements: ['breeding' => '\d+'])]
     public function delete(
         Breeding $breeding,
     ): JsonResponse {

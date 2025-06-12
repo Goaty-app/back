@@ -44,7 +44,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animals/{animal}/healthcares', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/animals/{animal}/healthcares', name: 'get_all_in', methods: ['GET'], requirements: ['animal' => '\d+'])]
     public function getAllIn(
         Animal $animal,
         HealthcareRepository $healthcareRepository,
@@ -58,7 +58,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/healthcares/{healthcare}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'get', methods: ['GET'], requirements: ['healthcare' => '\d+'])]
     public function get(
         Healthcare $healthcare,
     ): JsonResponse {
@@ -67,7 +67,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animals/{animal}/healthcares', name: 'create', methods: ['POST'])]
+    #[Route('/v1/animals/{animal}/healthcares', name: 'create', methods: ['POST'], requirements: ['animal' => '\d+'])]
     public function create(
         Animal $animal,
         #[MapRequestPayload]
@@ -97,7 +97,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/healthcares/{healthcare}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'update', methods: ['PATCH'], requirements: ['healthcare' => '\d+'])]
     public function update(
         Healthcare $healthcare,
         #[MapRequestPayload]
@@ -118,7 +118,7 @@ final class HealthcareController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/healthcares/{healthcare}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/healthcares/{healthcare}', name: 'delete', methods: ['DELETE'], requirements: ['healthcare' => '\d+'])]
     public function delete(
         Healthcare $healthcare,
     ): JsonResponse {

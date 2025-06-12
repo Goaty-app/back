@@ -42,7 +42,7 @@ final class BirthController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/births/{birth}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/births/{birth}', name: 'get', methods: ['GET'], requirements: ['birth' => '\d+'])]
     public function get(
         Birth $birth,
     ): JsonResponse {
@@ -80,7 +80,7 @@ final class BirthController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/births/{birth}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/births/{birth}', name: 'update', methods: ['PATCH'], requirements: ['birth' => '\d+'])]
     public function update(
         Birth $birth,
         #[MapRequestPayload]
@@ -104,7 +104,7 @@ final class BirthController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/births/{birth}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/births/{birth}', name: 'delete', methods: ['DELETE'], requirements: ['birth' => '\d+'])]
     public function delete(
         Birth $birth,
     ): JsonResponse {

@@ -40,7 +40,7 @@ final class AnimalTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animal-types/{animalType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/animal-types/{animalType}', name: 'get', methods: ['GET'], requirements: ['animalType' => '\d+'])]
     public function get(
         AnimalType $animalType,
     ): JsonResponse {
@@ -73,7 +73,7 @@ final class AnimalTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/animal-types/{animalType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/animal-types/{animalType}', name: 'update', methods: ['PATCH'], requirements: ['animalType' => '\d+'])]
     public function update(
         AnimalType $animalType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class AnimalTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/animal-types/{animalType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/animal-types/{animalType}', name: 'delete', methods: ['DELETE'], requirements: ['animalType' => '\d+'])]
     public function delete(
         AnimalType $animalType,
     ): JsonResponse {

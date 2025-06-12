@@ -44,7 +44,7 @@ final class ProductionController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/productions', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/herds/{herd}/productions', name: 'get_all_in', methods: ['GET'], requirements: ['herd' => '\d+'])]
     public function getAllIn(
         Herd $herd,
         ProductionRepository $productionRepository,
@@ -58,7 +58,7 @@ final class ProductionController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/productions/{production}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/productions/{production}', name: 'get', methods: ['GET'], requirements: ['production' => '\d+'])]
     public function get(
         Production $production,
     ): JsonResponse {
@@ -67,7 +67,7 @@ final class ProductionController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/productions', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herds/{herd}/productions', name: 'create', methods: ['POST'], requirements: ['herd' => '\d+'])]
     public function create(
         Herd $herd,
         #[MapRequestPayload]
@@ -96,7 +96,7 @@ final class ProductionController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/productions/{production}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/productions/{production}', name: 'update', methods: ['PATCH'], requirements: ['production' => '\d+'])]
     public function update(
         Production $production,
         #[MapRequestPayload]
@@ -119,7 +119,7 @@ final class ProductionController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/productions/{production}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/productions/{production}', name: 'delete', methods: ['DELETE'], requirements: ['production' => '\d+'])]
     public function delete(
         Production $production,
     ): JsonResponse {
