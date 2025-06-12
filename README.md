@@ -75,17 +75,12 @@ Si vous ne pouvez pas ou ne voulez pas utiliser `make`, suivez ces étapes.
     docker compose up -d --wait
     ```
 
-3.  **Installer les dépendances PHP**
-    ```sh
-    docker compose exec php composer install
-    ```
-
-4.  **Générer les clés d'authentification JWT**
+3.  **Générer les clés d'authentification JWT**
     ```sh
     docker compose exec php php bin/console lexik:jwt:generate-keypair
     ```
 
-5.  **Mettre en place la base de données**
+4.  **Mettre en place la base de données**
     ```sh
     docker compose exec php php bin/console doctrine:schema:update --force
     docker compose exec php php bin/console doctrine:fixtures:load
