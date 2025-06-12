@@ -26,6 +26,7 @@ Ce projet est construit avec **Symfony** et tourne dans un environnement **Docke
 *   **Gestion des Stocks :** Gérez les stocks de nourriture et leur historique d'utilisation.
 *   **Suivi de la Production :** Enregistrez les données de production (par exemple, lait, laine) par troupeau.
 *   **Authentification JWT :** API sécurisée utilisant des JSON Web Tokens avec des endpoints de rafraîchissement.
+*   **Ajout de documents :** Ajout de documents avec la route `/api/v1/healthcares/{healthcareId}/medias`.
 
 2. Programmation
 *   **Soft delete :** L'application utilise le package `SoftDeleteable` de `Gedmo`.
