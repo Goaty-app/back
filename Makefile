@@ -1,6 +1,9 @@
-.PHONY: down up db build schema fixtures cache clean debug
+.PHONY: down up db build schema fixtures cache clean debug jwt
 
 .DEFAULT_GOAL := clean
+
+jwt:
+	docker compose exec php bin/console lexik:jwt:generate-keypair --skip-if-exists --quiet
 
 debug:
 	XDEBUG_MODE=debug docker compose up --pull always -d --wait
@@ -37,5 +40,5 @@ fixtures:
 cache:
 	docker compose exec php bin/console cache:clear
 
-clean: db schema fixtures cache
+clean: db jwt schema fixtures cache
 	@echo "✅ Database reset, schema updated, fixtures loaded, and cache cleared successfully."
