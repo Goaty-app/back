@@ -1,0 +1,16 @@
+meta {
+  name: Stats Animal
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{URL}}/{{API}}/animals/stats?groupBy=gender
+  body: none
+  auth: inherit
+}
+
+params:query {
+  groupBy: gender
+  ~groupBy: originCountry
+}
