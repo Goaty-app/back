@@ -69,7 +69,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/animals', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/herds/{herd}/animals', name: 'get_all_in', methods: ['GET'], requirements: ['herd' => '\d+'])]
     public function getAllIn(
         Herd $herd,
         AnimalRepository $animalRepository,
@@ -83,7 +83,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/animals/{animal}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/animals/{animal}', name: 'get', methods: ['GET'], requirements: ['animal' => '\d+'])]
     public function get(
         Animal $animal,
     ): JsonResponse {
@@ -92,7 +92,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/animals', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herds/{herd}/animals', name: 'create', methods: ['POST'], requirements: ['herd' => '\d+'])]
     public function create(
         Herd $herd,
         #[MapRequestPayload]
@@ -121,7 +121,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/animals/{animal}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/animals/{animal}', name: 'update', methods: ['PATCH'], requirements: ['animal' => '\d+'])]
     public function update(
         Animal $animal,
         #[MapRequestPayload]
@@ -147,7 +147,7 @@ final class AnimalController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/animals/{animal}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/animals/{animal}', name: 'delete', methods: ['DELETE'], requirements: ['animal' => '\d+'])]
     public function delete(
         Animal $animal,
     ): JsonResponse {

@@ -40,7 +40,7 @@ final class FoodStockTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/food-stock-types/{foodStockType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/food-stock-types/{foodStockType}', name: 'get', methods: ['GET'], requirements: ['foodStockType' => '\d+'])]
     public function get(
         FoodStockType $foodStockType,
     ): JsonResponse {
@@ -73,7 +73,7 @@ final class FoodStockTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/food-stock-types/{foodStockType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/food-stock-types/{foodStockType}', name: 'update', methods: ['PATCH'], requirements: ['foodStockType' => '\d+'])]
     public function update(
         FoodStockType $foodStockType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class FoodStockTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/food-stock-types/{foodStockType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/food-stock-types/{foodStockType}', name: 'delete', methods: ['DELETE'], requirements: ['foodStockType' => '\d+'])]
     public function delete(
         FoodStockType $foodStockType,
     ): JsonResponse {

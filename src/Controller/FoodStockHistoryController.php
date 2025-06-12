@@ -32,7 +32,7 @@ final class FoodStockHistoryController extends AbstractCachedController
     ) {
     }
 
-    #[Route('/v1/food-stocks/{foodStock}/food-stock-histories', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/food-stocks/{foodStock}/food-stock-histories', name: 'get_all_in', methods: ['GET'], requirements: ['foodStock' => '\d+'])]
     public function getAll(
         FoodStock $foodStock,
         FoodStockHistoryRepository $foodStockHistory,
@@ -46,7 +46,7 @@ final class FoodStockHistoryController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/food-stock-histories/{foodStockHistory}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/food-stock-histories/{foodStockHistory}', name: 'get', methods: ['GET'], requirements: ['foodStockHistory' => '\d+'])]
     public function get(
         FoodStockHistory $foodStockHistory,
     ): JsonResponse {
@@ -55,7 +55,7 @@ final class FoodStockHistoryController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/food-stocks/{foodStock}/food-stock-histories', name: 'create', methods: ['POST'])]
+    #[Route('/v1/food-stocks/{foodStock}/food-stock-histories', name: 'create', methods: ['POST'], requirements: ['foodStock' => '\d+'])]
     public function create(
         FoodStock $foodStock,
         #[MapRequestPayload]
@@ -90,7 +90,7 @@ final class FoodStockHistoryController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/food-stock-histories/{foodStockHistory}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/food-stock-histories/{foodStockHistory}', name: 'delete', methods: ['DELETE'], requirements: ['foodStockHistory' => '\d+'])]
     public function delete(
         FoodStockHistory $foodStockHistory,
     ): JsonResponse {

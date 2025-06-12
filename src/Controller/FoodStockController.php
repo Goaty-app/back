@@ -44,7 +44,7 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/food-stocks', name: 'get_all_in', methods: ['GET'])]
+    #[Route('/v1/herds/{herd}/food-stocks', name: 'get_all_in', methods: ['GET'], requirements: ['herd' => '\d+'])]
     public function getAllIn(
         Herd $herd,
         FoodStockRepository $foodStockRepository,
@@ -58,7 +58,7 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/food-stocks/{foodStock}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/food-stocks/{foodStock}', name: 'get', methods: ['GET'], requirements: ['foodStock' => '\d+'])]
     public function get(
         FoodStock $foodStock,
     ): JsonResponse {
@@ -67,7 +67,7 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/herds/{herd}/food-stocks', name: 'create', methods: ['POST'])]
+    #[Route('/v1/herds/{herd}/food-stocks', name: 'create', methods: ['POST'], requirements: ['herd' => '\d+'])]
     public function create(
         Herd $herd,
         #[MapRequestPayload]
@@ -97,7 +97,7 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/food-stocks/{foodStock}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/food-stocks/{foodStock}', name: 'update', methods: ['PATCH'], requirements: ['foodStock' => '\d+'])]
     public function update(
         FoodStock $foodStock,
         #[MapRequestPayload]
@@ -121,7 +121,7 @@ final class FoodStockController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/food-stocks/{foodStock}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/food-stocks/{foodStock}', name: 'delete', methods: ['DELETE'], requirements: ['foodStock' => '\d+'])]
     public function delete(
         FoodStock $foodStock,
     ): JsonResponse {

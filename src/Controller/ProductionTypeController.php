@@ -40,7 +40,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/production-types/{productionType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/production-types/{productionType}', name: 'get', methods: ['GET'], requirements: ['productionType' => '\d+'])]
     public function get(
         ProductionType $productionType,
     ): JsonResponse {
@@ -73,7 +73,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/production-types/{productionType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/production-types/{productionType}', name: 'update', methods: ['PATCH'], requirements: ['productionType' => '\d+'])]
     public function update(
         ProductionType $productionType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class ProductionTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/production-types/{productionType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/production-types/{productionType}', name: 'delete', methods: ['DELETE'], requirements: ['productionType' => '\d+'])]
     public function delete(
         ProductionType $productionType,
     ): JsonResponse {

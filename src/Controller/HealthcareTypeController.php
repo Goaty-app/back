@@ -40,7 +40,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse($cacheReturn, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/v1/healthcare-types/{healthcareType}', name: 'get', methods: ['GET'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'get', methods: ['GET'], requirements: ['healthcareType' => '\d+'])]
     public function get(
         HealthcareType $healthcareType,
     ): JsonResponse {
@@ -73,7 +73,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['location' => $location], true);
     }
 
-    #[Route('/v1/healthcare-types/{healthcareType}', name: 'update', methods: ['PATCH'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'update', methods: ['PATCH'], requirements: ['healthcareType' => '\d+'])]
     public function update(
         HealthcareType $healthcareType,
         #[MapRequestPayload]
@@ -93,7 +93,7 @@ final class HealthcareTypeController extends AbstractCachedController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/v1/healthcare-types/{healthcareType}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/v1/healthcare-types/{healthcareType}', name: 'delete', methods: ['DELETE'], requirements: ['healthcareType' => '\d+'])]
     public function delete(
         HealthcareType $healthcareType,
     ): JsonResponse {
