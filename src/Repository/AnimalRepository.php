@@ -7,6 +7,7 @@ use App\Entity\Animal;
 use App\Repository\Trait\FindsByOwnerRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Animal>
@@ -18,6 +19,29 @@ class AnimalRepository extends ServiceEntityRepository implements OwnerScopedRep
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Animal::class);
+    }
+
+    public function getStatsByGroup(string $groupBy, UserInterface $user): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->select('COUNT(a.id) as count')
+            ->where('a.owner = :user')
+            ->setParameter('user', $user)
+        ;
+
+        $fieldMapping = [
+            'originCountry' => 'a.originCountry',
+            'gender'        => 'a.gender',
+        ];
+
+        $groupField = $fieldMapping[$groupBy];
+
+        $qb->addSelect("{$groupField} as value")
+            ->groupBy($groupField)
+            ->orderBy('count', 'DESC')
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 
     //    /**

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Abstract\AbstractCachedController;
 use App\Controller\Trait\ParseDtoTrait;
+use App\Dto\AnimalStatsQueryDto;
 use App\Dto\CreateAnimalDto;
 use App\Dto\UpdateAnimalDto;
 use App\Entity\Animal;
@@ -17,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -162,5 +164,18 @@ final class AnimalController extends AbstractCachedController
         ]);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/v1/animals/stats', name: 'stats', methods: ['GET'])]
+    public function stats(
+        #[MapQueryString(
+            validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY,
+        )]
+        AnimalStatsQueryDto $query,
+        AnimalRepository $animalRepository,
+    ): JsonResponse {
+        $statistics = $animalRepository->getStatsByGroup($query->groupBy, $this->getUser());
+
+        return new JsonResponse($statistics, Response::HTTP_OK);
     }
 }
