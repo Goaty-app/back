@@ -19,12 +19,21 @@ Ce projet est construit avec **Symfony** et tourne dans un environnement **Docke
 
 ## Fonctionnalités Principales
 
+1. Métier
 *   **Gestion des Troupeaux et des Animaux :** Créez et gérez des troupeaux et suivez les animaux individuels au sein de ces troupeaux.
 *   **Cycle de Reproduction :** Suivez l'ensemble du cycle de reproduction, de la saillie à la naissance.
 *   **Suivi Sanitaire :** Enregistrez les traitements, les vaccinations et d'autres événements de santé pour chaque animal.
 *   **Gestion des Stocks :** Gérez les stocks de nourriture et leur historique d'utilisation.
 *   **Suivi de la Production :** Enregistrez les données de production (par exemple, lait, laine) par troupeau.
 *   **Authentification JWT :** API sécurisée utilisant des JSON Web Tokens avec des endpoints de rafraîchissement.
+
+2. Programmation
+*   **Soft delete :** L'application utilise le package `SoftDeleteable` de `Gedmo`.
+*   **Gestion automatique du cache :** Gestion automatique du cache dans `src/Controller/Abstract/AbstractCachedController.php`.
+*   **Gestion automatique des tests :** Gestion automatique des tests dans `tests/Func/AbstractApiTestCase.php` avec les helpers dans `tests/Helper`.
+*   **Gestion automatique de permissions :** Gestion de la permission des resources dans `src/EventSubscriber/OwnerCheckSubscriber.php`.
+*   **Vérification avec les DTO :** Vérification des données utilisateurs avec les DTO dans `src/Dto`.
+*   **Utilisation des fichiers de langues :** Les fichiers de langues de l'application se trouvent dans `translations`.
 
 ## Prérequis
 
