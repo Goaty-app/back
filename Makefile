@@ -40,5 +40,5 @@ fixtures:
 cache:
 	docker compose exec php bin/console cache:clear
 
-clean: db jwt schema fixtures cache
+clean: db schema fixtures cache jwt
 	@echo "✅ Database reset, schema updated, fixtures loaded, and cache cleared successfully."
