@@ -75,15 +75,15 @@ Si vous ne pouvez pas ou ne voulez pas utiliser `make`, suivez ces étapes.
     docker compose up -d --wait
     ```
 
-3.  **Générer les clés d'authentification JWT**
-    ```sh
-    docker compose exec php php bin/console lexik:jwt:generate-keypair
-    ```
-
-4.  **Mettre en place la base de données**
+3.  **Mettre en place la base de données**
     ```sh
     docker compose exec php php bin/console doctrine:schema:update --force
     docker compose exec php php bin/console doctrine:fixtures:load
+    ```
+
+4.  **Générer les clés d'authentification JWT**
+    ```sh
+    docker compose exec php php bin/console lexik:jwt:generate-keypair
     ```
 
 ## Workflow de Développement
